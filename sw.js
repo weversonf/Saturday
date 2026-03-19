@@ -2,7 +2,7 @@ const CACHE_NAME = "saturday-v1";
 const assetsToCache = [
   "./index.html",
   "./manifest.json",
-  "./icon.svg" // <-- Atualizado aqui!
+  "./gemini-svg.svg"
 ];
 
 self.addEventListener("install", event => {
