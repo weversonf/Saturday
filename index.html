@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Saturday v04</title>
+  <title>Saturday v05</title>
 
   <script src="https://cdn.tailwindcss.com"></script>
   
@@ -284,36 +284,57 @@
               <i data-lucide="check-square" class="w-5 h-5 text-primary"></i> Criar Nova Tarefa
             </h2>
             
-            <form id="new-task-form" class="space-y-4">
-              <div>
-                <label class="text-xs text-muted-foreground mb-1 block">Título da Tarefa</label>
-                <input type="text" id="task-title" required class="w-full p-2.5 rounded-md bg-secondary/50 border border-border/50 text-white focus:outline-none focus:border-primary transition-colors" placeholder="Ex: Analisar relatório de tráfego">
-              </div>
-              
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label class="text-xs text-muted-foreground mb-1 block">Status</label>
-                  <select id="task-status" class="w-full p-2.5 rounded-md bg-secondary/50 border border-border/50 text-white focus:outline-none focus:border-primary transition-colors">
-                    <option value="Não iniciado">Não iniciado</option>
-                    <option value="Trabalhando nisso">Trabalhando nisso</option>
-                    <option value="Travado">Travado</option>
-                    <option value="Pronto">Pronto</option>
-                  </select>
-                </div>
-                <div>
-                  <label class="text-xs text-muted-foreground mb-1 block">Prioridade</label>
-                  <select id="task-priority" class="w-full p-2.5 rounded-md bg-secondary/50 border border-border/50 text-white focus:outline-none focus:border-primary transition-colors">
-                    <option value="Baixa">Baixa</option>
-                    <option value="Média" selected>Média</option>
-                    <option value="Alta">Alta</option>
-                  </select>
-                </div>
-              </div>
+<form id="new-task-form" class="space-y-4">
+            <div>
+              <label class="text-xs text-muted-foreground mb-1 block">Título da Tarefa</label>
+              <input type="text" id="task-title" required class="w-full p-2.5 rounded-md bg-secondary/50 border border-border/50 text-white focus:outline-none focus:border-primary transition-colors" placeholder="Ex: Analisar relatório de tráfego">
+            </div>
 
-              <button type="submit" class="w-full mt-4 p-2.5 rounded-md bg-primary hover:bg-primary/90 text-white font-medium transition-all">
-                Salvar Tarefa
-              </button>
-            </form>
+            <div>
+              <label class="text-xs text-muted-foreground mb-1 block">Descrição (Opcional)</label>
+              <textarea id="task-desc" rows="2" class="w-full p-2.5 rounded-md bg-secondary/50 border border-border/50 text-white focus:outline-none focus:border-primary transition-colors resize-none" placeholder="Detalhes, links ou observações..."></textarea>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="text-xs text-muted-foreground mb-1 block">Projeto</label>
+                <select id="task-project" class="w-full p-2.5 rounded-md bg-secondary/50 border border-border/50 text-white focus:outline-none focus:border-primary transition-colors">
+                  <option value="">Nenhum (Caixa de Entrada)</option>
+                  <option value="SaaS Financeiro">SaaS Financeiro</option>
+                  <option value="App Mobile">App Mobile</option>
+                  <option value="Marketing">Marketing</option>
+                </select>
+              </div>
+              <div>
+                <label class="text-xs text-muted-foreground mb-1 block">Data de Entrega</label>
+                <input type="date" id="task-due-date" class="w-full p-2.5 rounded-md bg-secondary/50 border border-border/50 text-white focus:outline-none focus:border-primary transition-colors [color-scheme:dark]">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="text-xs text-muted-foreground mb-1 block">Status</label>
+                <select id="task-status" class="w-full p-2.5 rounded-md bg-secondary/50 border border-border/50 text-white focus:outline-none focus:border-primary transition-colors">
+                  <option value="Não iniciado">Não iniciado</option>
+                  <option value="Trabalhando nisso">Trabalhando nisso</option>
+                  <option value="Travado">Travado</option>
+                  <option value="Pronto">Pronto</option>
+                </select>
+              </div>
+              <div>
+                <label class="text-xs text-muted-foreground mb-1 block">Prioridade</label>
+                <select id="task-priority" class="w-full p-2.5 rounded-md bg-secondary/50 border border-border/50 text-white focus:outline-none focus:border-primary transition-colors">
+                  <option value="Baixa">Baixa</option>
+                  <option value="Média" selected>Média</option>
+                  <option value="Alta">Alta</option>
+                </select>
+              </div>
+            </div>
+
+            <button type="submit" class="w-full mt-4 p-2.5 rounded-md bg-gradient-to-r from-primary to-blue-500 hover:from-primary/90 hover:to-blue-500/90 text-white font-medium transition-all shadow-lg shadow-primary/20">
+              Salvar Tarefa
+            </button>
+          </form>
           </div>
         </div>
 
