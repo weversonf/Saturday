@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Saturday v11</title>
+  <title>Saturday v12</title>
   <link rel="manifest" href="./manifest.json">
   <meta name="theme-color" content="#8b5cf6">
   <link rel="icon" type="image/svg+xml" href="./gemini-svg.svg">
@@ -32,6 +32,9 @@
           },
           fontFamily: {
             display: ['Inter', 'sans-serif'],
+          },
+          borderRadius: {
+            'xl': '2.5rem',
           }
         }
       }
@@ -43,8 +46,8 @@
 
   <style>
     body {
-      background-color: theme('colors.background');
-      color: theme('colors.foreground');
+      background-color: #09090b;
+      color: #fafafa;
       font-family: 'Inter', sans-serif;
       margin: 0;
       overflow-x: hidden;
@@ -55,7 +58,7 @@
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 0.75rem;
+      border-radius: 1.5rem; /* Ajustado para o estilo que o Weverson prefere */
     }
 
     @keyframes glow-pulse {
@@ -68,16 +71,7 @@
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    @keyframes scaleIn {
-      from { opacity: 0; transform: scale(0.92); }
-      to { opacity: 1; transform: scale(1); }
-    }
     .fade-up { animation: fadeUp 0.5s ease-out forwards; }
-    .scale-in { animation: scaleIn 0.3s ease-out forwards; opacity: 0; }
-    
-    .delay-100 { animation-delay: 0.1s; }
-    .delay-200 { animation-delay: 0.2s; }
-    .delay-300 { animation-delay: 0.3s; }
     
     .hidden-view { display: none !important; }
 
@@ -103,14 +97,13 @@
       gap: 0.5rem;
       padding: 0.75rem;
       background: rgba(139, 92, 246, 0.1);
-      border-radius: 0.5rem;
+      border-radius: 0.75rem;
       border-left: 3px solid #8b5cf6;
     }
 
     .kanban-card {
       padding: 1rem;
-      border-radius: 0.5rem;
-      cursor: grab;
+      border-radius: 1rem;
       transition: all 0.2s;
     }
 
@@ -133,7 +126,7 @@
     }
 
     .gantt-label {
-      min-width: 200px;
+      min-width: 180px;
       padding-right: 1rem;
       border-right: 1px solid rgba(255, 255, 255, 0.1);
     }
@@ -142,44 +135,37 @@
       flex: 1;
       min-width: 600px;
       position: relative;
-      height: 40px;
+      height: 32px;
       background: rgba(39, 39, 42, 0.3);
-      border-radius: 0.25rem;
+      border-radius: 0.5rem;
     }
 
     .gantt-bar {
       position: absolute;
       height: 100%;
-      background: linear-gradient(90deg, #8b5cf6, #6366f1);
-      border-radius: 0.25rem;
+      border-radius: 0.4rem;
       display: flex;
       align-items: center;
       padding: 0 0.5rem;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       color: white;
       overflow: hidden;
-      text-overflow: ellipsis;
       white-space: nowrap;
     }
 
-    /* View Mode Selector */
     .view-selector {
       display: flex;
-      gap: 0.5rem;
-      background: rgba(39, 39, 42, 0.4);
-      padding: 0.5rem;
-      border-radius: 0.5rem;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      gap: 0.25rem;
+      background: rgba(39, 39, 42, 0.6);
+      padding: 0.4rem;
+      border-radius: 0.75rem;
       width: fit-content;
     }
 
     .view-btn {
       padding: 0.5rem 1rem;
-      border-radius: 0.375rem;
-      border: none;
-      background: transparent;
+      border-radius: 0.6rem;
       color: #a1a1aa;
-      cursor: pointer;
       transition: all 0.2s;
       font-size: 0.875rem;
       display: flex;
@@ -190,56 +176,39 @@
     .view-btn.active {
       background: #8b5cf6;
       color: white;
-    }
-
-    .view-btn:hover {
-      color: white;
+      box-shadow: 0 4px 10px rgba(139, 92, 246, 0.3);
     }
   </style>
 </head>
-<body class="antialiased text-foreground bg-background">
+<body class="antialiased">
 
   <div id="auth-view" class="min-h-screen flex items-center justify-center relative overflow-hidden bg-[#09090b]">
     <div class="absolute top-1/4 -left-32 w-64 h-64 rounded-full bg-primary/20 blur-[100px] animate-glow-pulse"></div>
     <div class="absolute bottom-1/4 -right-32 w-64 h-64 rounded-full bg-blue-500/15 blur-[100px] animate-glow-pulse" style="animation-delay: 1.5s;"></div>
 
-    <div class="w-full max-w-md mx-4 glass-card p-6 relative z-10 fade-up">
-      <div class="text-center mb-6">
+    <div class="w-full max-w-md mx-4 glass-card p-8 relative z-10 fade-up">
+      <div class="text-center mb-8">
         <div class="flex items-center justify-center gap-3 mb-4">
-          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-blue-400 flex items-center justify-center shadow-lg shadow-primary/30">
-            <span class="text-white font-bold text-sm">AF</span>
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary to-blue-400 flex items-center justify-center shadow-lg shadow-primary/30">
+            <span class="text-white font-bold text-lg">S</span>
           </div>
-          <span class="text-xl font-display font-bold tracking-tight text-foreground">Saturday</span>
+          <span class="text-2xl font-display font-bold tracking-tight text-foreground">Saturday</span>
         </div>
         <h2 class="text-xl font-semibold text-foreground" id="auth-title">Entrar</h2>
       </div>
 
       <form id="auth-form" class="space-y-4">
-        <input type="email" placeholder="Email" required class="w-full p-2.5 rounded-md bg-secondary/50 border border-border/50 text-white focus:outline-none focus:border-primary transition-colors" />
-        <input type="password" placeholder="Senha" required minlength="6" class="w-full p-2.5 rounded-md bg-secondary/50 border border-border/50 text-white focus:outline-none focus:border-primary transition-colors" />
-        <button type="submit" id="btn-submit" class="w-full p-2.5 rounded-md bg-gradient-to-r from-primary to-blue-500 hover:from-primary/90 hover:to-blue-500/90 text-white font-medium shadow-lg shadow-primary/20 transition-all">
+        <input type="email" placeholder="Email" required class="w-full p-3 rounded-xl bg-secondary/50 border border-border/50 text-white focus:outline-none focus:border-primary transition-colors" />
+        <input type="password" placeholder="Senha" required minlength="6" class="w-full p-3 rounded-xl bg-secondary/50 border border-border/50 text-white focus:outline-none focus:border-primary transition-colors" />
+        <button type="submit" id="btn-submit" class="w-full p-3 rounded-xl bg-gradient-to-r from-primary to-blue-500 hover:opacity-90 text-white font-medium shadow-lg shadow-primary/20 transition-all">
           Entrar
         </button>
       </form>
 
       <div class="relative my-6">
-        <div class="absolute inset-0 flex items-center">
-          <span class="w-full border-t border-border"></span>
-        </div>
-        <div class="relative flex justify-center text-xs uppercase">
-          <span class="bg-card px-2 text-muted-foreground">Ou</span>
-        </div>
+        <div class="absolute inset-0 flex items-center"><span class="w-full border-t border-border"></span></div>
+        <div class="relative flex justify-center text-xs uppercase"><span class="bg-card px-2 text-muted-foreground">Ou</span></div>
       </div>
-
-      <button id="btn-google" type="button" class="w-full p-2.5 rounded-md bg-secondary border border-border/50 text-foreground hover:bg-secondary/80 flex items-center justify-center gap-2 transition-colors mb-4">
-        <svg class="w-5 h-5" viewBox="0 0 24 24">
-          <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
-          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
-        </svg>
-        Entrar com Google
-      </button>
 
       <button id="btn-toggle-auth" class="w-full text-sm text-muted-foreground hover:text-primary transition-colors">
         Não tem conta? Criar agora
@@ -251,222 +220,144 @@
     
     <div id="mobile-overlay" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-30 md:hidden transition-opacity" onclick="toggleSidebar()"></div>
 
-    <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-64 transform -translate-x-full transition-transform duration-300 md:relative md:translate-x-0 border-r border-border bg-card flex flex-col h-screen overflow-y-auto">
-      <div class="p-4 flex items-center justify-between md:justify-start gap-3">
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-64 transform -translate-x-full transition-transform duration-300 md:relative md:translate-x-0 border-r border-border bg-card flex flex-col h-screen">
+      <div class="p-6 flex items-center justify-between">
         <div class="flex items-center gap-3">
           <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-blue-400 flex items-center justify-center shrink-0">
-            <span class="text-white font-bold text-xs">AF</span>
+            <span class="text-white font-bold text-xs">S</span>
           </div>
           <span class="font-bold text-foreground">Saturday</span>
         </div>
-        <button onclick="toggleSidebar()" class="md:hidden text-muted-foreground hover:text-foreground">
-          <i data-lucide="x" class="w-5 h-5"></i>
-        </button>
+        <button onclick="toggleSidebar()" class="md:hidden text-muted-foreground"><i data-lucide="x" class="w-5 h-5"></i></button>
       </div>
       
-      <div class="flex-1 px-3 space-y-6 pb-6 mt-2">
-        <div>
-          <p class="px-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Principal</p>
-          <nav class="space-y-1">
-            <button onclick="navigate('dashboard')" class="w-full flex items-center gap-3 px-3 py-2 rounded-md hover:bg-secondary text-muted-foreground transition-colors" id="nav-dashboard">
-              <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
-            </button>
-            <button onclick="navigate('tasks')" class="w-full flex items-center gap-3 px-3 py-2 rounded-md hover:bg-secondary text-muted-foreground transition-colors" id="nav-tasks">
-              <i data-lucide="list-todo" class="w-4 h-4"></i> Minhas Tarefas
-            </button>
-            <button onclick="navigate('projects')" class="w-full flex items-center gap-3 px-3 py-2 rounded-md hover:bg-secondary text-muted-foreground transition-colors" id="nav-projects">
-              <i data-lucide="folder-kanban" class="w-4 h-4"></i> Projetos
-            </button>
-          </nav>
-        </div>
-
-        <div>
-          <p class="px-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Ferramentas</p>
-          <nav class="space-y-1">
-            <button onclick="navigate('analytics')" class="w-full flex items-center gap-3 px-3 py-2 rounded-md hover:bg-secondary text-muted-foreground transition-colors" id="nav-analytics">
-              <i data-lucide="bar-chart-2" class="w-4 h-4"></i> Analytics
-            </button>
-          </nav>
-        </div>
+      <div class="flex-1 px-4 space-y-6 overflow-y-auto">
+        <nav class="space-y-1">
+          <button onclick="navigate('dashboard')" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-secondary text-muted-foreground transition-colors" id="nav-dashboard">
+            <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
+          </button>
+          <button onclick="navigate('tasks')" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-secondary text-muted-foreground transition-colors" id="nav-tasks">
+            <i data-lucide="list-todo" class="w-4 h-4"></i> Minhas Tarefas
+          </button>
+          <button onclick="navigate('projects')" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-secondary text-muted-foreground transition-colors" id="nav-projects">
+            <i data-lucide="folder-kanban" class="w-4 h-4"></i> Projetos
+          </button>
+        </nav>
       </div>
 
       <div class="p-4 border-t border-border">
-        <button onclick="logout()" class="w-full flex items-center gap-3 px-3 py-2 rounded-md hover:bg-secondary text-destructive transition-colors">
+        <button onclick="logout()" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-secondary text-destructive transition-colors">
           <i data-lucide="log-out" class="w-4 h-4"></i> Sair
         </button>
       </div>
     </aside>
 
     <div class="flex-1 flex flex-col h-screen overflow-hidden">
-      
-      <header class="md:hidden flex items-center justify-between p-4 border-b border-border bg-card shrink-0">
-        <div class="flex items-center gap-2">
-          <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-blue-400 flex items-center justify-center shrink-0">
-            <span class="text-white font-bold text-xs">AF</span>
-          </div>
-          <span class="font-bold text-foreground">Saturday</span>
-        </div>
-        <button onclick="toggleSidebar()" class="text-foreground p-1 hover:bg-secondary rounded-md">
-          <i data-lucide="menu" class="w-6 h-6"></i>
-        </button>
+      <header class="md:hidden flex items-center justify-between p-4 border-b border-border bg-card">
+        <span class="font-bold text-foreground">Saturday</span>
+        <button onclick="toggleSidebar()" class="text-foreground p-2 bg-secondary rounded-lg"><i data-lucide="menu" class="w-6 h-6"></i></button>
       </header>
 
-      <main class="flex-1 p-4 md:p-6 overflow-y-auto relative">
+      <main class="flex-1 p-4 md:p-8 overflow-y-auto">
         
-        <div id="dashboard-content" class="space-y-6 fade-up">
+        <div id="dashboard-content" class="space-y-8 fade-up">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h1 class="text-2xl font-display font-bold text-foreground">Dashboard</h1>
-              <p class="text-sm text-muted-foreground mt-1" id="user-greeting">Visão geral</p>
+              <h1 class="text-3xl font-display font-bold text-foreground">Dashboard</h1>
+              <p class="text-sm text-muted-foreground mt-1">Bem-vindo à sua central de controle.</p>
             </div>
-            <button onclick="openTaskModal()" class="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-primary to-blue-500 hover:from-primary/90 hover:to-blue-500/90 text-white rounded-md text-sm font-medium transition-all shadow-lg shadow-primary/20 shrink-0">
+            <button onclick="openTaskModal()" class="w-full sm:w-auto px-6 py-3 bg-primary text-white rounded-xl text-sm font-medium shadow-lg shadow-primary/20 flex items-center justify-center gap-2">
               <i data-lucide="plus" class="w-4 h-4"></i> Nova Tarefa
             </button>
           </div>
 
-          <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4" id="kpi-container"></div>
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-4" id="kpi-container"></div>
 
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div class="glass-card p-4 h-full scale-in delay-100">
-              <h3 class="text-sm font-medium flex items-center gap-2 mb-4 text-foreground">
-                <i data-lucide="trending-up" class="w-4 h-4"></i> Status das Tarefas
-              </h3>
-              <div class="h-48">
-                <canvas id="statusChart"></canvas>
-              </div>
+            <div class="glass-card p-6 lg:col-span-1">
+              <h3 class="text-sm font-semibold flex items-center gap-2 mb-6"><i data-lucide="pie-chart" class="w-4 h-4 text-primary"></i> Status</h3>
+              <div class="h-48"><canvas id="statusChart"></canvas></div>
             </div>
-
-            <div class="glass-card p-4 scale-in delay-200">
-              <h3 class="text-sm font-medium flex items-center gap-2 mb-4 text-foreground">
-                <i data-lucide="folder" class="w-4 h-4"></i> Projetos
-              </h3>
-              <div class="space-y-2" id="projects-container"></div>
+            <div class="glass-card p-6">
+              <h3 class="text-sm font-semibold flex items-center gap-2 mb-4"><i data-lucide="folder" class="w-4 h-4 text-primary"></i> Projetos</h3>
+              <div class="space-y-3" id="projects-container"></div>
             </div>
-
-            <div class="glass-card p-4 scale-in delay-300">
-              <h3 class="text-sm font-medium flex items-center gap-2 mb-4 text-foreground">
-                <i data-lucide="clock" class="w-4 h-4"></i> Recentes
-              </h3>
-              <div class="space-y-2" id="recent-container"></div>
+            <div class="glass-card p-6">
+              <h3 class="text-sm font-semibold flex items-center gap-2 mb-4"><i data-lucide="clock" class="w-4 h-4 text-primary"></i> Recentes</h3>
+              <div class="space-y-3" id="recent-container"></div>
             </div>
           </div>
         </div>
 
         <div id="tasks-content" class="hidden-view space-y-6 fade-up">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
-              <h1 class="text-2xl font-display font-bold text-foreground">Minhas Tarefas</h1>
-              <p class="text-sm text-muted-foreground mt-1">Gerencie suas atividades</p>
-            </div>
-            <button onclick="openTaskModal()" class="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-primary to-blue-500 hover:from-primary/90 hover:to-blue-500/90 text-white rounded-md text-sm font-medium transition-all shadow-lg shadow-primary/20 shrink-0">
-              <i data-lucide="plus" class="w-4 h-4"></i> Nova Tarefa
-            </button>
+          <div class="flex items-center justify-between">
+            <h1 class="text-3xl font-display font-bold text-foreground">Minhas Tarefas</h1>
+            <button onclick="openTaskModal()" class="p-3 bg-primary text-white rounded-xl shadow-lg shadow-primary/20"><i data-lucide="plus" class="w-5 h-5"></i></button>
           </div>
 
-          <!-- View Mode Selector -->
           <div class="view-selector">
-            <button class="view-btn active" onclick="switchViewMode('list')">
+            <button class="view-btn active" onclick="switchViewMode(event, 'list')">
               <i data-lucide="list" class="w-4 h-4"></i> Lista
             </button>
-            <button class="view-btn" onclick="switchViewMode('kanban')">
+            <button class="view-btn" onclick="switchViewMode(event, 'kanban')">
               <i data-lucide="columns" class="w-4 h-4"></i> Kanban
             </button>
-            <button class="view-btn" onclick="switchViewMode('gantt')">
+            <button class="view-btn" onclick="switchViewMode(event, 'gantt')">
               <i data-lucide="calendar" class="w-4 h-4"></i> Gantt
             </button>
           </div>
 
-          <!-- List View -->
-          <div id="list-view" class="space-y-3">
-            <div id="tasks-list-container"></div>
-          </div>
-
-          <!-- Kanban View -->
-          <div id="kanban-view" class="hidden-view">
-            <div id="kanban-container" class="kanban-container"></div>
-          </div>
-
-          <!-- Gantt View -->
-          <div id="gantt-view" class="hidden-view">
-            <div id="gantt-container" class="gantt-container"></div>
-          </div>
+          <div id="list-view" class="space-y-3"><div id="tasks-list-container"></div></div>
+          <div id="kanban-view" class="hidden-view"><div id="kanban-container" class="kanban-container"></div></div>
+          <div id="gantt-view" class="hidden-view"><div id="gantt-container" class="gantt-container"></div></div>
         </div>
 
         <div id="projects-content" class="hidden-view space-y-6 fade-up">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
-              <h1 class="text-2xl font-display font-bold text-foreground">Projetos</h1>
-              <p class="text-sm text-muted-foreground mt-1">Organize seus projetos</p>
-            </div>
-            <button onclick="openProjectModal()" class="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-primary to-blue-500 hover:from-primary/90 hover:to-blue-500/90 text-white rounded-md text-sm font-medium transition-all shadow-lg shadow-primary/20 shrink-0">
-              <i data-lucide="plus" class="w-4 h-4"></i> Novo Projeto
-            </button>
+          <div class="flex items-center justify-between">
+            <h1 class="text-3xl font-display font-bold text-foreground">Projetos</h1>
+            <button onclick="openProjectModal()" class="p-3 bg-primary text-white rounded-xl shadow-lg shadow-primary/20"><i data-lucide="plus" class="w-5 h-5"></i></button>
           </div>
-
-          <div class="space-y-3" id="projects-list-container"></div>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="projects-list-container"></div>
         </div>
 
-        <div id="analytics-content" class="hidden-view space-y-6 fade-up">
-          <div>
-            <h1 class="text-2xl font-display font-bold text-foreground">Analytics</h1>
-            <p class="text-sm text-muted-foreground mt-1">Análise de desempenho</p>
-          </div>
-          <div class="glass-card p-6">
-            <p class="text-muted-foreground">Seção de analytics em desenvolvimento...</p>
-          </div>
-        </div>
       </main>
     </div>
   </div>
 
-  <!-- Task Modal -->
-  <div id="task-modal" class="hidden-view fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="glass-card p-6 w-full max-w-md scale-in">
-      <h2 class="text-lg font-semibold text-foreground mb-4" id="task-modal-title">
-        <i data-lucide="plus-circle" class="w-5 h-5 text-primary inline mr-2"></i> Nova Tarefa
-      </h2>
+  <div id="task-modal" class="hidden-view fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+    <div class="glass-card p-8 w-full max-w-md">
+      <h2 class="text-xl font-bold text-foreground mb-6" id="task-modal-title">Nova Tarefa</h2>
       <form id="new-task-form" class="space-y-4">
         <input type="hidden" id="task-id" />
-        <input type="text" id="task-title" placeholder="Título da tarefa" required class="w-full p-2.5 rounded-md bg-secondary/50 border border-border/50 text-white focus:outline-none focus:border-primary transition-colors" />
-        <textarea id="task-description" placeholder="Descrição (opcional)" rows="3" class="w-full p-2.5 rounded-md bg-secondary/50 border border-border/50 text-white focus:outline-none focus:border-primary transition-colors resize-none"></textarea>
-        <select id="task-project" class="w-full p-2.5 rounded-md bg-secondary/50 border border-border/50 text-white focus:outline-none focus:border-primary transition-colors">
-          <option value="">Nenhum (Caixa de Entrada)</option>
-        </select>
-        <select id="task-status" class="w-full p-2.5 rounded-md bg-secondary/50 border border-border/50 text-white focus:outline-none focus:border-primary transition-colors">
-          <option value="Não iniciado">Não iniciado</option>
-          <option value="Trabalhando nisso">Trabalhando nisso</option>
-          <option value="Travado">Travado</option>
-          <option value="Pronto">Pronto</option>
-        </select>
-        <input type="date" id="task-due-date" class="w-full p-2.5 rounded-md bg-secondary/50 border border-border/50 text-white focus:outline-none focus:border-primary transition-colors" />
-        <div class="flex gap-2">
-          <button type="submit" id="btn-save-task" class="flex-1 p-2.5 rounded-md bg-gradient-to-r from-primary to-blue-500 hover:from-primary/90 hover:to-blue-500/90 text-white font-medium transition-all">
-            Salvar Tarefa
-          </button>
-          <button type="button" onclick="closeTaskModal()" class="flex-1 p-2.5 rounded-md bg-secondary/50 border border-border/50 text-foreground hover:bg-secondary transition-colors">
-            Cancelar
-          </button>
+        <input type="text" id="task-title" placeholder="O que precisa ser feito?" required class="w-full p-3 rounded-xl bg-secondary/50 border border-border/50 text-white focus:border-primary outline-none" />
+        <textarea id="task-description" placeholder="Detalhes (opcional)" rows="3" class="w-full p-3 rounded-xl bg-secondary/50 border border-border/50 text-white focus:border-primary outline-none resize-none"></textarea>
+        <div class="grid grid-cols-2 gap-4">
+          <select id="task-project" class="p-3 rounded-xl bg-secondary border border-border text-white outline-none"></select>
+          <select id="task-status" class="p-3 rounded-xl bg-secondary border border-border text-white outline-none">
+            <option value="Não iniciado">Não iniciado</option>
+            <option value="Trabalhando nisso">Trabalhando nisso</option>
+            <option value="Travado">Travado</option>
+            <option value="Pronto">Pronto</option>
+          </select>
+        </div>
+        <input type="date" id="task-due-date" class="w-full p-3 rounded-xl bg-secondary border border-border text-white outline-none" />
+        <div class="flex gap-3 pt-4">
+          <button type="submit" class="flex-1 p-3 rounded-xl bg-primary text-white font-bold hover:opacity-90 transition-all">Salvar</button>
+          <button type="button" onclick="closeTaskModal()" class="flex-1 p-3 rounded-xl bg-secondary text-foreground hover:bg-border transition-colors">Cancelar</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- Project Modal -->
-  <div id="project-modal" class="hidden-view fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="glass-card p-6 w-full max-w-md scale-in">
-      <h2 class="text-lg font-semibold text-foreground mb-4" id="project-modal-title">
-        <i data-lucide="plus-circle" class="w-5 h-5 text-primary inline mr-2"></i> Novo Projeto
-      </h2>
+  <div id="project-modal" class="hidden-view fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+    <div class="glass-card p-8 w-full max-w-md">
+      <h2 class="text-xl font-bold text-foreground mb-6" id="project-modal-title">Novo Projeto</h2>
       <form id="new-project-form" class="space-y-4">
         <input type="hidden" id="project-id" />
-        <input type="text" id="project-name" placeholder="Nome do projeto" required class="w-full p-2.5 rounded-md bg-secondary/50 border border-border/50 text-white focus:outline-none focus:border-primary transition-colors" />
-        <div class="flex gap-2">
-          <button type="submit" id="btn-save-project" class="flex-1 p-2.5 rounded-md bg-gradient-to-r from-primary to-blue-500 hover:from-primary/90 hover:to-blue-500/90 text-white font-medium transition-all">
-            Salvar Projeto
-          </button>
-          <button type="button" onclick="closeProjectModal()" class="flex-1 p-2.5 rounded-md bg-secondary/50 border border-border/50 text-foreground hover:bg-secondary transition-colors">
-            Cancelar
-          </button>
+        <input type="text" id="project-name" placeholder="Nome do projeto" required class="w-full p-3 rounded-xl bg-secondary border border-border text-white outline-none" />
+        <div class="flex gap-3 pt-4">
+          <button type="submit" class="flex-1 p-3 rounded-xl bg-primary text-white font-bold transition-all">Salvar</button>
+          <button type="button" onclick="closeProjectModal()" class="flex-1 p-3 rounded-xl bg-secondary text-foreground transition-colors">Cancelar</button>
         </div>
       </form>
     </div>
@@ -474,12 +365,11 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
     import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, query, where, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
-    // Firebase Config
     const firebaseConfig = {
-      apiKey: "AIzaSyDfW_example",
+      apiKey: "AIzaSyDfW_REPLACE_ME",
       authDomain: "saturday-app.firebaseapp.com",
       projectId: "saturday-app",
       storageBucket: "saturday-app.appspot.com",
@@ -495,15 +385,19 @@
     let globalProjects = [];
     let unsubscribeTasks = null;
     let unsubscribeProjects = null;
-    let currentViewMode = 'list';
-    let editingTaskId = null;
+    let statusChartInstance = null;
 
-    // --- NAVEGAÇÃO E AUTENTICAÇÃO ---
+    const STATUS_COLORS = {
+      "Pronto": "#10b981", "Trabalhando nisso": "#8b5cf6",
+      "Travado": "#ef4444", "Não iniciado": "#71717a"
+    };
+
+    // --- NAVIGATION ---
     window.navigate = (page) => {
       document.querySelectorAll('[id$="-content"]').forEach(el => el.classList.add('hidden-view'));
       document.getElementById(page + '-content').classList.remove('hidden-view');
-      document.querySelectorAll('[id^="nav-"]').forEach(el => el.classList.remove('text-foreground'));
-      document.getElementById('nav-' + page)?.classList.add('text-foreground');
+      document.querySelectorAll('[id^="nav-"]').forEach(el => el.classList.remove('text-foreground', 'bg-secondary'));
+      document.getElementById('nav-' + page)?.classList.add('text-foreground', 'bg-secondary');
       if (window.innerWidth < 768) toggleSidebar();
     };
 
@@ -514,28 +408,12 @@
       overlay.classList.toggle('hidden');
     };
 
-    window.logout = async () => {
-      try {
-        await signOut(auth);
-        if (unsubscribeTasks) unsubscribeTasks();
-        if (unsubscribeProjects) unsubscribeProjects();
-        document.getElementById('app-view').classList.add('hidden-view');
-        document.getElementById('auth-view').classList.remove('hidden-view');
-      } catch (error) {
-        alert("Erro ao sair: " + error.message);
-      }
-    };
-
-    // --- MODAIS ---
+    // --- MODAL HANDLING ---
     window.openTaskModal = (taskId = null) => {
+      const form = document.getElementById('new-task-form');
+      form.reset();
       document.getElementById('task-id').value = '';
-      document.getElementById('task-title').value = '';
-      document.getElementById('task-description').value = '';
-      document.getElementById('task-status').value = 'Não iniciado';
-      document.getElementById('task-due-date').value = '';
-      document.getElementById('task-project').value = '';
-      document.getElementById('task-modal-title').innerHTML = '<i data-lucide="plus-circle" class="w-5 h-5 text-primary inline mr-2"></i> Nova Tarefa';
-      editingTaskId = null;
+      document.getElementById('task-modal-title').innerText = 'Nova Tarefa';
 
       if (taskId) {
         const task = globalTasks.find(t => t.id === taskId);
@@ -544,461 +422,239 @@
           document.getElementById('task-title').value = task.title;
           document.getElementById('task-description').value = task.description || '';
           document.getElementById('task-status').value = task.status;
-          document.getElementById('task-due-date').value = task.dueDate || '';
           document.getElementById('task-project').value = task.project || '';
-          document.getElementById('task-modal-title').innerHTML = '<i data-lucide="edit-3" class="w-5 h-5 text-primary inline mr-2"></i> Editar Tarefa';
-          editingTaskId = taskId;
+          document.getElementById('task-due-date').value = task.dueDate || '';
+          document.getElementById('task-modal-title').innerText = 'Editar Tarefa';
         }
       }
-
       document.getElementById('task-modal').classList.remove('hidden-view');
-      lucide.createIcons();
     };
 
-    window.closeTaskModal = () => {
-      document.getElementById('task-modal').classList.add('hidden-view');
-      editingTaskId = null;
-    };
+    window.closeTaskModal = () => document.getElementById('task-modal').classList.add('hidden-view');
 
     window.openProjectModal = (projectId = null) => {
       document.getElementById('project-id').value = '';
       document.getElementById('project-name').value = '';
-      document.getElementById('project-modal-title').innerHTML = '<i data-lucide="plus-circle" class="w-5 h-5 text-primary inline mr-2"></i> Novo Projeto';
-
       if (projectId) {
-        const project = globalProjects.find(p => p.id === projectId);
-        if (project) {
-          document.getElementById('project-id').value = project.id;
-          document.getElementById('project-name').value = project.name;
-          document.getElementById('project-modal-title').innerHTML = '<i data-lucide="edit-3" class="w-5 h-5 text-primary inline mr-2"></i> Editar Projeto';
+        const p = globalProjects.find(x => x.id === projectId);
+        if (p) {
+          document.getElementById('project-id').value = p.id;
+          document.getElementById('project-name').value = p.name;
         }
       }
-
       document.getElementById('project-modal').classList.remove('hidden-view');
-      lucide.createIcons();
     };
 
-    window.closeProjectModal = () => {
-      document.getElementById('project-modal').classList.add('hidden-view');
-    };
+    window.closeProjectModal = () => document.getElementById('project-modal').classList.add('hidden-view');
 
-    // --- SALVAR E DELETAR ---
-    document.getElementById('new-task-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const user = auth.currentUser;
-      if (!user) return;
-      const btn = document.getElementById('btn-save-task');
-      btn.innerText = "Salvando...";
-      const id = document.getElementById('task-id').value;
-      const title = document.getElementById('task-title').value;
-      const description = document.getElementById('task-description').value;
-      const project = document.getElementById('task-project').value;
-      const status = document.getElementById('task-status').value;
-      const dueDate = document.getElementById('task-due-date').value;
-
-      try {
-        if (id) {
-          await updateDoc(doc(db, "tasks", id), { title, description, project, status, dueDate });
-        } else {
-          await addDoc(collection(db, "tasks"), { userId: user.uid, title, description, project, status, dueDate, createdAt: serverTimestamp() });
-        }
-        closeTaskModal();
-        e.target.reset();
-      } catch (error) {
-        alert("Erro ao salvar: " + error.message);
-      } finally {
-        btn.innerText = "Salvar Tarefa";
-      }
-    });
-
-    document.getElementById('new-project-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const user = auth.currentUser;
-      if (!user) return;
-      const btn = document.getElementById('btn-save-project');
-      btn.innerText = "Salvando...";
-      const id = document.getElementById('project-id').value;
-      const name = document.getElementById('project-name').value;
-
-      try {
-        if (id) {
-          await updateDoc(doc(db, "projects", id), { name });
-        } else {
-          await addDoc(collection(db, "projects"), { userId: user.uid, name, createdAt: serverTimestamp() });
-        }
-        closeProjectModal();
-      } catch (error) {
-        alert("Erro ao salvar: " + error.message);
-      } finally {
-        btn.innerText = "Salvar Projeto";
-      }
-    });
-
-    window.deleteTask = async (id) => {
-      if (confirm("Deseja mesmo excluir esta tarefa?")) {
-        try {
-          await deleteDoc(doc(db, "tasks", id));
-        } catch (error) {
-          alert("Erro ao excluir: " + error.message);
-        }
-      }
-    };
-
-    window.deleteProject = async (id) => {
-      if (confirm("Deseja excluir este projeto?")) {
-        try {
-          await deleteDoc(doc(db, "projects", id));
-        } catch (error) {
-          alert("Erro ao excluir: " + error.message);
-        }
-      }
-    };
-
-    // --- BUSCA E RENDERIZAÇÃO REAL-TIME ---
-    function iniciarBuscaDados(userId) {
-      const qTasks = query(collection(db, "tasks"), where("userId", "==", userId));
-      unsubscribeTasks = onSnapshot(qTasks, (snapshot) => {
-        globalTasks = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        renderDashboard();
-        renderTasksList();
-        renderKanban();
-        renderGantt();
-      });
-
-      const qProjects = query(collection(db, "projects"), where("userId", "==", userId));
-      unsubscribeProjects = onSnapshot(qProjects, (snapshot) => {
-        globalProjects = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        renderProjectsList();
-        renderDashboard();
-        
-        const selectProjeto = document.getElementById('task-project');
-        selectProjeto.innerHTML = '<option value="">Nenhum (Caixa de Entrada)</option>' + 
-          globalProjects.map(p => `<option value="${p.name}">${p.name}</option>`).join('');
-      });
-    }
-
-    const STATUS_COLORS = {
-      "Pronto": "#00C875", 
-      "Trabalhando nisso": "#9b6dff",
-      "Travado": "#E2445C", 
-      "Não iniciado": "#5a5a7a",
-    };
-
-    let statusChartInstance = null;
-
-    // --- RENDERIZAÇÃO DO DASHBOARD ---
-    function renderDashboard() {
-      const total = globalTasks.length;
-      const done = globalTasks.filter(t => t.status === "Pronto").length;
-      const working = globalTasks.filter(t => t.status === "Trabalhando nisso").length;
-
-      document.getElementById('kpi-container').innerHTML = `
-        ${createKpiCard('list-todo', 'Total', total, 'text-primary', 'from-primary/20 to-primary/5')}
-        ${createKpiCard('check-circle-2', 'Prontas', done, 'text-emerald-400', 'from-emerald-500/20 to-emerald-500/5')}
-        ${createKpiCard('clock', 'Progresso', working, 'text-primary', 'from-primary/20 to-blue-500/5')}
-        ${createKpiCard('alert-triangle', 'Atrasadas', 0, 'text-destructive', 'from-destructive/20 to-destructive/5')}
-      `;
-
-      if (globalProjects.length === 0) {
-        document.getElementById('projects-container').innerHTML = '<p class="text-sm text-muted-foreground text-center py-6">Nenhum projeto cadastrado.</p>';
-      } else {
-        document.getElementById('projects-container').innerHTML = globalProjects.slice(0, 4).map(p => {
-          const pTasks = globalTasks.filter(t => t.project === p.name);
-          const pct = pTasks.length ? Math.round((pTasks.filter(t => t.status === 'Pronto').length / pTasks.length) * 100) : 0;
-          return `
-            <div class="p-3 rounded-xl bg-secondary/50 border border-border/50">
-              <div class="flex justify-between mb-2"><p class="text-sm font-medium text-foreground">${p.name}</p><span class="text-xs text-muted-foreground">${pct}%</span></div>
-              <div class="w-full bg-background rounded-full h-1.5 mb-1 overflow-hidden"><div class="bg-primary h-1.5 rounded-full" style="width: ${pct}%"></div></div>
-              <p class="text-[10px] text-muted-foreground">${pTasks.length} tarefas</p>
-            </div>
-          `;
-        }).join('');
-      }
-
-      if (globalTasks.length === 0) {
-        document.getElementById('recent-container').innerHTML = '<p class="text-sm text-muted-foreground text-center py-6">Nenhuma tarefa recente.</p>';
-      } else {
-        document.getElementById('recent-container').innerHTML = [...globalTasks].reverse().slice(0, 5).map(t => `
-          <div class="flex items-center gap-3 p-2 rounded-lg bg-secondary/30 border border-border/30">
-            <div class="w-2 h-2 rounded-full shrink-0" style="background-color: ${STATUS_COLORS[t.status] || '#5a5a7a'}"></div>
-            <div class="flex-1 min-w-0"><p class="text-xs font-medium truncate text-foreground">${t.title}</p><p class="text-[10px] text-muted-foreground">${t.status}</p></div>
-          </div>
-        `).join('');
-      }
-
-      lucide.createIcons();
-      renderChart(globalTasks);
-    }
-
-    // --- RENDERIZAÇÃO DA LISTA ---
-    function renderTasksList() {
-      const container = document.getElementById('tasks-list-container');
-      if (globalTasks.length === 0) {
-        container.innerHTML = '<div class="glass-card p-8 text-center text-muted-foreground"><i data-lucide="list-todo" class="w-8 h-8 mx-auto mb-2 opacity-50"></i><p>Sua lista de tarefas está vazia.</p></div>';
-      } else {
-        container.innerHTML = globalTasks.map(t => `
-          <div class="glass-card p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-l-4" style="border-left-color: ${STATUS_COLORS[t.status] || '#5a5a7a'}">
-            <div class="flex-1">
-              <h4 class="font-medium text-foreground">${t.title}</h4>
-              <div class="flex items-center gap-3 text-[11px] text-muted-foreground mt-1">
-                ${t.project ? `<span class="bg-secondary px-2 py-0.5 rounded">${t.project}</span>` : ''}
-                ${t.dueDate ? `<span><i data-lucide="calendar" class="w-3 h-3 inline mr-1"></i>${t.dueDate.split('-').reverse().join('/')}</span>` : ''}
-              </div>
-            </div>
-            <div class="flex items-center gap-2">
-              <span class="text-xs px-2 py-1 rounded-md bg-secondary text-foreground">${t.status}</span>
-              <button onclick="openTaskModal('${t.id}')" class="p-1.5 text-muted-foreground hover:text-blue-400 rounded-md transition-colors"><i data-lucide="edit-3" class="w-4 h-4"></i></button>
-              <button onclick="deleteTask('${t.id}')" class="p-1.5 text-muted-foreground hover:text-destructive rounded-md transition-colors"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-            </div>
-          </div>
-        `).join('');
-      }
-      lucide.createIcons();
-    }
-
-    // --- RENDERIZAÇÃO DO KANBAN ---
-    function renderKanban() {
-      const container = document.getElementById('kanban-container');
-      const statuses = ["Não iniciado", "Trabalhando nisso", "Travado", "Pronto"];
-      
-      container.innerHTML = statuses.map(status => {
-        const tasks = globalTasks.filter(t => t.status === status);
-        return `
-          <div class="kanban-column">
-            <div class="kanban-column-header">
-              <div class="w-2 h-2 rounded-full" style="background-color: ${STATUS_COLORS[status]}"></div>
-              <span class="font-medium text-sm">${status}</span>
-              <span class="ml-auto text-xs text-muted-foreground">${tasks.length}</span>
-            </div>
-            <div class="space-y-2">
-              ${tasks.map(t => `
-                <div class="kanban-card glass-card">
-                  <h4 class="font-medium text-foreground text-sm mb-2">${t.title}</h4>
-                  ${t.description ? `<p class="text-xs text-muted-foreground mb-2">${t.description}</p>` : ''}
-                  ${t.project ? `<p class="text-xs text-primary mb-2">${t.project}</p>` : ''}
-                  ${t.dueDate ? `<p class="text-xs text-muted-foreground mb-3"><i data-lucide="calendar" class="w-3 h-3 inline mr-1"></i>${t.dueDate.split('-').reverse().join('/')}</p>` : ''}
-                  <div class="flex gap-2">
-                    <button onclick="openTaskModal('${t.id}')" class="flex-1 text-xs p-1.5 text-muted-foreground hover:text-blue-400 rounded transition-colors"><i data-lucide="edit-3" class="w-3 h-3 inline mr-1"></i>Editar</button>
-                    <button onclick="deleteTask('${t.id}')" class="flex-1 text-xs p-1.5 text-muted-foreground hover:text-destructive rounded transition-colors"><i data-lucide="trash-2" class="w-3 h-3 inline mr-1"></i>Excluir</button>
-                  </div>
-                </div>
-              `).join('')}
-            </div>
-          </div>
-        `;
-      }).join('');
-      lucide.createIcons();
-    }
-
-    // --- RENDERIZAÇÃO DO GANTT ---
-    function renderGantt() {
-      const container = document.getElementById('gantt-container');
-      
-      if (globalTasks.length === 0) {
-        container.innerHTML = '<p class="text-sm text-muted-foreground text-center py-6">Nenhuma tarefa com data de entrega.</p>';
-        return;
-      }
-
-      const tasksWithDates = globalTasks.filter(t => t.dueDate).sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
-      
-      if (tasksWithDates.length === 0) {
-        container.innerHTML = '<p class="text-sm text-muted-foreground text-center py-6">Nenhuma tarefa com data de entrega.</p>';
-        return;
-      }
-
-      const today = new Date();
-      const minDate = new Date(tasksWithDates[0].dueDate);
-      const maxDate = new Date(tasksWithDates[tasksWithDates.length - 1].dueDate);
-      const totalDays = Math.ceil((maxDate - minDate) / (1000 * 60 * 60 * 24)) + 1;
-
-      container.innerHTML = tasksWithDates.map(t => {
-        const taskDate = new Date(t.dueDate);
-        const startOffset = Math.ceil((taskDate - minDate) / (1000 * 60 * 60 * 24));
-        const percentStart = (startOffset / totalDays) * 100;
-
-        return `
-          <div class="gantt-row">
-            <div class="gantt-label">
-              <p class="text-sm font-medium text-foreground truncate">${t.title}</p>
-              <p class="text-xs text-muted-foreground">${t.dueDate.split('-').reverse().join('/')}</p>
-            </div>
-            <div class="gantt-timeline">
-              <div class="gantt-bar" style="left: ${percentStart}%; width: 10%; background-color: ${STATUS_COLORS[t.status]};">
-                <span>${t.title}</span>
-              </div>
-            </div>
-            <div class="flex gap-2 ml-2">
-              <button onclick="openTaskModal('${t.id}')" class="p-1.5 text-muted-foreground hover:text-blue-400 rounded transition-colors"><i data-lucide="edit-3" class="w-4 h-4"></i></button>
-              <button onclick="deleteTask('${t.id}')" class="p-1.5 text-muted-foreground hover:text-destructive rounded transition-colors"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-            </div>
-          </div>
-        `;
-      }).join('');
-      lucide.createIcons();
-    }
-
-    // --- SELETOR DE MODO DE VISUALIZAÇÃO ---
-    window.switchViewMode = (mode) => {
-      currentViewMode = mode;
-      
+    // --- VIEW MODE SWAPPER (FIXED) ---
+    window.switchViewMode = (e, mode) => {
+      // Remove active do botão atual
       document.querySelectorAll('.view-btn').forEach(btn => btn.classList.remove('active'));
-      event.target.closest('.view-btn').classList.add('active');
+      
+      // Adiciona active no botão clicado (usando currentTarget para pegar o button mesmo se clicar no icon)
+      if(e) e.currentTarget.classList.add('active');
 
       document.getElementById('list-view').classList.add('hidden-view');
       document.getElementById('kanban-view').classList.add('hidden-view');
       document.getElementById('gantt-view').classList.add('hidden-view');
 
-      if (mode === 'list') {
-        document.getElementById('list-view').classList.remove('hidden-view');
-      } else if (mode === 'kanban') {
-        document.getElementById('kanban-view').classList.remove('hidden-view');
-        renderKanban();
-      } else if (mode === 'gantt') {
-        document.getElementById('gantt-view').classList.remove('hidden-view');
-        renderGantt();
+      const target = document.getElementById(`${mode}-view`);
+      if (target) {
+        target.classList.remove('hidden-view');
+        if (mode === 'kanban') renderKanban();
+        if (mode === 'gantt') renderGantt();
       }
     };
 
-    // --- RENDERIZAÇÃO DE PROJETOS ---
-    function renderProjectsList() {
-      const container = document.getElementById('projects-list-container');
-      if (globalProjects.length === 0) {
-        container.innerHTML = '<p class="text-sm text-muted-foreground text-center py-6">Nenhum projeto cadastrado.</p>';
-      } else {
-        container.innerHTML = globalProjects.map(p => `
-          <div class="glass-card p-4 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-              <i data-lucide="folder" class="w-4 h-4 text-primary"></i>
-              <span class="text-sm font-medium text-foreground">${p.name}</span>
-            </div>
-            <div class="flex gap-2">
-              <button onclick="openProjectModal('${p.id}')" class="p-1.5 text-muted-foreground hover:text-blue-400 rounded-md transition-colors"><i data-lucide="edit-3" class="w-4 h-4"></i></button>
-              <button onclick="deleteProject('${p.id}')" class="p-1.5 text-muted-foreground hover:text-destructive rounded-md transition-colors"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-            </div>
+    // --- FIREBASE CRUD ---
+    document.getElementById('new-task-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('task-id').value;
+      const data = {
+        title: document.getElementById('task-title').value,
+        description: document.getElementById('task-description').value,
+        project: document.getElementById('task-project').value,
+        status: document.getElementById('task-status').value,
+        dueDate: document.getElementById('task-due-date').value,
+        userId: auth.currentUser.uid
+      };
+      try {
+        if (id) await updateDoc(doc(db, "tasks", id), data);
+        else await addDoc(collection(db, "tasks"), { ...data, createdAt: serverTimestamp() });
+        closeTaskModal();
+      } catch (err) { console.error(err); }
+    });
+
+    document.getElementById('new-project-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('project-id').value;
+      const name = document.getElementById('project-name').value;
+      try {
+        if (id) await updateDoc(doc(db, "projects", id), { name });
+        else await addDoc(collection(db, "projects"), { name, userId: auth.currentUser.uid, createdAt: serverTimestamp() });
+        closeProjectModal();
+      } catch (err) { console.error(err); }
+    });
+
+    window.deleteTask = async (id) => { if (confirm("Excluir tarefa?")) await deleteDoc(doc(db, "tasks", id)); };
+    window.deleteProject = async (id) => { if (confirm("Excluir projeto?")) await deleteDoc(doc(db, "projects", id)); };
+
+    // --- RENDERING LOGIC ---
+    function renderDashboard() {
+      const total = globalTasks.length;
+      const done = globalTasks.filter(t => t.status === "Pronto").length;
+      const progress = globalTasks.filter(t => t.status === "Trabalhando nisso").length;
+
+      document.getElementById('kpi-container').innerHTML = `
+        ${createKpi('Total', total, 'list-todo', 'text-primary')}
+        ${createKpi('Prontas', done, 'check-circle', 'text-emerald-400')}
+        ${createKpi('Fazendo', progress, 'zap', 'text-amber-400')}
+        ${createKpi('Projetos', globalProjects.length, 'folder', 'text-blue-400')}
+      `;
+
+      document.getElementById('projects-container').innerHTML = globalProjects.slice(0, 3).map(p => {
+        const pTasks = globalTasks.filter(t => t.project === p.name);
+        const pct = pTasks.length ? Math.round((pTasks.filter(t => t.status === 'Pronto').length / pTasks.length) * 100) : 0;
+        return `<div class="p-3 bg-secondary/30 rounded-xl border border-border/50">
+          <div class="flex justify-between text-xs mb-1"><span>${p.name}</span><span>${pct}%</span></div>
+          <div class="w-full bg-background h-1 rounded-full overflow-hidden"><div class="bg-primary h-full" style="width:${pct}%"></div></div>
+        </div>`;
+      }).join('');
+
+      document.getElementById('recent-container').innerHTML = globalTasks.slice(-4).reverse().map(t => `
+        <div class="flex items-center gap-3 p-2 bg-secondary/20 rounded-lg text-xs">
+          <div class="w-2 h-2 rounded-full" style="background:${STATUS_COLORS[t.status]}"></div>
+          <span class="truncate flex-1">${t.title}</span>
+        </div>
+      `).join('');
+
+      lucide.createIcons();
+      renderChart();
+    }
+
+    function createKpi(label, val, icon, color) {
+      return `<div class="glass-card p-4 flex items-center gap-4">
+        <div class="p-2 rounded-lg bg-background/50 ${color}"><i data-lucide="${icon}" class="w-5 h-5"></i></div>
+        <div><p class="text-xl font-bold">${val}</p><p class="text-[10px] text-muted-foreground">${label}</p></div>
+      </div>`;
+    }
+
+    function renderTasksList() {
+      document.getElementById('tasks-list-container').innerHTML = globalTasks.map(t => `
+        <div class="glass-card p-4 flex items-center justify-between border-l-4" style="border-color:${STATUS_COLORS[t.status]}">
+          <div>
+            <h4 class="font-medium text-sm">${t.title}</h4>
+            <p class="text-[10px] text-muted-foreground">${t.project || 'Sem Projeto'} • ${t.dueDate || 'Sem data'}</p>
           </div>
-        `).join('');
-      }
+          <div class="flex gap-2">
+            <button onclick="openTaskModal('${t.id}')" class="p-2 hover:text-primary"><i data-lucide="edit-3" class="w-4 h-4"></i></button>
+            <button onclick="deleteTask('${t.id}')" class="p-2 hover:text-destructive"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+          </div>
+        </div>
+      `).join('');
       lucide.createIcons();
     }
 
-    function createKpiCard(icon, label, value, iconColor, gradient) {
-      return `
-        <div class="glass-card overflow-hidden relative p-3 sm:p-4 flex items-center gap-3 sm:gap-4 transition-transform hover:scale-105">
-          <div class="absolute inset-0 bg-gradient-to-br ${gradient} pointer-events-none opacity-50"></div>
-          <div class="${iconColor} relative z-10 p-2 rounded-xl bg-background/30 shrink-0"><i data-lucide="${icon}" class="w-4 h-4 sm:w-5 sm:h-5"></i></div>
-          <div class="relative z-10 min-w-0"><p class="text-xl sm:text-2xl font-display font-bold text-foreground truncate">${value}</p><p class="text-[10px] sm:text-[11px] text-muted-foreground truncate">${label}</p></div>
+    function renderKanban() {
+      const statuses = ["Não iniciado", "Trabalhando nisso", "Travado", "Pronto"];
+      document.getElementById('kanban-container').innerHTML = statuses.map(s => `
+        <div class="kanban-column">
+          <div class="kanban-column-header text-xs font-bold uppercase tracking-wider">
+            <div class="w-2 h-2 rounded-full" style="background:${STATUS_COLORS[s]}"></div> ${s}
+          </div>
+          <div class="space-y-3">
+            ${globalTasks.filter(t => t.status === s).map(t => `
+              <div class="kanban-card glass-card p-4">
+                <p class="text-sm font-semibold mb-2">${t.title}</p>
+                <div class="flex justify-between items-center mt-4">
+                  <span class="text-[10px] text-primary">${t.project || ''}</span>
+                  <button onclick="openTaskModal('${t.id}')" class="text-muted-foreground hover:text-white"><i data-lucide="more-horizontal" class="w-4 h-4"></i></button>
+                </div>
+              </div>
+            `).join('')}
+          </div>
         </div>
-      `;
+      `).join('');
+      lucide.createIcons();
     }
 
-    function renderChart(tasks) {
-      const ctx = document.getElementById('statusChart').getContext('2d');
+    function renderGantt() {
+      const tasks = globalTasks.filter(t => t.dueDate).sort((a,b) => new Date(a.dueDate) - new Date(b.dueDate));
+      if(!tasks.length) return;
+      const min = new Date(tasks[0].dueDate);
+      const max = new Date(tasks[tasks.length-1].dueDate);
+      const totalDays = Math.max(1, Math.ceil((max - min) / (86400000)) + 1);
+
+      document.getElementById('gantt-container').innerHTML = tasks.map(t => {
+        const offset = Math.ceil((new Date(t.dueDate) - min) / 86400000);
+        const left = (offset / totalDays) * 100;
+        return `<div class="gantt-row">
+          <div class="gantt-label text-[10px] truncate">${t.title}</div>
+          <div class="gantt-timeline">
+            <div class="gantt-bar" style="left:${left}%; width:60px; background:${STATUS_COLORS[t.status]}"></div>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    function renderChart() {
+      const ctx = document.getElementById('statusChart');
+      if (!ctx) return;
       if (statusChartInstance) statusChartInstance.destroy();
-      if (tasks.length === 0) {
-        statusChartInstance = new Chart(ctx, {
-          type: 'doughnut', 
-          data: { 
-            labels: ['Sem tarefas'], 
-            datasets: [{ data: [1], backgroundColor: ['#27272a'], borderWidth: 0 }] 
-          },
-          options: { 
-            responsive: true, 
-            maintainAspectRatio: false, 
-            cutout: '70%', 
-            plugins: { 
-              legend: { display: false }, 
-              tooltip: { enabled: false } 
-            } 
-          }
-        });
-        return;
-      }
-      const counts = { 
-        "Pronto": tasks.filter(t => t.status === "Pronto").length, 
-        "Trabalhando nisso": tasks.filter(t => t.status === "Trabalhando nisso").length, 
-        "Travado": tasks.filter(t => t.status === "Travado").length, 
-        "Não iniciado": tasks.filter(t => t.status === "Não iniciado").length 
-      };
+      const counts = ["Pronto", "Trabalhando nisso", "Travado", "Não iniciado"].map(s => globalTasks.filter(t => t.status === s).length);
       statusChartInstance = new Chart(ctx, {
-        type: 'doughnut', 
-        data: { 
-          labels: Object.keys(counts), 
-          datasets: [{ 
-            data: Object.values(counts), 
-            backgroundColor: Object.keys(counts).map(k => STATUS_COLORS[k]), 
-            borderWidth: 0 
-          }] 
+        type: 'doughnut',
+        data: {
+          labels: ["Pronto", "Fazendo", "Travado", "Pendente"],
+          datasets: [{ data: counts, backgroundColor: Object.values(STATUS_COLORS), borderWidth: 0 }]
         },
-        options: { 
-          responsive: true, 
-          maintainAspectRatio: false, 
-          cutout: '70%', 
-          plugins: { 
-            legend: { display: false } 
-          } 
-        }
+        options: { cutout: '80%', plugins: { legend: { display: false } }, maintainAspectRatio: false }
       });
     }
 
-    // --- AUTENTICAÇÃO ---
+    // --- AUTH OBSERVER ---
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        document.getElementById('app-view').classList.remove('hidden-view');
         document.getElementById('auth-view').classList.add('hidden-view');
+        document.getElementById('app-view').classList.remove('hidden-view');
         navigate('dashboard');
-        iniciarBuscaDados(user.uid);
+        
+        onSnapshot(query(collection(db, "tasks"), where("userId", "==", user.uid)), snap => {
+          globalTasks = snap.docs.map(d => ({id: d.id, ...d.data()}));
+          renderDashboard();
+          renderTasksList();
+          // Atualiza a view atual
+          if(document.getElementById('kanban-view').classList.contains('hidden-view') === false) renderKanban();
+        });
+
+        onSnapshot(query(collection(db, "projects"), where("userId", "==", user.uid)), snap => {
+          globalProjects = snap.docs.map(d => ({id: d.id, ...d.data()}));
+          document.getElementById('task-project').innerHTML = '<option value="">Sem Projeto</option>' + globalProjects.map(p => `<option value="${p.name}">${p.name}</option>`).join('');
+          renderDashboard();
+        });
       } else {
-        document.getElementById('app-view').classList.add('hidden-view');
         document.getElementById('auth-view').classList.remove('hidden-view');
+        document.getElementById('app-view').classList.add('hidden-view');
       }
     });
 
-    // --- FORMULÁRIO DE AUTENTICAÇÃO ---
+    // --- AUTH ACTIONS ---
     document.getElementById('auth-form').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const email = e.target[0].value;
-      const password = e.target[1].value;
-      try {
-        await signInWithEmailAndPassword(auth, email, password);
-      } catch (error) {
-        alert("Erro: " + error.message);
-      }
+      const [email, pass] = [e.target[0].value, e.target[1].value];
+      try { await signInWithEmailAndPassword(auth, email, pass); } catch(err) { alert("Erro no login"); }
     });
 
     document.getElementById('btn-toggle-auth').addEventListener('click', async () => {
-      const email = document.querySelector('#auth-form input[type="email"]').value;
-      const password = document.querySelector('#auth-form input[type="password"]').value;
-      if (!email || !password) {
-        alert("Preencha email e senha");
-        return;
-      }
-      try {
-        await createUserWithEmailAndPassword(auth, email, password);
-      } catch (error) {
-        alert("Erro: " + error.message);
-      }
+      const [email, pass] = [document.querySelector('input[type="email"]').value, document.querySelector('input[type="password"]').value];
+      if(!email || !pass) return alert("Preencha os campos");
+      try { await createUserWithEmailAndPassword(auth, email, pass); } catch(err) { alert(err.message); }
     });
+
+    window.logout = () => signOut(auth);
 
     lucide.createIcons();
   </script>
-
-  <script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js')
-        .then(reg => {
-          console.log('Saturday: Service Worker registrado com sucesso!', reg.scope);
-        })
-        .catch(err => {
-          console.error('Saturday: Erro ao registrar o Service Worker:', err);
-        });
-    });
-  }
-
-  window.addEventListener('beforeinstallprompt', (e) => {
-    console.log('Saturday pronto para ser instalado!');
-  });
-</script>
-  
 </body>
 </html>
