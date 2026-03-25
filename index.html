@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Saturday v12</title>
+  <title>Saturday v13</title>
   <link rel="manifest" href="./manifest.json">
   <meta name="theme-color" content="#8b5cf6">
   <link rel="icon" type="image/svg+xml" href="./gemini-svg.svg">
@@ -58,7 +58,7 @@
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 1.5rem; /* Ajustado para o estilo que o Weverson prefere */
+      border-radius: 1.5rem;
     }
 
     @keyframes glow-pulse {
@@ -207,8 +207,18 @@
 
       <div class="relative my-6">
         <div class="absolute inset-0 flex items-center"><span class="w-full border-t border-border"></span></div>
-        <div class="relative flex justify-center text-xs uppercase"><span class="bg-card px-2 text-muted-foreground">Ou</span></div>
+        <div class="relative flex justify-center text-xs uppercase"><span class="bg-card px-2 text-muted-foreground">Ou continue com</span></div>
       </div>
+
+      <button onclick="loginComGoogle()" type="button" class="w-full p-3 rounded-xl bg-secondary border border-border/50 text-foreground hover:bg-secondary/80 flex items-center justify-center gap-3 transition-colors mb-4">
+        <svg class="w-5 h-5" viewBox="0 0 24 24">
+          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+        </svg>
+        Google
+      </button>
 
       <button id="btn-toggle-auth" class="w-full text-sm text-muted-foreground hover:text-primary transition-colors">
         Não tem conta? Criar agora
@@ -264,7 +274,7 @@
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <h1 class="text-3xl font-display font-bold text-foreground">Dashboard</h1>
-              <p class="text-sm text-muted-foreground mt-1">Bem-vindo à sua central de controle.</p>
+              <p class="text-sm text-muted-foreground mt-1">Olá, <span id="user-display-name">Bem-vindo</span>!</p>
             </div>
             <button onclick="openTaskModal()" class="w-full sm:w-auto px-6 py-3 bg-primary text-white rounded-xl text-sm font-medium shadow-lg shadow-primary/20 flex items-center justify-center gap-2">
               <i data-lucide="plus" class="w-4 h-4"></i> Nova Tarefa
@@ -365,7 +375,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
     import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, query, where, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -380,16 +390,25 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
+    const provider = new GoogleAuthProvider();
 
     let globalTasks = [];
     let globalProjects = [];
-    let unsubscribeTasks = null;
-    let unsubscribeProjects = null;
     let statusChartInstance = null;
 
     const STATUS_COLORS = {
       "Pronto": "#10b981", "Trabalhando nisso": "#8b5cf6",
       "Travado": "#ef4444", "Não iniciado": "#71717a"
+    };
+
+    // --- GOOGLE LOGIN ---
+    window.loginComGoogle = async () => {
+      try {
+        await signInWithPopup(auth, provider);
+      } catch (error) {
+        console.error("Erro Google Login:", error);
+        alert("Falha na autenticação com Google.");
+      }
     };
 
     // --- NAVIGATION ---
@@ -447,12 +466,9 @@
 
     window.closeProjectModal = () => document.getElementById('project-modal').classList.add('hidden-view');
 
-    // --- VIEW MODE SWAPPER (FIXED) ---
+    // --- VIEW MODE SWAPPER ---
     window.switchViewMode = (e, mode) => {
-      // Remove active do botão atual
       document.querySelectorAll('.view-btn').forEach(btn => btn.classList.remove('active'));
-      
-      // Adiciona active no botão clicado (usando currentTarget para pegar o button mesmo se clicar no icon)
       if(e) e.currentTarget.classList.add('active');
 
       document.getElementById('list-view').classList.add('hidden-view');
@@ -542,7 +558,7 @@
 
     function renderTasksList() {
       document.getElementById('tasks-list-container').innerHTML = globalTasks.map(t => `
-        <div class="glass-card p-4 flex items-center justify-between border-l-4" style="border-color:${STATUS_COLORS[t.status]}">
+        <div class="glass-card p-4 flex items-center justify-between border-l-4 mb-2" style="border-color:${STATUS_COLORS[t.status]}">
           <div>
             <h4 class="font-medium text-sm">${t.title}</h4>
             <p class="text-[10px] text-muted-foreground">${t.project || 'Sem Projeto'} • ${t.dueDate || 'Sem data'}</p>
@@ -560,7 +576,7 @@
       const statuses = ["Não iniciado", "Trabalhando nisso", "Travado", "Pronto"];
       document.getElementById('kanban-container').innerHTML = statuses.map(s => `
         <div class="kanban-column">
-          <div class="kanban-column-header text-xs font-bold uppercase tracking-wider">
+          <div class="kanban-column-header text-xs font-bold uppercase tracking-wider mb-2">
             <div class="w-2 h-2 rounded-full" style="background:${STATUS_COLORS[s]}"></div> ${s}
           </div>
           <div class="space-y-3">
@@ -618,13 +634,13 @@
       if (user) {
         document.getElementById('auth-view').classList.add('hidden-view');
         document.getElementById('app-view').classList.remove('hidden-view');
+        document.getElementById('user-display-name').innerText = user.displayName || user.email.split('@')[0];
         navigate('dashboard');
         
         onSnapshot(query(collection(db, "tasks"), where("userId", "==", user.uid)), snap => {
           globalTasks = snap.docs.map(d => ({id: d.id, ...d.data()}));
           renderDashboard();
           renderTasksList();
-          // Atualiza a view atual
           if(document.getElementById('kanban-view').classList.contains('hidden-view') === false) renderKanban();
         });
 
