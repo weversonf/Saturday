@@ -3,22 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Saturday v17</title>
+  <title>Saturday v18</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body { background-color: #09090b; color: #fafafa; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
     .glass-card { background: rgba(39, 39, 42, 0.4); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 1.5rem; }
     .hidden-view { display: none !important; }
-    .error-message { color: #ef4444; font-size: 0.875rem; margin-top: 0.5rem; text-align: center; }
+    .error-message { color: #ef4444; font-size: 0.875rem; margin-top: 0.5rem; text-align: center; font-weight: 500; }
     @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     .fade-up { animation: fadeUp 0.5s ease-out forwards; }
   </style>
 </head>
 <body class="antialiased">
 
-  <!-- AUTH VIEW -->
   <div id="auth-view" class="min-h-screen flex items-center justify-center relative overflow-hidden bg-[#09090b]">
     <div class="w-full max-w-md mx-4 glass-card p-8 relative z-10 fade-up">
       <div class="text-center mb-8">
@@ -61,30 +59,42 @@
     </div>
   </div>
 
-  <!-- APP VIEW (SIMPLIFIED FOR DEMO) -->
   <div id="app-view" class="hidden-view min-h-screen flex flex-col items-center justify-center bg-[#09090b] text-white">
-    <h1 class="text-4xl font-bold mb-4">Bem-vindo ao Saturday!</h1>
-    <p class="text-xl mb-8">Logado como: <span id="user-display" class="text-purple-400"></span></p>
-    <button id="btn-logout" class="px-8 py-3 bg-red-600 rounded-xl font-bold hover:bg-red-700 transition-all">Sair</button>
+    <div class="glass-card p-12 text-center fade-up">
+        <h1 class="text-4xl font-bold mb-4">Bem-vindo ao Saturday!</h1>
+        <p class="text-xl mb-8 text-gray-400">Logado como: <span id="user-display" class="text-purple-400 font-semibold"></span></p>
+        <button id="btn-logout" class="px-8 py-3 bg-red-500/10 border border-red-500/50 text-red-500 rounded-xl font-bold hover:bg-red-500 hover:text-white transition-all">Sair do App</button>
+    </div>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+    import { 
+        getAuth, 
+        signInWithEmailAndPassword, 
+        createUserWithEmailAndPassword, 
+        signOut, 
+        onAuthStateChanged, 
+        GoogleAuthProvider, 
+        signInWithPopup 
+    } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
 
-    // SUBSTITUA PELAS SUAS CREDENCIAIS DO FIREBASE
-const firebaseConfig = {
-  apiKey: "AIzaSyCGemp_OA8savCmLZfX7Us0nmDpdbpv4N0",
-  authDomain: "mytasks-saturday.firebaseapp.com",
-  projectId: "mytasks-saturday",
-  storageBucket: "mytasks-saturday.firebasestorage.app",
-  messagingSenderId: "647554172397",
-  appId: "1:647554172397:web:aac3ef00938ee7cd8f13e4"
-};
+    const firebaseConfig = {
+      apiKey: "AIzaSyCGemp_OA8savCmLZfX7Us0nmDpdbpv4N0",
+      authDomain: "mytasks-saturday.firebaseapp.com",
+      projectId: "mytasks-saturday",
+      storageBucket: "mytasks-saturday.firebasestorage.app",
+      messagingSenderId: "647554172397",
+      appId: "1:647554172397:web:aac3ef00938ee7cd8f13e4"
+    };
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const provider = new GoogleAuthProvider();
+    
+    // Melhora a UX do Google Auth: Força a seleção de conta
+    provider.setCustomParameters({ prompt: 'select_account' });
+
     let isSignUpMode = false;
 
     // DOM Elements
@@ -110,7 +120,7 @@ const firebaseConfig = {
       e.preventDefault();
       const email = document.getElementById('auth-email').value;
       const password = document.getElementById('auth-password').value;
-      authError.innerText = 'Processando...';
+      authError.innerText = 'Autenticando...';
 
       try {
         if (isSignUpMode) {
@@ -123,12 +133,14 @@ const firebaseConfig = {
       }
     });
 
-    // Google Auth
+    // Google Auth - Versão Robusta
     btnGoogle.addEventListener('click', async () => {
+      authError.innerText = 'Iniciando Google Login...';
       try {
-        authError.innerText = 'Abrindo login do Google...';
-        await signInWithPopup(auth, provider);
+        const result = await signInWithPopup(auth, provider);
+        console.log("Sucesso Google:", result.user);
       } catch (error) {
+        console.error("Erro detalhado do Google:", error);
         handleAuthError(error);
       }
     });
@@ -142,6 +154,7 @@ const firebaseConfig = {
         document.getElementById('auth-view').classList.add('hidden-view');
         document.getElementById('app-view').classList.remove('hidden-view');
         document.getElementById('user-display').innerText = user.displayName || user.email;
+        authError.innerText = '';
       } else {
         document.getElementById('auth-view').classList.remove('hidden-view');
         document.getElementById('app-view').classList.add('hidden-view');
@@ -149,14 +162,31 @@ const firebaseConfig = {
     });
 
     function handleAuthError(error) {
-      console.error(error);
       let msg = "Erro na autenticação.";
-      if (error.code === 'auth/invalid-api-key') msg = "Chave de API inválida.";
-      if (error.code === 'auth/user-not-found') msg = "Usuário não encontrado.";
-      if (error.code === 'auth/wrong-password') msg = "Senha incorreta.";
-      if (error.code === 'auth/email-already-in-use') msg = "E-mail já cadastrado.";
-      if (error.code === 'auth/popup-closed-by-user') msg = "Login do Google cancelado.";
-      if (error.code === 'auth/operation-not-allowed') msg = "Método de login não habilitado no Firebase.";
+      
+      // Mapeamento de erros comuns
+      switch (error.code) {
+        case 'auth/operation-not-allowed':
+          msg = "Erro: Ative o 'Google' no Console do Firebase!";
+          break;
+        case 'auth/popup-blocked':
+          msg = "O navegador bloqueou o popup de login.";
+          break;
+        case 'auth/popup-closed-by-user':
+          msg = "Login cancelado pelo usuário.";
+          break;
+        case 'auth/email-already-in-use':
+          msg = "Este e-mail já está em uso.";
+          break;
+        case 'auth/wrong-password':
+          msg = "Senha incorreta.";
+          break;
+        case 'auth/user-not-found':
+          msg = "Usuário não encontrado.";
+          break;
+        default:
+          msg = `Erro: ${error.message}`;
+      }
       authError.innerText = msg;
     }
   </script>
