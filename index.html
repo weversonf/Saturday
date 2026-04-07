@@ -3,232 +3,538 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Saturday v20</title>
+  <title>Saturday v20 - Gestor de Tarefas</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    body { background-color: #09090b; color: #fafafa; font-family: 'Inter', sans-serif; margin: 0; overflow: hidden; }
-    .glass-card { background: rgba(39, 39, 42, 0.4); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 1rem; }
+    body { 
+      background-color: #09090b; 
+      color: #fafafa; 
+      font-family: 'Inter', sans-serif; 
+      margin: 0; 
+      overflow: hidden; 
+    }
+    .glass-card { 
+      background: rgba(39, 39, 42, 0.4); 
+      backdrop-filter: blur(12px); 
+      border: 1px solid rgba(255, 255, 255, 0.1); 
+      border-radius: 1rem; 
+    }
     .hidden-view { display: none !important; }
-    .task-item { transition: all 0.2s ease; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+    .task-item { 
+      transition: all 0.2s ease; 
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05); 
+    }
     .task-item:hover { background: rgba(255, 255, 255, 0.02); }
     
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 10px; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-in { animation: fadeIn 0.3s ease forwards; }
+
+    #toast-container {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      z-index: 100;
+    }
+
+    .kanban-column {
+      min-height: 400px;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 1rem;
+      border: 1px border transparent;
+    }
+
+    /* Mobile Drawer */
+    #mobile-menu {
+      transition: transform 0.3s ease-in-out;
+      transform: translateX(-100%);
+    }
+    #mobile-menu.open {
+      transform: translateX(0);
+    }
   </style>
 </head>
 <body class="antialiased">
 
-  <div id="auth-view" class="min-h-screen flex items-center justify-center bg-[#09090b]">
-    <div class="w-full max-w-md mx-4 glass-card p-8 text-center">
-      <div class="flex items-center justify-center gap-3 mb-6">
-        <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-600 to-blue-500 flex items-center justify-center shadow-lg">
-          <span class="text-white font-bold text-xl">S</span>
-        </div>
-        <span class="text-2xl font-bold tracking-tight">Saturday</span>
+  <div id="toast-container"></div>
+
+  <!-- Overlay para fechar menu mobile -->
+  <div id="menu-overlay" class="hidden-view fixed inset-0 bg-black/60 backdrop-blur-sm z-[90]"></div>
+
+  <!-- Mobile Drawer Menu -->
+  <aside id="mobile-menu" class="fixed inset-y-0 left-0 w-72 bg-[#09090b] border-r border-white/10 p-6 flex flex-col z-[100] lg:hidden">
+    <div class="flex items-center justify-between mb-10">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-lg bg-purple-600 flex items-center justify-center text-xs font-bold text-white">S</div>
+        <span class="font-bold text-white">Saturday</span>
       </div>
-      <h2 class="text-xl font-semibold mb-6" id="auth-title">Entrar no Gestor</h2>
-      
-      <form id="auth-form" class="space-y-4">
-        <input type="email" id="auth-email" placeholder="Seu email" required class="w-full p-3 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-purple-500 transition-all" />
-        <input type="password" id="auth-password" placeholder="Sua senha" required class="w-full p-3 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-purple-500 transition-all" />
-        <div id="auth-error" class="text-red-500 text-sm"></div>
-        <button type="submit" id="btn-submit" class="w-full p-3 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-medium transition-all">Entrar</button>
-      </form>
-      
-      <button id="btn-google" class="w-full mt-4 p-3 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center gap-2 hover:bg-white/10 transition-all">
-        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/action/google.svg" width="18"> Google
-      </button>
-      
-      <button id="btn-toggle-auth" class="mt-6 text-sm text-gray-500 hover:text-purple-400">Não tem conta? Criar agora</button>
+      <button id="close-menu" class="p-2 text-gray-400 hover:text-white"><i data-lucide="x"></i></button>
+    </div>
+    <nav class="flex-1 space-y-2">
+      <div onclick="changeView('list'); toggleMenu(false)" class="nav-item-list p-3 bg-purple-500/10 text-purple-400 rounded-xl flex items-center gap-3 cursor-pointer"><i data-lucide="list"></i> Lista</div>
+      <div onclick="changeView('kanban'); toggleMenu(false)" class="nav-item-kanban p-3 text-gray-500 hover:text-white transition-all flex items-center gap-3 cursor-pointer"><i data-lucide="columns"></i> Kanban</div>
+      <div class="p-3 text-gray-500 hover:text-white transition-all flex items-center gap-3 cursor-pointer"><i data-lucide="users"></i> Time</div>
+    </nav>
+    <button onclick="handleLogout()" class="p-3 text-red-400 hover:bg-red-500/10 rounded-xl flex items-center gap-3 transition-all mt-auto">
+      <i data-lucide="log-out"></i> Sair
+    </button>
+  </aside>
+
+  <!-- Modal de Confirmação -->
+  <div id="confirm-modal" class="hidden-view fixed inset-0 z-[110] flex items-center justify-center bg-black/60 backdrop-blur-sm">
+    <div class="glass-card p-6 w-full max-w-sm mx-4">
+      <h3 class="text-lg font-bold mb-2 text-white">Excluir tarefa?</h3>
+      <p class="text-gray-400 text-sm mb-6">Esta ação não pode ser desfeita.</p>
+      <div class="flex gap-3 justify-end">
+        <button id="confirm-cancel" class="px-4 py-2 rounded-lg hover:bg-white/5 transition-colors text-white">Cancelar</button>
+        <button id="confirm-delete" class="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-500 text-white font-medium transition-colors">Excluir</button>
+      </div>
     </div>
   </div>
 
+  <!-- Auth View -->
+  <div id="auth-view" class="min-h-screen flex items-center justify-center bg-[#09090b]">
+    <div class="w-full max-w-md mx-4 glass-card p-8 text-center animate-in">
+      <div class="flex items-center justify-center gap-3 mb-6">
+        <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-600 to-blue-500 flex items-center justify-center shadow-lg shadow-purple-500/20">
+          <span class="text-white font-bold text-xl">S</span>
+        </div>
+        <span class="text-2xl font-bold tracking-tight text-white">Saturday</span>
+      </div>
+      <h2 class="text-xl font-semibold mb-6 text-white" id="auth-title">Entrar no Gestor</h2>
+      
+      <form id="auth-form" class="space-y-4">
+        <div class="relative">
+          <i data-lucide="mail" class="absolute left-3 top-3.5 w-5 h-5 text-gray-500"></i>
+          <input type="email" id="auth-email" placeholder="Seu email" required class="w-full pl-10 p-3 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-purple-500 transition-all" />
+        </div>
+        <div class="relative">
+          <i data-lucide="lock" class="absolute left-3 top-3.5 w-5 h-5 text-gray-500"></i>
+          <input type="password" id="auth-password" placeholder="Sua senha" required class="w-full pl-10 p-3 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-purple-500 transition-all" />
+        </div>
+        <button type="submit" id="btn-submit" class="w-full p-3 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-medium transition-all shadow-lg shadow-purple-600/20 flex items-center justify-center gap-2">
+          <span>Entrar</span>
+        </button>
+      </form>
+      
+      <div class="relative my-6">
+        <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-white/10"></div></div>
+        <div class="relative flex justify-center text-xs uppercase"><span class="bg-[#121214] px-2 text-gray-500">Ou continue com</span></div>
+      </div>
+      
+      <button id="btn-google" class="w-full p-3 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center gap-2 hover:bg-white/10 transition-all text-white">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/action/google.svg" width="18"> Google
+      </button>
+      
+      <button id="btn-toggle-auth" class="mt-6 text-sm text-gray-500 hover:text-purple-400 transition-colors">Não tem conta? Criar agora</button>
+    </div>
+  </div>
+
+  <!-- App View -->
   <div id="app-view" class="hidden-view min-h-screen flex bg-[#09090b]">
     
-    <aside class="w-64 border-r border-white/5 p-6 flex flex-col hidden md:flex">
+    <!-- Sidebar Desktop -->
+    <aside class="w-64 border-r border-white/5 p-6 flex flex-col hidden lg:flex">
       <div class="flex items-center gap-3 mb-10">
-        <div class="w-8 h-8 rounded-lg bg-purple-600 flex items-center justify-center text-xs font-bold">S</div>
-        <span class="font-bold">Saturday</span>
+        <div class="w-8 h-8 rounded-lg bg-purple-600 flex items-center justify-center text-xs font-bold text-white">S</div>
+        <span class="font-bold text-white">Saturday <span class="text-[10px] text-purple-400 ml-1">v20</span></span>
       </div>
       <nav class="flex-1 space-y-2">
-        <div class="p-3 bg-purple-500/10 text-purple-400 rounded-xl flex items-center gap-3"><i data-lucide="layout"></i> Boards</div>
+        <div onclick="changeView('list')" class="nav-item-list p-3 bg-purple-500/10 text-purple-400 rounded-xl flex items-center gap-3 cursor-pointer transition-all"><i data-lucide="list"></i> Lista</div>
+        <div onclick="changeView('kanban')" class="nav-item-kanban p-3 text-gray-500 hover:text-white transition-all flex items-center gap-3 cursor-pointer"><i data-lucide="columns"></i> Kanban</div>
         <div class="p-3 text-gray-500 hover:text-white transition-all flex items-center gap-3 cursor-pointer"><i data-lucide="users"></i> Time</div>
       </nav>
-      <button id="btn-logout" class="p-3 text-red-400 hover:bg-red-500/10 rounded-xl flex items-center gap-3 transition-all">
+      <button onclick="handleLogout()" class="p-3 text-red-400 hover:bg-red-500/10 rounded-xl flex items-center gap-3 transition-all">
         <i data-lucide="log-out"></i> Sair
       </button>
     </aside>
 
+    <!-- Main Content -->
     <main class="flex-1 flex flex-col overflow-hidden">
-      <header class="h-16 border-b border-white/5 flex items-center justify-between px-8">
-        <h2 class="font-semibold">Meu Board de Tarefas</h2>
-        <div id="user-display" class="text-sm text-gray-400 font-medium"></div>
+      <header class="h-16 border-b border-white/5 flex items-center justify-between px-6 lg:px-8">
+        <div class="flex items-center gap-4">
+           <button id="open-menu" class="lg:hidden p-2 hover:bg-white/5 rounded-lg text-gray-400"><i data-lucide="menu"></i></button>
+           <h2 class="font-semibold text-white">Meu Board</h2>
+           <!-- View Toggles for Tablets -->
+           <div class="hidden md:flex bg-white/5 rounded-lg p-1 ml-4">
+              <button onclick="changeView('list')" id="toggle-list" class="p-1.5 px-3 rounded-md bg-purple-600 text-white text-xs flex items-center gap-2"><i data-lucide="list" class="w-4 h-4"></i> Lista</button>
+              <button onclick="changeView('kanban')" id="toggle-kanban" class="p-1.5 px-3 rounded-md text-gray-500 text-xs flex items-center gap-2"><i data-lucide="columns" class="w-4 h-4"></i> Kanban</button>
+           </div>
+        </div>
+        <div id="user-display" class="flex items-center gap-3">
+          <div class="text-right hidden sm:block">
+            <p id="user-email" class="text-sm font-medium text-gray-200"></p>
+            <p class="text-[10px] text-gray-500 uppercase tracking-widest">Workspace Pessoal</p>
+          </div>
+          <div id="user-avatar" class="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center text-xs font-bold text-white border border-white/10 shadow-lg shadow-purple-600/20">?</div>
+        </div>
       </header>
 
-      <section class="p-8 bg-white/[0.02] border-b border-white/5">
-        <form id="task-form" class="flex gap-4 max-w-4xl">
-          <input type="text" id="task-input" placeholder="+ Adicionar nova tarefa..." required 
-            class="flex-1 p-3 rounded-xl bg-white/5 border border-white/10 focus:outline-none focus:border-purple-500 transition-all" />
-          <select id="task-priority" class="bg-white/5 border border-white/10 rounded-xl px-4 text-sm outline-none focus:border-purple-500">
-            <option value="Baixa" class="bg-gray-900">Baixa</option>
-            <option value="Média" class="bg-gray-900" selected>Média</option>
-            <option value="Alta" class="bg-gray-900">Alta</option>
-          </select>
-          <button type="submit" class="bg-purple-600 hover:bg-purple-500 px-6 py-3 rounded-xl font-bold transition-all flex items-center gap-2">
-            <i data-lucide="plus" class="w-4 h-4"></i> Lançar
-          </button>
+      <!-- Quick Add Form -->
+      <section class="p-6 bg-white/[0.01] border-b border-white/5">
+        <form id="task-form" class="flex flex-col sm:flex-row gap-4 max-w-6xl">
+          <input type="text" id="task-input" placeholder="+ Adicionar tarefa..." required 
+            class="flex-1 p-3 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-purple-500 transition-all placeholder:text-gray-600" />
+          <div class="flex gap-4">
+            <select id="task-priority" class="bg-white/5 border border-white/10 rounded-xl px-4 text-sm text-white outline-none focus:border-purple-500 cursor-pointer">
+              <option value="Baixa" class="bg-gray-900 text-white">Baixa</option>
+              <option value="Média" class="bg-gray-900 text-white" selected>Média</option>
+              <option value="Alta" class="bg-gray-900 text-white">Alta</option>
+            </select>
+            <button type="submit" class="bg-purple-600 hover:bg-purple-500 px-6 py-3 rounded-xl font-bold text-white transition-all flex items-center gap-2 shadow-lg shadow-purple-600/10 whitespace-nowrap">
+              <i data-lucide="plus" class="w-4 h-4"></i> Criar
+            </button>
+          </div>
         </form>
       </section>
 
-      <section class="flex-1 overflow-y-auto p-8">
-        <div class="glass-card overflow-hidden">
-          <div class="grid grid-cols-12 p-4 bg-white/5 text-xs font-bold uppercase tracking-wider text-gray-500">
-            <div class="col-span-7 px-2">Tarefa</div>
-            <div class="col-span-2 px-2 text-center">Prioridade</div>
-            <div class="col-span-2 px-2 text-center">Status</div>
-            <div class="col-span-1 px-2 text-right">Ação</div>
-          </div>
-          <div id="task-list">
-            <div class="p-10 text-center text-gray-600">Carregando tarefas...</div>
+      <!-- Dynamic Views Content -->
+      <div id="view-container" class="flex-1 overflow-y-auto p-4 lg:p-6">
+        <!-- List View -->
+        <div id="list-view" class="animate-in">
+          <div class="glass-card overflow-hidden">
+            <div class="grid grid-cols-12 p-4 bg-white/5 text-[10px] font-bold uppercase tracking-widest text-gray-500">
+              <div class="col-span-6 md:col-span-8 px-2">Tarefa</div>
+              <div class="col-span-3 md:col-span-2 px-2 text-center">Status</div>
+              <div class="col-span-3 md:col-span-2 px-2 text-right">Ação</div>
+            </div>
+            <div id="task-list-content"></div>
           </div>
         </div>
-      </section>
+
+        <!-- Kanban View -->
+        <div id="kanban-view" class="hidden-view h-full animate-in">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 h-full min-h-[500px]">
+            <!-- Pendente -->
+            <div class="flex flex-col h-full">
+              <div class="flex items-center justify-between mb-4 px-2">
+                <div class="flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-gray-500"></span>
+                  <h3 class="font-bold text-sm uppercase tracking-wider text-gray-400">Pendente</h3>
+                </div>
+                <span id="count-pendente" class="text-xs bg-white/5 px-2 py-0.5 rounded text-gray-500">0</span>
+              </div>
+              <div id="kanban-pendente" class="kanban-column p-4 space-y-4 overflow-y-auto flex-1"></div>
+            </div>
+            <!-- Em Andamento -->
+            <div class="flex flex-col h-full">
+              <div class="flex items-center justify-between mb-4 px-2">
+                <div class="flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+                  <h3 class="font-bold text-sm uppercase tracking-wider text-gray-400">Em Andamento</h3>
+                </div>
+                <span id="count-andamento" class="text-xs bg-white/5 px-2 py-0.5 rounded text-gray-500">0</span>
+              </div>
+              <div id="kanban-andamento" class="kanban-column p-4 space-y-4 overflow-y-auto flex-1"></div>
+            </div>
+            <!-- Concluído -->
+            <div class="flex flex-col h-full">
+              <div class="flex items-center justify-between mb-4 px-2">
+                <div class="flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                  <h3 class="font-bold text-sm uppercase tracking-wider text-gray-400">Concluído</h3>
+                </div>
+                <span id="count-concluido" class="text-xs bg-white/5 px-2 py-0.5 rounded text-gray-500">0</span>
+              </div>
+              <div id="kanban-concluido" class="kanban-column p-4 space-y-4 overflow-y-auto flex-1"></div>
+            </div>
+          </div>
+        </div>
+      </div>
     </main>
   </div>
 
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
-    import { getFirestore, collection, addDoc, onSnapshot, query, where, orderBy, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, GoogleAuthProvider, signInWithPopup, signInWithCustomToken, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, collection, addDoc, onSnapshot, query, where, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyCGemp_OA8savCmLZfX7Us0nmDpdbpv4N0",
-      authDomain: "mytasks-saturday.firebaseapp.com",
-      projectId: "mytasks-saturday",
-      storageBucket: "mytasks-saturday.firebasestorage.app",
-      messagingSenderId: "647554172397",
-      appId: "1:647554172397:web:aac3ef00938ee7cd8f13e4"
-    };
+    const firebaseConfig = typeof __firebase_config !== 'undefined' 
+      ? JSON.parse(__firebase_config) 
+      : {
+          apiKey: "AIzaSyCGemp_OA8savCmLZfX7Us0nmDpdbpv4N0",
+          authDomain: "mytasks-saturday.firebaseapp.com",
+          projectId: "mytasks-saturday",
+          storageBucket: "mytasks-saturday.firebasestorage.app",
+          messagingSenderId: "647554172397",
+          appId: "1:647554172397:web:aac3ef00938ee7cd8f13e4"
+        };
 
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'saturday-v20';
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-    const provider = new GoogleAuthProvider();
-    let currentUser = null;
+    const googleProvider = new GoogleAuthProvider();
+    
+    let user = null;
+    let currentView = 'list';
+    let taskToDeleteId = null;
 
-    // --- Lógica de Autenticação ---
-    const authForm = document.getElementById('auth-form');
-    const authView = document.getElementById('auth-view');
-    const appView = document.getElementById('app-view');
+    // --- Core Logic ---
+    async function init() {
+      try {
+        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+          await signInWithCustomToken(auth, __initial_auth_token);
+        }
+      } catch(e) { console.error(e); }
+    }
 
-    onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, (u) => {
+      user = u;
+      const authView = document.getElementById('auth-view');
+      const appView = document.getElementById('app-view');
+      
       if (user) {
-        currentUser = user;
         authView.classList.add('hidden-view');
         appView.classList.remove('hidden-view');
-        document.getElementById('user-display').innerText = user.email;
+        document.getElementById('user-email').innerText = user.email || 'Usuário Convidado';
+        
+        if (user.photoURL) {
+          document.getElementById('user-avatar').innerHTML = `<img src="${user.photoURL}" class="w-full h-full rounded-full" />`;
+        } else {
+          document.getElementById('user-avatar').innerText = (user.email || 'U').charAt(0).toUpperCase();
+        }
+
         loadTasks();
-        lucide.createIcons();
       } else {
         authView.classList.remove('hidden-view');
         appView.classList.add('hidden-view');
       }
+      lucide.createIcons();
     });
 
-    authForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const email = document.getElementById('auth-email').value;
-      const password = document.getElementById('auth-password').value;
-      try {
-        await signInWithEmailAndPassword(auth, email, password);
-      } catch (err) { alert("Erro ao entrar: " + err.message); }
-    });
-
-    document.getElementById('btn-google').onclick = () => signInWithPopup(auth, provider);
-    document.getElementById('btn-logout').onclick = () => signOut(auth);
-
-    // --- Lógica de Tarefas (O Core do Sistema) ---
-    const taskForm = document.getElementById('task-form');
-    const taskInput = document.getElementById('task-input');
-    const taskPriority = document.getElementById('task-priority');
-    const taskList = document.getElementById('task-list');
-
-    // Lançar atividade
-    taskForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const text = taskInput.value;
-      const priority = taskPriority.value;
-
-      try {
-        await addDoc(collection(db, "tasks"), {
-          text: text,
-          priority: priority,
-          status: "Pendente",
-          userId: currentUser.uid,
-          createdAt: Date.now()
-        });
-        taskInput.value = '';
-      } catch (err) { console.error("Erro ao salvar:", err); }
-    });
-
-    // Carregar em tempo real (onSnapshot)
-    function loadTasks() {
-      const q = query(
-        collection(db, "tasks"), 
-        where("userId", "==", currentUser.uid),
-        orderBy("createdAt", "desc")
-      );
-
-      onSnapshot(q, (snapshot) => {
-        taskList.innerHTML = '';
-        if (snapshot.empty) {
-          taskList.innerHTML = '<div class="p-10 text-center text-gray-600 italic">Nenhuma atividade lançada.</div>';
-          return;
-        }
-
-        snapshot.forEach((docSnap) => {
-          const task = docSnap.data();
-          const id = docSnap.id;
-          
-          const priorityColor = task.priority === 'Alta' ? 'text-red-400 bg-red-400/10' : 
-                                task.priority === 'Média' ? 'text-yellow-400 bg-yellow-400/10' : 'text-blue-400 bg-blue-400/10';
-
-          const html = `
-            <div class="grid grid-cols-12 p-4 task-item items-center animate-in">
-              <div class="col-span-7 px-2 font-medium text-gray-200">${task.text}</div>
-              <div class="col-span-2 px-2 text-center">
-                <span class="text-[10px] px-2 py-1 rounded-full font-bold uppercase ${priorityColor}">${task.priority}</span>
-              </div>
-              <div class="col-span-2 px-2 text-center">
-                <button onclick="toggleStatus('${id}', '${task.status}')" class="text-xs ${task.status === 'Concluído' ? 'text-emerald-400' : 'text-gray-500'} hover:underline">
-                  ${task.status}
-                </button>
-              </div>
-              <div class="col-span-1 px-2 text-right">
-                <button onclick="deleteTask('${id}')" class="text-gray-600 hover:text-red-500 transition-colors">
-                   <i data-lucide="trash-2" class="w-4 h-4"></i>
-                </button>
-              </div>
-            </div>
-          `;
-          taskList.innerHTML += html;
-        });
-        lucide.createIcons();
-      });
+    // --- UI Menu Mobile ---
+    function toggleMenu(open) {
+      const menu = document.getElementById('mobile-menu');
+      const overlay = document.getElementById('menu-overlay');
+      if(open) {
+        menu.classList.add('open');
+        overlay.classList.remove('hidden-view');
+      } else {
+        menu.classList.remove('open');
+        overlay.classList.add('hidden-view');
+      }
     }
 
-    // Funções Globais (para os botões gerados dinamicamente)
-    window.deleteTask = async (id) => {
-      if(confirm("Excluir tarefa?")) await deleteDoc(doc(db, "tasks", id));
+    document.getElementById('open-menu').onclick = () => toggleMenu(true);
+    document.getElementById('close-menu').onclick = () => toggleMenu(false);
+    document.getElementById('menu-overlay').onclick = () => toggleMenu(false);
+
+    // --- Google Login ---
+    document.getElementById('btn-google').onclick = async () => {
+      try {
+        await signInWithPopup(auth, googleProvider);
+        showToast("Conectado com Google!");
+      } catch (err) {
+        showToast("Falha no login Google: " + err.message, "error");
+      }
     };
 
-    window.toggleStatus = async (id, current) => {
-      const newStatus = current === 'Pendente' ? 'Concluído' : 'Pendente';
-      await updateDoc(doc(db, "tasks", id), { status: newStatus });
+    window.handleLogout = () => signOut(auth);
+
+    // --- Task Logic ---
+    function getTaskPath() {
+      return collection(db, 'artifacts', appId, 'users', user.uid, 'tasks');
+    }
+
+    document.getElementById('task-form').onsubmit = async (e) => {
+      e.preventDefault();
+      if (!user) return;
+      const input = document.getElementById('task-input');
+      const priority = document.getElementById('task-priority');
+      const text = input.value.trim();
+
+      try {
+        await addDoc(getTaskPath(), {
+          text,
+          priority: priority.value,
+          status: "Pendente",
+          createdAt: Date.now()
+        });
+        input.value = '';
+        showToast("Tarefa criada!");
+      } catch (err) { showToast("Erro ao salvar", "error"); }
     };
 
+    function loadTasks() {
+      if (!user) return;
+      onSnapshot(query(getTaskPath()), (snap) => {
+        const tasks = [];
+        snap.forEach(d => tasks.push({ id: d.id, ...d.data() }));
+        tasks.sort((a, b) => b.createdAt - a.createdAt);
+        render(tasks);
+      }, (err) => showToast("Erro de sincronização", "error"));
+    }
+
+    function render(tasks) {
+      renderList(tasks);
+      renderKanban(tasks);
+      lucide.createIcons();
+    }
+
+    function renderList(tasks) {
+      const container = document.getElementById('task-list-content');
+      if (tasks.length === 0) {
+        container.innerHTML = `<div class="p-20 text-center text-gray-600">Nenhuma tarefa por aqui.</div>`;
+        return;
+      }
+
+      container.innerHTML = tasks.map(task => `
+        <div class="grid grid-cols-12 p-4 task-item items-center">
+          <div class="col-span-6 md:col-span-8 px-2">
+            <p class="font-medium text-sm ${task.status === 'Concluído' ? 'line-through text-gray-600' : 'text-gray-200'}">${task.text}</p>
+            <span class="text-[10px] text-gray-500 font-bold tracking-tight uppercase">${task.priority}</span>
+          </div>
+          <div class="col-span-3 md:col-span-2 px-2 text-center">
+             <button onclick="window.cycleStatus('${task.id}', '${task.status}')" class="text-[10px] px-2 py-1 rounded-full border border-white/10 ${getStatusColor(task.status)} font-bold uppercase transition-all whitespace-nowrap">
+               ${task.status}
+             </button>
+          </div>
+          <div class="col-span-3 md:col-span-2 px-2 text-right">
+            <button onclick="window.triggerDelete('${task.id}')" class="text-gray-700 hover:text-red-500 transition-colors p-2"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderKanban(tasks) {
+      const pCol = document.getElementById('kanban-pendente');
+      const aCol = document.getElementById('kanban-andamento');
+      const cCol = document.getElementById('kanban-concluido');
+      
+      const cols = { Pendente: [], "Em Andamento": [], Concluído: [] };
+      tasks.forEach(t => { if(cols[t.status]) cols[t.status].push(t); });
+
+      document.getElementById('count-pendente').innerText = cols.Pendente.length;
+      document.getElementById('count-andamento').innerText = cols["Em Andamento"].length;
+      document.getElementById('count-concluido').innerText = cols.Concluído.length;
+
+      const card = (t) => `
+        <div class="glass-card p-4 space-y-3 animate-in group">
+          <div class="flex justify-between items-start">
+             <p class="text-sm font-medium text-gray-200 leading-tight">${t.text}</p>
+             <button onclick="window.triggerDelete('${t.id}')" class="opacity-0 group-hover:opacity-100 text-gray-600 hover:text-red-500 transition-all"><i data-lucide="x" class="w-3 h-3"></i></button>
+          </div>
+          <div class="flex items-center justify-between pt-2">
+            <span class="text-[9px] font-bold uppercase px-2 py-0.5 rounded border border-white/5 ${getPriorityColor(t.priority)}">${t.priority}</span>
+            <div class="flex gap-1">
+               ${t.status !== 'Pendente' ? `<button onclick="window.updateStatus('${t.id}', 'prev', '${t.status}')" class="p-1 hover:bg-white/5 rounded text-gray-400"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>` : ''}
+               ${t.status !== 'Concluído' ? `<button onclick="window.updateStatus('${t.id}', 'next', '${t.status}')" class="p-1 hover:bg-white/5 rounded text-gray-400"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>` : ''}
+            </div>
+          </div>
+        </div>
+      `;
+
+      pCol.innerHTML = cols.Pendente.map(card).join('');
+      aCol.innerHTML = cols["Em Andamento"].map(card).join('');
+      cCol.innerHTML = cols.Concluído.map(card).join('');
+    }
+
+    // --- Global Actions ---
+    window.cycleStatus = async (id, current) => {
+      const flow = ["Pendente", "Em Andamento", "Concluído"];
+      let next = flow[(flow.indexOf(current) + 1) % flow.length];
+      await updateDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'tasks', id), { status: next });
+    };
+
+    window.updateStatus = async (id, direction, current) => {
+      const flow = ["Pendente", "Em Andamento", "Concluído"];
+      let idx = flow.indexOf(current);
+      let next = direction === 'next' ? flow[idx+1] : flow[idx-1];
+      if(next) await updateDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'tasks', id), { status: next });
+    };
+
+    window.triggerDelete = (id) => {
+      taskToDeleteId = id;
+      document.getElementById('confirm-modal').classList.remove('hidden-view');
+    };
+
+    document.getElementById('confirm-delete').onclick = async () => {
+      if(!taskToDeleteId) return;
+      await deleteDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'tasks', taskToDeleteId));
+      document.getElementById('confirm-modal').classList.add('hidden-view');
+      showToast("Tarefa removida");
+    };
+
+    document.getElementById('confirm-cancel').onclick = () => document.getElementById('confirm-modal').classList.add('hidden-view');
+
+    window.changeView = (view) => {
+      currentView = view;
+      const listV = document.getElementById('list-view');
+      const kanbanV = document.getElementById('kanban-view');
+      
+      const navItemsL = document.querySelectorAll('.nav-item-list');
+      const navItemsK = document.querySelectorAll('.nav-item-kanban');
+      
+      const toggleL = document.getElementById('toggle-list');
+      const toggleK = document.getElementById('toggle-kanban');
+
+      if(view === 'list') {
+        listV.classList.remove('hidden-view');
+        kanbanV.classList.add('hidden-view');
+        
+        navItemsL.forEach(el => el.classList.add('bg-purple-500/10', 'text-purple-400'));
+        navItemsL.forEach(el => el.classList.remove('text-gray-500'));
+        navItemsK.forEach(el => el.classList.remove('bg-purple-500/10', 'text-purple-400'));
+        navItemsK.forEach(el => el.classList.add('text-gray-500'));
+
+        if(toggleL) {
+          toggleL.classList.add('bg-purple-600', 'text-white');
+          toggleL.classList.remove('text-gray-500');
+        }
+        if(toggleK) {
+          toggleK.classList.remove('bg-purple-600', 'text-white');
+          toggleK.classList.add('text-gray-500');
+        }
+      } else {
+        listV.classList.add('hidden-view');
+        kanbanV.classList.remove('hidden-view');
+        
+        navItemsK.forEach(el => el.classList.add('bg-purple-500/10', 'text-purple-400'));
+        navItemsK.forEach(el => el.classList.remove('text-gray-500'));
+        navItemsL.forEach(el => el.classList.remove('bg-purple-500/10', 'text-purple-400'));
+        navItemsL.forEach(el => el.classList.add('text-gray-500'));
+
+        if(toggleK) {
+          toggleK.classList.add('bg-purple-600', 'text-white');
+          toggleK.classList.remove('text-gray-500');
+        }
+        if(toggleL) {
+          toggleL.classList.remove('bg-purple-600', 'text-white');
+          toggleL.classList.add('text-gray-500');
+        }
+      }
+      lucide.createIcons();
+    };
+
+    function getStatusColor(s) {
+      if(s === 'Concluído') return 'text-emerald-400 bg-emerald-400/10 border-emerald-500/20';
+      if(s === 'Em Andamento') return 'text-blue-400 bg-blue-400/10 border-blue-500/20';
+      return 'text-gray-400 bg-white/5 border-white/5';
+    }
+
+    function getPriorityColor(p) {
+      if(p === 'Alta') return 'text-red-400 bg-red-400/10';
+      if(p === 'Média') return 'text-yellow-400 bg-yellow-400/10';
+      return 'text-blue-400 bg-blue-400/10';
+    }
+
+    function showToast(msg, type='success') {
+      const t = document.createElement('div');
+      t.className = `p-4 mb-4 rounded-xl glass-card border-l-4 ${type === 'error' ? 'border-red-500' : 'border-purple-500'} animate-in`;
+      t.innerHTML = `<p class="text-sm font-medium text-white">${msg}</p>`;
+      document.getElementById('toast-container').appendChild(t);
+      setTimeout(() => t.remove(), 3000);
+    }
+
+    init();
   </script>
 </body>
 </html>
