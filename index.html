@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Saturday v23</title>
+  <title>Saturday v24 - Gestor Makro</title>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700;900&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -331,10 +331,13 @@
       e.preventDefault();
       if (!user) return;
       
-      const fields = ['task-input', 'task-requester', 'task-deadline', 'task-urgency'];
-      const data = {};
-      fields.forEach(f => data[f.replace('task-', '')] = document.getElementById(f).value);
-      data.urgency = parseInt(data.urgency);
+      // Mapeamento explícito para evitar erros de chaves no banco
+      const data = {
+        text: document.getElementById('task-input').value.trim(),
+        requester: document.getElementById('task-requester').value.trim(),
+        deadline: document.getElementById('task-deadline').value,
+        urgency: parseInt(document.getElementById('task-urgency').value)
+      };
 
       try {
         if (editingTaskId) {
