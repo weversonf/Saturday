@@ -75,6 +75,11 @@
 </head>
 <body class="antialiased">
 
+  <div id="global-loader" class="fixed inset-0 bg-[#010816] z-[999] flex flex-col items-center justify-center transition-opacity duration-500">
+    <div class="w-12 h-12 border-4 border-red-600 border-t-transparent rounded-full animate-spin mb-4"></div>
+    <p class="text-xs font-black uppercase tracking-[3px] text-gray-500 animate-pulse">Carregando Gestor...</p>
+  </div>
+
   <div id="toast-container" class="fixed bottom-8 right-8 z-[200]"></div>
 
   <div id="menu-overlay" class="hidden-view fixed inset-0 bg-black/80 backdrop-blur-sm z-[90]"></div>
