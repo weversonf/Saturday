@@ -270,10 +270,14 @@
       }
     }
 
+let isAuthReady = false;
+
     onAuthStateChanged(auth, (u) => {
       user = u;
       const authView = document.getElementById('auth-view');
       const appView = document.getElementById('app-view');
+      const globalLoader = document.getElementById('global-loader');
+
       if (user) {
         authView.classList.add('hidden-view');
         appView.classList.remove('hidden-view');
@@ -285,6 +289,14 @@
         authView.classList.remove('hidden-view');
         appView.classList.add('hidden-view');
       }
+
+      // Quando o Firebase responder pela primeira vez, esconde a tela de loading suavemente
+      if (!isAuthReady) {
+        isAuthReady = true;
+        globalLoader.classList.add('opacity-0');
+        setTimeout(() => globalLoader.classList.add('hidden-view'), 500); // Aguarda a animação terminar
+      }
+      
       lucide.createIcons();
     });
 
