@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Saturday v29 - Gestor Makro</title>
+  <title>Gestor Makro v30 - Enterprise</title>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700;900&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -52,20 +52,20 @@
 
   <div id="global-loader" class="fixed inset-0 bg-[#010816] z-[999] flex flex-col items-center justify-center transition-opacity duration-500">
     <div class="w-12 h-12 border-4 border-red-600 border-t-transparent rounded-full animate-spin mb-4"></div>
-    <p class="text-xs font-black uppercase tracking-[3px] text-gray-500 animate-pulse">Carregando Gestor...</p>
+    <p class="text-xs font-black uppercase tracking-[3px] text-gray-500 animate-pulse">Iniciando Workspace Makro...</p>
   </div>
 
   <div id="toast-container" class="fixed bottom-8 right-8 z-[200] flex flex-col gap-2"></div>
-
   <div id="menu-overlay" class="hidden-view fixed inset-0 bg-black/80 backdrop-blur-sm z-[90]"></div>
 
   <aside id="mobile-menu" class="fixed inset-y-0 left-0 w-80 bg-[#010816] border-r border-white/10 p-8 flex flex-col z-[100] lg:hidden">
     <div class="flex items-center justify-between mb-12">
-      <img src="https://makroengenharia.com.br/wp-content/uploads/2023/03/logo-1.png" class="h-8" alt="Logo">
+      <h1 class="text-xl font-black text-white uppercase tracking-widest">MAKRO</h1>
       <button id="close-menu" class="p-2 text-gray-500 hover:text-white"><i data-lucide="x"></i></button>
     </div>
     <nav class="flex-1 space-y-4">
       <div onclick="changeView('dashboard'); toggleMenu(false)" class="nav-item-dashboard p-4 bg-red-600/10 text-red-500 rounded-2xl flex items-center gap-4 cursor-pointer font-bold uppercase text-xs tracking-widest transition-all"><i data-lucide="layout-dashboard"></i> Dashboard</div>
+      <div onclick="changeView('table'); toggleMenu(false)" class="nav-item-table p-4 text-gray-500 hover:text-white rounded-2xl flex items-center gap-4 cursor-pointer font-bold uppercase text-xs tracking-widest transition-all"><i data-lucide="table"></i> Tabela</div>
       <div onclick="changeView('list'); toggleMenu(false)" class="nav-item-list p-4 text-gray-500 hover:text-white rounded-2xl flex items-center gap-4 cursor-pointer font-bold uppercase text-xs tracking-widest transition-all"><i data-lucide="list"></i> Lista</div>
       <div onclick="changeView('kanban'); toggleMenu(false)" class="nav-item-kanban p-4 text-gray-500 hover:text-white rounded-2xl flex items-center gap-4 cursor-pointer font-bold uppercase text-xs tracking-widest transition-all"><i data-lucide="columns"></i> Kanban</div>
     </nav>
@@ -79,7 +79,7 @@
       <div class="flex justify-between items-center p-6 border-b border-white/5 bg-white/[0.02]">
         <div class="flex items-center gap-3">
           <i data-lucide="layout-template" class="text-red-500 w-5 h-5"></i>
-          <h2 id="modal-title" class="text-lg font-black uppercase tracking-widest text-white">Detalhes da Atividade</h2>
+          <h2 id="modal-title" class="text-lg font-black uppercase tracking-widest text-white">Detalhes da Operação</h2>
         </div>
         <button onclick="window.closeTaskModal()" class="text-gray-500 hover:text-white transition-colors p-2 bg-white/5 hover:bg-red-600 rounded-xl"><i data-lucide="x"></i></button>
       </div>
@@ -87,18 +87,18 @@
       <div class="flex-1 overflow-y-auto p-6 custom-scrollbar flex flex-col md:flex-row gap-8">
         <div class="flex-1 space-y-6">
           <div>
-            <label class="text-[9px] font-black uppercase opacity-40 mb-2 block tracking-widest">Título da Tarefa</label>
-            <input type="text" id="task-input" placeholder="Ex: Analisar relatório MAKRO..." required class="w-full p-4 rounded-xl text-lg font-bold" />
+            <label class="text-[9px] font-black uppercase opacity-40 mb-2 block tracking-widest">Atividade / Equipamento</label>
+            <input type="text" id="task-input" placeholder="Ex: Manutenção Guindaste GM-450..." required class="w-full p-4 rounded-xl text-lg font-bold" />
           </div>
           
           <div>
-            <label class="text-[9px] font-black uppercase opacity-40 mb-2 block tracking-widest flex items-center gap-2"><i data-lucide="align-left" class="w-3 h-3"></i> Descrição / Comentários</label>
-            <textarea id="task-comment" placeholder="Detalhes, links ou anotações..." class="w-full p-4 rounded-xl text-sm min-h-[120px] custom-scrollbar"></textarea>
+            <label class="text-[9px] font-black uppercase opacity-40 mb-2 block tracking-widest flex items-center gap-2"><i data-lucide="align-left" class="w-3 h-3"></i> Descrição</label>
+            <textarea id="task-comment" placeholder="Detalhes da operação, local da obra..." class="w-full p-4 rounded-xl text-sm min-h-[120px] custom-scrollbar"></textarea>
           </div>
 
           <div>
             <div class="flex justify-between items-center mb-2">
-              <label class="text-[9px] font-black uppercase opacity-40 block tracking-widest flex items-center gap-2"><i data-lucide="check-square" class="w-3 h-3"></i> Checklist</label>
+              <label class="text-[9px] font-black uppercase opacity-40 block tracking-widest flex items-center gap-2"><i data-lucide="check-square" class="w-3 h-3"></i> Sub-tarefas</label>
               <span id="checklist-progress-text" class="text-[10px] font-bold text-gray-500">0%</span>
             </div>
             <div class="w-full bg-white/5 rounded-full h-2 mb-4">
@@ -106,7 +106,7 @@
             </div>
             <div id="checklist-items" class="space-y-2 mb-3"></div>
             <div class="flex gap-2">
-              <input type="text" id="new-check-item" placeholder="Adicionar item..." class="flex-1 p-3 rounded-xl text-sm" onkeypress="if(event.key === 'Enter') window.addChecklistItem(event)" />
+              <input type="text" id="new-check-item" placeholder="Adicionar etapa..." class="flex-1 p-3 rounded-xl text-sm" onkeypress="if(event.key === 'Enter') window.addChecklistItem(event)" />
               <button type="button" onclick="window.addChecklistItem()" class="px-4 bg-white/10 hover:bg-white/20 rounded-xl font-bold text-xs transition-colors">Add</button>
             </div>
           </div>
@@ -117,7 +117,7 @@
             <h3 class="text-[10px] font-black uppercase opacity-40 tracking-widest mb-2 border-b border-white/5 pb-2">Configurações</h3>
             
             <div>
-              <label class="text-[9px] font-bold text-gray-500 block mb-1 uppercase">Solicitante</label>
+              <label class="text-[9px] font-bold text-gray-500 block mb-1 uppercase">Solicitante / Cliente</label>
               <input type="text" id="task-requester" placeholder="Nome..." class="w-full p-3 rounded-lg text-xs" />
             </div>
             
@@ -127,7 +127,16 @@
             </div>
             
             <div>
-              <label class="text-[9px] font-bold text-gray-500 block mb-1 uppercase">Nível de Urgência</label>
+              <label class="text-[9px] font-bold text-gray-500 block mb-1 uppercase">Status Atual</label>
+              <select id="task-status" class="w-full p-3 rounded-lg text-xs cursor-pointer">
+                <option value="Pendente" class="bg-[#010816]">Pendente</option>
+                <option value="Em Andamento" class="bg-[#010816]">Em Andamento</option>
+                <option value="Concluído" class="bg-[#010816]">Concluído</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="text-[9px] font-bold text-gray-500 block mb-1 uppercase">Nível de Prioridade</label>
               <select id="task-urgency" class="w-full p-3 rounded-lg text-xs cursor-pointer">
                 <option value="1" class="bg-[#010816]">Nível 1 (Baixo)</option>
                 <option value="2" class="bg-[#010816]">Nível 2 (Médio)</option>
@@ -144,21 +153,21 @@
             </div>
 
             <div>
-              <label class="text-[9px] font-bold text-gray-500 block mb-1 uppercase">Etiquetas</label>
+              <label class="text-[9px] font-bold text-gray-500 block mb-1 uppercase">Etiquetas / Setor</label>
               <div id="active-labels" class="flex flex-wrap gap-1 mb-2"></div>
               <select id="label-selector" class="w-full p-3 rounded-lg text-xs cursor-pointer" onchange="window.addLabel(this.value)">
                 <option value="">+ Add Etiqueta...</option>
-                <option value="red" class="bg-[#010816] text-red-500">Urgente</option>
-                <option value="blue" class="bg-[#010816] text-blue-500">Revisão</option>
-                <option value="yellow" class="bg-[#010816] text-yellow-500">Atenção</option>
-                <option value="emerald" class="bg-[#010816] text-emerald-500">Aprovado</option>
-                <option value="purple" class="bg-[#010816] text-purple-500">Design</option>
+                <option value="red" class="bg-[#010816] text-red-500">Manutenção</option>
+                <option value="blue" class="bg-[#010816] text-blue-500">Operacional</option>
+                <option value="yellow" class="bg-[#010816] text-yellow-500">Comercial</option>
+                <option value="emerald" class="bg-[#010816] text-emerald-500">Logística</option>
+                <option value="purple" class="bg-[#010816] text-purple-500">Engenharia</option>
               </select>
             </div>
           </div>
 
           <button type="button" onclick="window.saveTask()" id="btn-save-task" class="w-full py-4 bg-red-600 hover:bg-red-700 rounded-xl font-black uppercase text-xs tracking-widest text-white transition-all shadow-lg active:scale-95 flex items-center justify-center gap-2">
-            <i data-lucide="save" class="w-4 h-4"></i> Salvar Atividade
+            <i data-lucide="save" class="w-4 h-4"></i> Salvar
           </button>
         </div>
       </div>
@@ -167,15 +176,14 @@
 
   <div id="auth-view" class="hidden-view min-h-screen flex items-center justify-center bg-[#010816]">
     <div class="w-full max-w-md mx-4 glass-card p-12 text-center animate-fadeup">
-      <img src="https://makroengenharia.com.br/wp-content/uploads/2023/03/logo-1.png" class="h-12 mx-auto mb-10" alt="Logo">
-      <h2 class="text-2xl font-black mb-8 tracking-tighter uppercase">Acesso ao Gestor</h2>
+      <h1 class="text-3xl font-black text-white uppercase tracking-[5px] mb-8">MAKRO</h1>
+      <h2 class="text-sm font-bold mb-8 tracking-widest uppercase opacity-50">Portal do Colaborador</h2>
       <form id="auth-form" class="space-y-4 text-left">
-        <input type="email" id="auth-email" placeholder="E-mail corporativo" required class="w-full p-4 rounded-2xl text-sm" />
+        <input type="email" id="auth-email" placeholder="E-mail" required class="w-full p-4 rounded-2xl text-sm" />
         <input type="password" id="auth-password" placeholder="Senha" required class="w-full p-4 rounded-2xl text-sm" />
         <button type="submit" class="w-full bg-red-600 p-5 rounded-2xl font-black uppercase hover:bg-red-700 shadow-xl shadow-red-600/20 active:scale-95 transition-all mt-4 text-white text-sm">Entrar</button>
       </form>
-      <div class="relative my-8"><div class="absolute inset-0 flex items-center"><div class="w-full border-t border-white/10"></div></div><div class="relative flex justify-center text-[10px] uppercase font-bold"><span class="bg-[#010816] px-4 text-gray-500 tracking-widest">Ou continue com</span></div></div>
-      <button id="btn-google" class="w-full p-4 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center gap-3 hover:bg-white/10 transition-all font-bold uppercase text-xs tracking-widest text-white"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/action/google.svg" width="18" alt="Google"> Google</button>
+      <button id="btn-google" class="w-full mt-4 p-4 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center gap-3 hover:bg-white/10 transition-all font-bold uppercase text-xs tracking-widest text-white"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/action/google.svg" width="18" alt="Google"> Google</button>
     </div>
   </div>
 
@@ -183,22 +191,16 @@
     <header class="h-20 border-b border-white/5 flex items-center justify-between px-6 lg:px-8 bg-black/20 backdrop-blur-md sticky top-0 z-40">
       <div class="flex items-center gap-4">
          <button id="open-menu" class="lg:hidden p-2 text-gray-400 hover:text-white transition-colors"><i data-lucide="menu"></i></button>
-         <img src="https://makroengenharia.com.br/wp-content/uploads/2023/03/logo-1.png" class="h-8 hidden md:block" alt="Logo">
-         <div class="h-6 w-[1px] bg-white/10 hidden md:block"></div>
-         <h2 class="font-black uppercase tracking-[3px] text-xs opacity-60">Gestor de Projetos</h2>
+         <h1 class="text-xl font-black text-white uppercase tracking-widest hidden md:block">MAKRO</h1>
+         <div class="h-6 w-[1px] bg-white/10 hidden md:block mx-2"></div>
+         <h2 class="font-black uppercase tracking-[3px] text-xs opacity-60"><i data-lucide="trello" class="inline w-4 h-4 mr-2 text-red-500"></i> Board Operacional</h2>
       </div>
       
       <div class="flex items-center gap-6">
-        <button onclick="window.openTaskModal()" class="hidden md:flex p-3 px-6 rounded-2xl bg-red-600 hover:bg-red-700 text-white text-[10px] font-black uppercase tracking-widest items-center gap-2 transition-all shadow-lg shadow-red-600/20 active:scale-95">
-          <i data-lucide="plus" class="w-4 h-4"></i> Nova Atividade
+        <button onclick="window.openTaskModal()" class="flex p-3 px-6 rounded-xl bg-white/10 hover:bg-white/20 text-white text-[10px] font-black uppercase tracking-widest items-center gap-2 transition-all">
+          <i data-lucide="plus" class="w-4 h-4"></i> Lançar
         </button>
-        <div id="user-display" class="flex items-center gap-4 border-l border-white/10 pl-6">
-          <div class="text-right hidden sm:block">
-            <p id="user-email" class="text-xs font-black uppercase tracking-tighter text-gray-200"></p>
-            <p class="text-[9px] text-red-500 font-bold uppercase tracking-[2px]">Analista Makro</p>
-          </div>
-          <div id="user-avatar" class="w-10 h-10 rounded-2xl bg-red-600 flex items-center justify-center text-sm font-black text-white border border-white/10 shadow-lg shadow-red-600/20">?</div>
-        </div>
+        <button onclick="handleLogout()" class="text-gray-500 hover:text-red-500 transition-colors"><i data-lucide="log-out" class="w-5 h-5"></i></button>
       </div>
     </header>
 
@@ -206,6 +208,7 @@
       <aside class="w-64 border-r border-white/5 p-8 flex flex-col hidden lg:flex bg-black/10">
         <nav class="flex-1 space-y-3">
           <div onclick="changeView('dashboard')" class="nav-item-dashboard p-4 bg-red-600/10 text-red-500 rounded-2xl flex items-center gap-4 cursor-pointer font-bold uppercase text-[10px] tracking-[2px] transition-all"><i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard</div>
+          <div onclick="changeView('table')" class="nav-item-table p-4 text-gray-500 hover:text-white rounded-2xl flex items-center gap-4 cursor-pointer font-bold uppercase text-[10px] tracking-[2px] transition-all"><i data-lucide="table" class="w-4 h-4"></i> Tabela <span class="bg-red-600 text-white text-[8px] px-1.5 py-0.5 rounded ml-auto">NOVO</span></div>
           <div onclick="changeView('list')" class="nav-item-list p-4 text-gray-500 hover:text-white rounded-2xl flex items-center gap-4 cursor-pointer font-bold uppercase text-[10px] tracking-[2px] transition-all"><i data-lucide="list" class="w-4 h-4"></i> Lista</div>
           <div onclick="changeView('kanban')" class="nav-item-kanban p-4 text-gray-500 hover:text-white rounded-2xl flex items-center gap-4 cursor-pointer font-bold uppercase text-[10px] tracking-[2px] transition-all"><i data-lucide="columns" class="w-4 h-4"></i> Kanban</div>
         </nav>
@@ -221,11 +224,11 @@
         </button>
 
         <div id="dashboard-view" class="animate-fadeup space-y-8">
-          <h2 class="text-xl font-black uppercase tracking-widest text-white mb-6">Panorama Geral</h2>
+          <h2 class="text-xl font-black uppercase tracking-widest text-white mb-6">Panorama Operacional</h2>
           
           <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
             <div class="glass-card p-6 flex flex-col justify-center items-center text-center">
-              <span class="text-[10px] font-black uppercase opacity-40 tracking-widest mb-2">Total de Atividades</span>
+              <span class="text-[10px] font-black uppercase opacity-40 tracking-widest mb-2">Total Lançado</span>
               <span id="dash-total" class="text-4xl font-black text-white">0</span>
             </div>
             <div class="glass-card p-6 flex flex-col justify-center items-center text-center border-b-4 border-emerald-500">
@@ -233,7 +236,7 @@
               <span id="dash-concluidas" class="text-4xl font-black text-emerald-500">0</span>
             </div>
             <div class="glass-card p-6 flex flex-col justify-center items-center text-center border-b-4 border-blue-500">
-              <span class="text-[10px] font-black uppercase opacity-40 tracking-widest mb-2">Em Andamento</span>
+              <span class="text-[10px] font-black uppercase opacity-40 tracking-widest mb-2">Em Execução</span>
               <span id="dash-andamento" class="text-4xl font-black text-blue-500">0</span>
             </div>
             <div class="glass-card p-6 flex flex-col justify-center items-center text-center border-b-4 border-red-500 bg-red-500/5">
@@ -243,7 +246,7 @@
           </div>
 
           <div class="glass-card p-8 mt-8">
-            <h3 class="text-[10px] font-black uppercase opacity-40 tracking-widest mb-4">Progresso Global do Projeto</h3>
+            <h3 class="text-[10px] font-black uppercase opacity-40 tracking-widest mb-4">Progresso Global</h3>
             <div class="w-full bg-white/5 rounded-full h-4 mb-2 overflow-hidden border border-white/10">
                <div id="dash-progress-bar" class="bg-red-600 h-4 rounded-full transition-all duration-1000 ease-out" style="width: 0%"></div>
             </div>
@@ -251,6 +254,32 @@
               <span>0%</span>
               <span id="dash-progress-text" class="text-white text-lg">0%</span>
               <span>100%</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="table-view" class="hidden-view animate-fadeup h-full">
+          <div class="glass-card overflow-hidden border-white/5 h-full flex flex-col">
+            <div class="p-6 border-b border-white/5 flex justify-between items-center bg-white/[0.02]">
+              <h2 class="text-sm font-black uppercase tracking-widest text-white">Relatório Tabular</h2>
+              <button class="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-[10px] font-bold uppercase transition-colors"><i data-lucide="download" class="w-3 h-3 inline mr-1"></i> Exportar</button>
+            </div>
+            <div class="flex-1 overflow-auto custom-scrollbar">
+              <table class="w-full text-left border-collapse">
+                <thead class="bg-white/5 sticky top-0 z-10">
+                  <tr class="text-[9px] font-black uppercase tracking-[2px] text-gray-400">
+                    <th class="p-4 border-b border-white/10">Atividade</th>
+                    <th class="p-4 border-b border-white/10">Solicitante</th>
+                    <th class="p-4 border-b border-white/10 text-center">Progresso</th>
+                    <th class="p-4 border-b border-white/10 text-center">Status</th>
+                    <th class="p-4 border-b border-white/10 text-center">Prazo</th>
+                    <th class="p-4 border-b border-white/10 text-center">Urgência</th>
+                    <th class="p-4 border-b border-white/10 text-right">Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="task-table-content" class="divide-y divide-white/5 text-sm text-gray-300">
+                  </tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -269,36 +298,29 @@
         </div>
 
         <div id="kanban-view" class="hidden-view h-full animate-fadeup">
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-8 h-full min-h-[600px]">
-            <div class="flex flex-col h-full">
-              <div class="flex items-center justify-between mb-6 px-4">
-                <div class="flex items-center gap-3">
-                  <span class="w-3 h-3 rounded-full bg-gray-500 shadow-lg shadow-gray-500/20"></span>
-                  <h3 class="font-black text-[11px] uppercase tracking-[4px] text-gray-400">Pendente</h3>
-                </div>
-                <span id="count-Pendente" class="text-[10px] font-black bg-white/5 px-3 py-1 rounded-full text-gray-500">0</span>
+          <div class="flex h-full gap-6 overflow-x-auto custom-scrollbar pb-4 min-h-[600px] items-start">
+            <div class="w-80 flex-shrink-0 flex flex-col max-h-full bg-white/[0.02] rounded-2xl border border-white/5">
+              <div class="p-4 border-b border-white/5 flex justify-between items-center bg-black/20 rounded-t-2xl">
+                <h3 class="font-black text-xs uppercase tracking-widest text-gray-300">Pendente</h3>
+                <span id="count-Pendente" class="text-[10px] font-black bg-white/10 px-2 py-0.5 rounded text-gray-400">0</span>
               </div>
-              <div id="kanban-Pendente" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondrop="handleDrop(event, 'Pendente')" class="kanban-column p-4 space-y-4 overflow-y-auto flex-1 custom-scrollbar"></div>
+              <div id="kanban-Pendente" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondrop="handleDrop(event, 'Pendente')" class="p-3 space-y-3 overflow-y-auto flex-1 custom-scrollbar min-h-[150px]"></div>
             </div>
-            <div class="flex flex-col h-full">
-              <div class="flex items-center justify-between mb-6 px-4">
-                <div class="flex items-center gap-3">
-                  <span class="w-3 h-3 rounded-full bg-blue-500 shadow-lg shadow-blue-500/20"></span>
-                  <h3 class="font-black text-[11px] uppercase tracking-[4px] text-gray-400">Em Andamento</h3>
-                </div>
-                <span id="count-EmAndamento" class="text-[10px] font-black bg-white/5 px-3 py-1 rounded-full text-gray-500">0</span>
+
+            <div class="w-80 flex-shrink-0 flex flex-col max-h-full bg-white/[0.02] rounded-2xl border border-white/5">
+              <div class="p-4 border-b border-blue-500/20 flex justify-between items-center bg-blue-500/5 rounded-t-2xl">
+                <h3 class="font-black text-xs uppercase tracking-widest text-blue-400">Em Execução</h3>
+                <span id="count-EmAndamento" class="text-[10px] font-black bg-blue-500/20 px-2 py-0.5 rounded text-blue-400">0</span>
               </div>
-              <div id="kanban-EmAndamento" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondrop="handleDrop(event, 'Em Andamento')" class="kanban-column p-4 space-y-4 overflow-y-auto flex-1 custom-scrollbar"></div>
+              <div id="kanban-EmAndamento" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondrop="handleDrop(event, 'Em Andamento')" class="p-3 space-y-3 overflow-y-auto flex-1 custom-scrollbar min-h-[150px]"></div>
             </div>
-            <div class="flex flex-col h-full">
-              <div class="flex items-center justify-between mb-6 px-4">
-                <div class="flex items-center gap-3">
-                  <span class="w-3 h-3 rounded-full bg-emerald-500 shadow-lg shadow-emerald-500/20"></span>
-                  <h3 class="font-black text-[11px] uppercase tracking-[4px] text-gray-400">Concluído</h3>
-                </div>
-                <span id="count-Concluido" class="text-[10px] font-black bg-white/5 px-3 py-1 rounded-full text-gray-500">0</span>
+
+            <div class="w-80 flex-shrink-0 flex flex-col max-h-full bg-white/[0.02] rounded-2xl border border-white/5">
+              <div class="p-4 border-b border-emerald-500/20 flex justify-between items-center bg-emerald-500/5 rounded-t-2xl">
+                <h3 class="font-black text-xs uppercase tracking-widest text-emerald-400">Concluído</h3>
+                <span id="count-Concluido" class="text-[10px] font-black bg-emerald-500/20 px-2 py-0.5 rounded text-emerald-400">0</span>
               </div>
-              <div id="kanban-Concluido" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondrop="handleDrop(event, 'Concluído')" class="kanban-column p-4 space-y-4 overflow-y-auto flex-1 custom-scrollbar"></div>
+              <div id="kanban-Concluido" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondrop="handleDrop(event, 'Concluído')" class="p-3 space-y-3 overflow-y-auto flex-1 custom-scrollbar min-h-[150px]"></div>
             </div>
           </div>
         </div>
@@ -321,9 +343,7 @@
       appId: "1:647554172397:web:aac3ef00938ee7cd8f13e4"
     };
 
-    // MANTIVE NA v28 para puxar o histórico. Se quiser usar outro banco, altere aqui.
-    const appId = typeof __app_id !== 'undefined' ? __app_id : 'saturday-v22'; 
-    
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'saturday-v28'; 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
@@ -339,19 +359,12 @@
     let currentLabels = [];
 
     const labelDefinitions = {
-      red: { bg: 'bg-red-500/20', text: 'text-red-400', border: 'border-red-500/30', label: 'Urgente' },
-      blue: { bg: 'bg-blue-500/20', text: 'text-blue-400', border: 'border-blue-500/30', label: 'Revisão' },
-      yellow: { bg: 'bg-yellow-500/20', text: 'text-yellow-400', border: 'border-yellow-500/30', label: 'Atenção' },
-      emerald: { bg: 'bg-emerald-500/20', text: 'text-emerald-400', border: 'border-emerald-500/30', label: 'Aprovado' },
-      purple: { bg: 'bg-purple-500/20', text: 'text-purple-400', border: 'border-purple-500/30', label: 'Design' }
+      red: { bg: 'bg-red-500/20', text: 'text-red-400', border: 'border-red-500/30', label: 'Manutenção' },
+      blue: { bg: 'bg-blue-500/20', text: 'text-blue-400', border: 'border-blue-500/30', label: 'Operacional' },
+      yellow: { bg: 'bg-yellow-500/20', text: 'text-yellow-400', border: 'border-yellow-500/30', label: 'Comercial' },
+      emerald: { bg: 'bg-emerald-500/20', text: 'text-emerald-400', border: 'border-emerald-500/30', label: 'Logística' },
+      purple: { bg: 'bg-purple-500/20', text: 'text-purple-400', border: 'border-purple-500/30', label: 'Engenharia' }
     };
-
-    // --- Authentication ---
-    async function initAuth() {
-      if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-        await signInWithCustomToken(auth, __initial_auth_token);
-      }
-    }
 
     onAuthStateChanged(auth, (u) => {
       user = u;
@@ -362,9 +375,6 @@
       if (user) {
         authView.classList.add('hidden-view');
         appView.classList.remove('hidden-view');
-        document.getElementById('user-email').innerText = user.email || 'Convidado';
-        if (user.photoURL) document.getElementById('user-avatar').innerHTML = `<img src="${user.photoURL}" class="w-full h-full rounded-2xl object-cover" />`;
-        else document.getElementById('user-avatar').innerText = (user.email || 'U').charAt(0).toUpperCase();
         loadTasks();
       } else {
         authView.classList.remove('hidden-view');
@@ -388,7 +398,6 @@
     document.getElementById('btn-google').onclick = () => signInWithPopup(auth, googleProvider);
     window.handleLogout = () => signOut(auth);
 
-    // --- Modal Logic ---
     window.openTaskModal = (id = null) => {
       editingTaskId = id;
       currentChecklist = [];
@@ -397,29 +406,27 @@
       if (id) {
         const t = globalTasks.find(x => x.id === id);
         if(!t) return;
-        document.getElementById('modal-title').innerText = "Editar Atividade";
-        
+        document.getElementById('modal-title').innerText = "Editar Operação";
         document.getElementById('task-input').value = t.text || t.input || '';
         document.getElementById('task-requester').value = t.requester || '';
         document.getElementById('task-deadline').value = t.deadline || '';
+        document.getElementById('task-comment').value = t.comment || '';
+        document.getElementById('task-status').value = t.status || 'Pendente';
         document.getElementById('task-urgency').value = t.urgency || 1;
         document.getElementById('task-progress').value = t.progress || 0;
         document.getElementById('progress-val').innerText = (t.progress || 0) + '%';
-        document.getElementById('task-comment').value = t.comment || '';
-        document.getElementById('task-status').value = t.status || 'Pendente';
-        
         currentChecklist = t.checklist || [];
         currentLabels = t.labels || [];
       } else {
-        document.getElementById('modal-title').innerText = "Nova Atividade";
+        document.getElementById('modal-title').innerText = "Nova Operação";
         document.getElementById('task-input').value = '';
         document.getElementById('task-requester').value = '';
         document.getElementById('task-deadline').value = '';
+        document.getElementById('task-comment').value = '';
+        document.getElementById('task-status').value = 'Pendente';
         document.getElementById('task-urgency').value = 1;
         document.getElementById('task-progress').value = 0;
         document.getElementById('progress-val').innerText = '0%';
-        document.getElementById('task-comment').value = '';
-        document.getElementById('task-status').value = 'Pendente';
       }
       
       renderChecklist();
@@ -430,7 +437,6 @@
 
     window.closeTaskModal = () => document.getElementById('task-modal').classList.add('hidden-view');
 
-    // --- Checklists & Labels ---
     window.addChecklistItem = (e) => {
       if(e) e.preventDefault();
       const input = document.getElementById('new-check-item');
@@ -491,7 +497,6 @@
       }).join('');
     }
 
-    // --- Task Engine ---
     function getTaskPath() { return collection(db, 'artifacts', appId, 'users', user.uid, 'tasks'); }
 
     window.saveTask = async () => {
@@ -503,29 +508,24 @@
         text: text,
         requester: document.getElementById('task-requester').value.trim(),
         deadline: document.getElementById('task-deadline').value,
+        status: document.getElementById('task-status').value,
         urgency: parseInt(document.getElementById('task-urgency').value),
         progress: parseInt(document.getElementById('task-progress').value),
         comment: document.getElementById('task-comment').value.trim(),
-        status: document.getElementById('task-status').value,
         checklist: currentChecklist,
         labels: currentLabels
       };
 
-      if (data.progress === 100) data.status = "Concluído";
-
       try {
         if (editingTaskId) {
           await updateDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'tasks', editingTaskId), data);
-          showToast("Atividade atualizada com sucesso!");
+          showToast("Operação atualizada!");
         } else {
-          await addDoc(getTaskPath(), {
-            ...data,
-            createdAt: Date.now()
-          });
-          showToast("Atividade lançada!");
+          await addDoc(getTaskPath(), { ...data, createdAt: Date.now() });
+          showToast("Operação lançada!");
         }
         window.closeTaskModal();
-      } catch (err) { showToast("Erro ao salvar tarefa.", "error"); }
+      } catch (err) { showToast("Erro ao salvar.", "error"); }
     };
 
     function loadTasks() {
@@ -540,6 +540,7 @@
 
     function render(tasks) {
       renderDashboard(tasks);
+      renderTable(tasks);
       renderList(tasks);
       renderKanban(tasks);
       lucide.createIcons();
@@ -566,6 +567,37 @@
       document.getElementById('dash-progress-text').innerText = overallProgress + '%';
     }
 
+    function renderTable(tasks) {
+      const container = document.getElementById('task-table-content');
+      if (tasks.length === 0) {
+        container.innerHTML = `<tr><td colspan="7" class="p-10 text-center opacity-30 text-xs font-black uppercase tracking-widest">Sem registros</td></tr>`;
+        return;
+      }
+      container.innerHTML = tasks.map(t => {
+        const taskTitle = t.text || t.input || "Sem título";
+        const zone = getUrgencyLabel(t.urgency);
+        const overdue = isOverdue(t.deadline) && t.status !== 'Concluído';
+        return `
+          <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
+            <td class="p-4 font-bold ${t.status === 'Concluído' ? 'line-through opacity-50' : 'text-gray-100'}">${taskTitle}</td>
+            <td class="p-4 opacity-70">${t.requester || 'N/A'}</td>
+            <td class="p-4 text-center"><span class="font-black text-gray-400">${t.progress || 0}%</span></td>
+            <td class="p-4 text-center">
+              <span class="text-[9px] font-black px-2 py-1 rounded-md border border-white/10 ${getStatusStyle(t.status)} uppercase whitespace-nowrap">${t.status}</span>
+            </td>
+            <td class="p-4 text-center ${overdue ? 'text-red-500 font-bold' : 'opacity-70'}">${formatDate(t.deadline)}</td>
+            <td class="p-4 text-center">
+              <span class="text-[9px] font-black px-2 py-1 rounded-md border ${zone.cls} uppercase">${zone.label}</span>
+            </td>
+            <td class="p-4 text-right whitespace-nowrap">
+              <button onclick="window.openTaskModal('${t.id}')" class="text-blue-400 bg-blue-500/10 hover:bg-blue-500/20 rounded-lg p-2 transition-colors mr-1"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button>
+              <button onclick="window.deleteTask('${t.id}')" class="text-red-500 bg-red-500/10 hover:bg-red-500/20 rounded-lg p-2 transition-colors"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
     function renderList(tasks) {
       const container = document.getElementById('task-list-content');
       if (tasks.length === 0) {
@@ -577,17 +609,28 @@
         const zone = getUrgencyLabel(t.urgency);
         const overdue = isOverdue(t.deadline) && t.status !== 'Concluído';
         const prog = t.progress || 0;
+
+        const labels = t.labels || [];
+        const labelsHtml = labels.length > 0 ? `<div class="flex flex-wrap gap-1 mb-2">${labels.map(l => `<span class="w-6 h-1.5 rounded-full ${labelDefinitions[l]?.bg || 'bg-gray-500'}"></span>`).join('')}</div>` : '';
+
+        const checks = t.checklist || [];
+        const doneChecks = checks.filter(c => c.done).length;
+        const checkHtml = checks.length > 0 ? `<span class="flex items-center gap-1 text-[9px] font-bold ${doneChecks === checks.length ? 'text-emerald-500' : 'text-gray-400'}"><i data-lucide="check-square" class="w-3 h-3"></i> ${doneChecks}/${checks.length}</span>` : '';
         
         return `
           <div class="grid grid-cols-12 p-6 hover:bg-white/5 transition-all items-center">
             <div class="col-span-5 md:col-span-5 px-2">
+              ${labelsHtml}
               <p class="font-bold text-sm ${t.status === 'Concluído' ? 'line-through opacity-30' : 'text-white'}">${taskTitle}</p>
               
               <div class="w-full bg-white/10 rounded-full h-1 mt-2 mb-1">
                  <div class="bg-red-600 h-1 rounded-full transition-all" style="width: ${prog}%"></div>
               </div>
               <div class="flex items-center justify-between mt-1">
-                <p class="text-[9px] font-bold opacity-40 uppercase tracking-wider"><span class="text-red-500">Por:</span> ${t.requester || 'N/A'}</p>
+                <div class="flex items-center gap-3">
+                  <p class="text-[9px] font-bold opacity-40 uppercase tracking-wider"><span class="text-red-500">Por:</span> ${t.requester || 'N/A'}</p>
+                  ${checkHtml}
+                </div>
                 <p class="text-[9px] font-black text-gray-400">${prog}%</p>
               </div>
               ${t.comment ? `<p class="text-[10px] mt-2 text-gray-400 italic border-l-2 border-red-600/30 pl-2 line-clamp-1 opacity-60">"${t.comment}"</p>` : ''}
@@ -630,35 +673,22 @@
           const overdue = isOverdue(t.deadline) && t.status !== 'Concluído';
           const prog = t.progress || 0;
 
-          // Checklist Stats
           const checks = t.checklist || [];
           const doneChecks = checks.filter(c => c.done).length;
-          const checkHtml = checks.length > 0 ? 
-            `<div class="flex items-center gap-1.5 text-[9px] font-bold ${doneChecks === checks.length ? 'text-emerald-500 bg-emerald-500/10' : 'text-gray-400 bg-white/5'} px-2 py-0.5 rounded-md border border-white/5"><i data-lucide="check-square" class="w-3 h-3"></i> ${doneChecks}/${checks.length}</div>` : '';
+          const checkHtml = checks.length > 0 ? `<div class="flex items-center gap-1.5 text-[9px] font-bold ${doneChecks === checks.length ? 'text-emerald-500 bg-emerald-500/10' : 'text-gray-400 bg-white/5'} px-2 py-0.5 rounded-md border border-white/5"><i data-lucide="check-square" class="w-3 h-3"></i> ${doneChecks}/${checks.length}</div>` : '';
 
-          // Labels
           const labels = t.labels || [];
-          const labelsHtml = labels.length > 0 ? 
-            `<div class="flex flex-wrap gap-1 mb-2">${labels.map(l => `<span class="w-8 h-2 rounded-full ${labelDefinitions[l]?.bg || 'bg-gray-500'}"></span>`).join('')}</div>` : '';
+          const labelsHtml = labels.length > 0 ? `<div class="flex flex-wrap gap-1 mb-3">${labels.map(l => `<span class="w-8 h-2 rounded-full ${labelDefinitions[l]?.bg || 'bg-gray-500'}"></span>`).join('')}</div>` : '';
 
           return `
             <div id="card-${t.id}" draggable="true" ondragstart="handleDragStart(event, '${t.id}')" ondragend="handleDragEnd('${t.id}')" onclick="if(!event.target.closest('button')) window.openTaskModal('${t.id}')"
-              class="bg-[#010816] p-4 rounded-xl border border-white/10 hover:border-white/20 transition-all group animate-fadeup shadow-lg cursor-pointer relative">
+              class="bg-[#010816] p-4 rounded-xl border border-white/10 hover:border-white/20 transition-all group animate-fadeup shadow-lg cursor-pointer">
               
               ${labelsHtml}
               
               <div class="flex justify-between items-start mb-2">
-                 <span class="text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded border ${zone.cls} h-fit">${zone.label}</span>
-                 <button onclick="event.stopPropagation(); window.deleteTask('${t.id}')" class="opacity-0 group-hover:opacity-100 text-gray-600 hover:text-red-500 transition-all p-1"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
-              </div>
-              
-              <p class="text-xs font-bold leading-relaxed text-gray-100">${taskTitle}</p>
-              
-              <div class="w-full bg-white/10 rounded-full h-1 mt-2">
-                 <div class="bg-red-600 h-1 rounded-full transition-all" style="width: ${prog}%"></div>
-              </div>
-              <div class="flex justify-end mt-0.5 mb-2">
-                <span class="text-[8px] font-black text-gray-500">${prog}% concluído</span>
+                 <p class="text-xs font-bold leading-relaxed text-gray-100 ${t.status === 'Concluído' ? 'line-through opacity-50' : ''}">${taskTitle}</p>
+                 <button onclick="event.stopPropagation(); window.deleteTask('${t.id}')" class="opacity-0 group-hover:opacity-100 text-gray-600 hover:text-red-500 transition-all p-1 ml-2"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
               </div>
 
               ${t.comment ? `<p class="text-[9px] text-gray-500 italic line-clamp-1 mb-3">"${t.comment}"</p>` : ''}
@@ -666,7 +696,6 @@
               <div class="flex items-center justify-between pt-2 border-t border-white/5">
                  <div class="flex items-center gap-2">
                    ${checkHtml}
-                   <div class="flex items-center gap-1 text-[9px] font-bold opacity-40"><i data-lucide="user" class="w-3 h-3"></i> ${t.requester || 'N/A'}</div>
                  </div>
                  <div class="flex items-center gap-2 text-[9px] font-black ${overdue ? 'text-red-500 bg-red-500/10 px-2 py-0.5 rounded' : 'text-gray-500'}">
                    ${t.deadline ? `<i data-lucide="calendar" class="w-3 h-3"></i> ${formatDate(t.deadline)}` : ''}
@@ -711,30 +740,24 @@
       await updateDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'tasks', id), updateData);
     };
 
-    // --- UI/Navigation ---
     window.changeView = (view) => {
       currentView = view;
       document.getElementById('dashboard-view').className = view === 'dashboard' ? 'animate-fadeup space-y-8' : 'hidden-view';
+      document.getElementById('table-view').className = view === 'table' ? 'animate-fadeup h-full' : 'hidden-view';
       document.getElementById('list-view').className = view === 'list' ? 'animate-fadeup' : 'hidden-view';
       document.getElementById('kanban-view').className = view === 'kanban' ? 'h-full animate-fadeup' : 'hidden-view';
       
-      const navD = document.querySelectorAll('.nav-item-dashboard');
-      const navL = document.querySelectorAll('.nav-item-list');
-      const navK = document.querySelectorAll('.nav-item-kanban');
+      const navs = ['dashboard', 'table', 'list', 'kanban'];
+      const activeClass = "bg-red-600/10 text-red-500 hover:text-red-500";
+      const inactiveClass = "text-gray-500 hover:text-white bg-transparent";
 
-      const active = "bg-red-600/10 text-red-500 hover:text-red-500";
-      const inactive = "text-gray-500 hover:text-white bg-transparent";
-
-      const updateNav = (nodes, isActive) => {
+      navs.forEach(nav => {
+        const nodes = document.querySelectorAll(`.nav-item-${nav}`);
         nodes.forEach(n => {
           n.className = n.className.replace(/bg-red-600\/10|text-red-500|text-gray-500|hover:text-white|hover:text-red-500|bg-transparent/g, '').trim();
-          n.className += " " + (isActive ? active : inactive);
+          n.className += " " + (view === nav ? activeClass : inactiveClass);
         });
-      };
-
-      updateNav(navD, view === 'dashboard');
-      updateNav(navL, view === 'list');
-      updateNav(navK, view === 'kanban');
+      });
       
       lucide.createIcons();
     };
@@ -772,8 +795,6 @@
       document.getElementById('toast-container').appendChild(t);
       setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 3000);
     }
-
-    initAuth();
   </script>
 </body>
 </html>
