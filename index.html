@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gestor Makro v30 - Enterprise</title>
+  <title>Gestor Makro v31 - Enterprise</title>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700;900&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -60,7 +60,7 @@
 
   <aside id="mobile-menu" class="fixed inset-y-0 left-0 w-80 bg-[#010816] border-r border-white/10 p-8 flex flex-col z-[100] lg:hidden">
     <div class="flex items-center justify-between mb-12">
-      <h1 class="text-xl font-black text-white uppercase tracking-widest">MAKRO</h1>
+      <img src="https://makroengenharia.com.br/wp-content/uploads/2023/03/logo-1.png" class="h-8" alt="Logo Makro">
       <button id="close-menu" class="p-2 text-gray-500 hover:text-white"><i data-lucide="x"></i></button>
     </div>
     <nav class="flex-1 space-y-4">
@@ -68,6 +68,9 @@
       <div onclick="changeView('table'); toggleMenu(false)" class="nav-item-table p-4 text-gray-500 hover:text-white rounded-2xl flex items-center gap-4 cursor-pointer font-bold uppercase text-xs tracking-widest transition-all"><i data-lucide="table"></i> Tabela</div>
       <div onclick="changeView('list'); toggleMenu(false)" class="nav-item-list p-4 text-gray-500 hover:text-white rounded-2xl flex items-center gap-4 cursor-pointer font-bold uppercase text-xs tracking-widest transition-all"><i data-lucide="list"></i> Lista</div>
       <div onclick="changeView('kanban'); toggleMenu(false)" class="nav-item-kanban p-4 text-gray-500 hover:text-white rounded-2xl flex items-center gap-4 cursor-pointer font-bold uppercase text-xs tracking-widest transition-all"><i data-lucide="columns"></i> Kanban</div>
+      <div class="border-t border-white/5 pt-4 mt-4">
+        <div onclick="showToast('Acessando Configurações...'); toggleMenu(false)" class="p-4 text-gray-500 hover:text-white rounded-2xl flex items-center gap-4 cursor-pointer font-bold uppercase text-xs tracking-widest transition-all"><i data-lucide="settings"></i> Configurações</div>
+      </div>
     </nav>
     <button onclick="handleLogout()" class="p-4 text-red-500/60 hover:text-red-500 flex items-center gap-4 transition-all mt-auto font-black uppercase text-xs tracking-[3px]">
       <i data-lucide="log-out"></i> Sair
@@ -191,8 +194,8 @@
     <header class="h-20 border-b border-white/5 flex items-center justify-between px-6 lg:px-8 bg-black/20 backdrop-blur-md sticky top-0 z-40">
       <div class="flex items-center gap-4">
          <button id="open-menu" class="lg:hidden p-2 text-gray-400 hover:text-white transition-colors"><i data-lucide="menu"></i></button>
-         <h1 class="text-xl font-black text-white uppercase tracking-widest hidden md:block">MAKRO</h1>
-         <div class="h-6 w-[1px] bg-white/10 hidden md:block mx-2"></div>
+         <h1 class="text-xl font-black text-white uppercase tracking-widest hidden md:block lg:hidden">MAKRO</h1>
+         <div class="h-6 w-[1px] bg-white/10 hidden md:block lg:hidden mx-2"></div>
          <h2 class="font-black uppercase tracking-[3px] text-xs opacity-60"><i data-lucide="trello" class="inline w-4 h-4 mr-2 text-red-500"></i> Board Operacional</h2>
       </div>
       
@@ -205,15 +208,43 @@
     </header>
 
     <div class="flex-1 flex overflow-hidden">
-      <aside class="w-64 border-r border-white/5 p-8 flex flex-col hidden lg:flex bg-black/10">
+      <aside id="desktop-sidebar" class="w-64 border-r border-white/5 px-6 py-8 flex flex-col hidden lg:flex bg-black/10 transition-all duration-300 relative flex-shrink-0">
+        <div class="flex items-center justify-between mb-10 h-8 overflow-hidden">
+          <img src="https://makroengenharia.com.br/wp-content/uploads/2023/03/logo-1.png" class="h-8 sidebar-text flex-shrink-0 transition-opacity" alt="Logo Makro">
+          <button onclick="window.toggleDesktopSidebar()" class="p-2 text-gray-500 hover:text-white transition-colors bg-white/5 hover:bg-white/10 rounded-xl flex-shrink-0 ml-auto" title="Recolher Menu">
+            <i data-lucide="chevron-left" id="sidebar-toggle-icon" class="w-4 h-4"></i>
+          </button>
+        </div>
+        
         <nav class="flex-1 space-y-3">
-          <div onclick="changeView('dashboard')" class="nav-item-dashboard p-4 bg-red-600/10 text-red-500 rounded-2xl flex items-center gap-4 cursor-pointer font-bold uppercase text-[10px] tracking-[2px] transition-all"><i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard</div>
-          <div onclick="changeView('table')" class="nav-item-table p-4 text-gray-500 hover:text-white rounded-2xl flex items-center gap-4 cursor-pointer font-bold uppercase text-[10px] tracking-[2px] transition-all"><i data-lucide="table" class="w-4 h-4"></i> Tabela <span class="bg-red-600 text-white text-[8px] px-1.5 py-0.5 rounded ml-auto">NOVO</span></div>
-          <div onclick="changeView('list')" class="nav-item-list p-4 text-gray-500 hover:text-white rounded-2xl flex items-center gap-4 cursor-pointer font-bold uppercase text-[10px] tracking-[2px] transition-all"><i data-lucide="list" class="w-4 h-4"></i> Lista</div>
-          <div onclick="changeView('kanban')" class="nav-item-kanban p-4 text-gray-500 hover:text-white rounded-2xl flex items-center gap-4 cursor-pointer font-bold uppercase text-[10px] tracking-[2px] transition-all"><i data-lucide="columns" class="w-4 h-4"></i> Kanban</div>
+          <div onclick="changeView('dashboard')" class="nav-item-dashboard p-4 bg-red-600/10 text-red-500 rounded-2xl flex items-center gap-4 cursor-pointer font-bold uppercase text-[10px] tracking-[2px] transition-all" title="Dashboard">
+            <i data-lucide="layout-dashboard" class="w-4 h-4 flex-shrink-0"></i> 
+            <span class="sidebar-text whitespace-nowrap">Dashboard</span>
+          </div>
+          <div onclick="changeView('table')" class="nav-item-table p-4 text-gray-500 hover:text-white rounded-2xl flex items-center gap-4 cursor-pointer font-bold uppercase text-[10px] tracking-[2px] transition-all" title="Tabela">
+            <i data-lucide="table" class="w-4 h-4 flex-shrink-0"></i> 
+            <span class="sidebar-text whitespace-nowrap flex items-center gap-2">Tabela <span class="bg-red-600 text-white text-[8px] px-1.5 py-0.5 rounded">NOVO</span></span>
+          </div>
+          <div onclick="changeView('list')" class="nav-item-list p-4 text-gray-500 hover:text-white rounded-2xl flex items-center gap-4 cursor-pointer font-bold uppercase text-[10px] tracking-[2px] transition-all" title="Lista">
+            <i data-lucide="list" class="w-4 h-4 flex-shrink-0"></i> 
+            <span class="sidebar-text whitespace-nowrap">Lista</span>
+          </div>
+          <div onclick="changeView('kanban')" class="nav-item-kanban p-4 text-gray-500 hover:text-white rounded-2xl flex items-center gap-4 cursor-pointer font-bold uppercase text-[10px] tracking-[2px] transition-all" title="Kanban">
+            <i data-lucide="columns" class="w-4 h-4 flex-shrink-0"></i> 
+            <span class="sidebar-text whitespace-nowrap">Kanban</span>
+          </div>
+          
+          <div class="pt-4 mt-4 border-t border-white/5">
+             <div onclick="showToast('Acessando Configurações...')" class="p-4 text-gray-500 hover:text-white rounded-2xl flex items-center gap-4 cursor-pointer font-bold uppercase text-[10px] tracking-[2px] transition-all" title="Configurações e Perfil">
+              <i data-lucide="settings" class="w-4 h-4 flex-shrink-0"></i> 
+              <span class="sidebar-text whitespace-nowrap">Configurações</span>
+            </div>
+          </div>
         </nav>
-        <button onclick="handleLogout()" class="p-4 text-gray-500 hover:text-red-500 flex items-center gap-4 transition-all font-black uppercase text-[10px] tracking-[3px] mt-auto">
-          <i data-lucide="log-out" class="w-4 h-4"></i> Sair
+        
+        <button onclick="handleLogout()" class="p-4 text-gray-500 hover:text-red-500 flex items-center gap-4 transition-all font-black uppercase text-[10px] tracking-[3px] mt-auto" title="Sair">
+          <i data-lucide="log-out" class="w-4 h-4 flex-shrink-0"></i> 
+          <span class="sidebar-text whitespace-nowrap">Sair</span>
         </button>
       </aside>
 
@@ -278,7 +309,7 @@
                   </tr>
                 </thead>
                 <tbody id="task-table-content" class="divide-y divide-white/5 text-sm text-gray-300">
-                  </tbody>
+                </tbody>
               </table>
             </div>
           </div>
@@ -343,7 +374,9 @@
       appId: "1:647554172397:web:aac3ef00938ee7cd8f13e4"
     };
 
+    // MANTIDO EXATAMENTE COMO SOLICITADO
     const appId = typeof __app_id !== 'undefined' ? __app_id : 'saturday-v22'; 
+    
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
@@ -397,6 +430,28 @@
 
     document.getElementById('btn-google').onclick = () => signInWithPopup(auth, googleProvider);
     window.handleLogout = () => signOut(auth);
+
+    // --- Sidebar Toggle Logic ---
+    window.toggleDesktopSidebar = () => {
+      const sidebar = document.getElementById('desktop-sidebar');
+      const texts = document.querySelectorAll('.sidebar-text');
+      const icon = document.getElementById('sidebar-toggle-icon');
+      
+      if (sidebar.classList.contains('w-64')) {
+        // Recolher
+        sidebar.classList.remove('w-64', 'px-6');
+        sidebar.classList.add('w-[84px]', 'px-3');
+        texts.forEach(t => t.classList.add('hidden'));
+        icon.setAttribute('data-lucide', 'chevron-right');
+      } else {
+        // Expandir
+        sidebar.classList.remove('w-[84px]', 'px-3');
+        sidebar.classList.add('w-64', 'px-6');
+        setTimeout(() => texts.forEach(t => t.classList.remove('hidden')), 150);
+        icon.setAttribute('data-lucide', 'chevron-left');
+      }
+      lucide.createIcons();
+    };
 
     window.openTaskModal = (id = null) => {
       editingTaskId = id;
@@ -708,7 +763,6 @@
       lucide.createIcons();
     }
 
-    // --- Drag & Drop ---
     window.allowDrop = (e) => { e.preventDefault(); e.currentTarget.classList.add('drag-over'); };
     window.dragLeave = (e) => e.currentTarget.classList.remove('drag-over');
     window.handleDragStart = (e, id) => { e.dataTransfer.setData('taskId', id); document.getElementById(`card-${id}`)?.classList.add('dragging'); };
