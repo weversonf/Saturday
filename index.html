@@ -68,6 +68,7 @@
       <div onclick="changeView('table'); toggleMenu(false)" class="nav-item-table p-4 text-gray-500 hover:text-white rounded-2xl flex items-center gap-4 cursor-pointer font-bold uppercase text-xs tracking-widest transition-all"><i data-lucide="table"></i> Tabela</div>
       <div onclick="changeView('list'); toggleMenu(false)" class="nav-item-list p-4 text-gray-500 hover:text-white rounded-2xl flex items-center gap-4 cursor-pointer font-bold uppercase text-xs tracking-widest transition-all"><i data-lucide="list"></i> Lista</div>
       <div onclick="changeView('kanban'); toggleMenu(false)" class="nav-item-kanban p-4 text-gray-500 hover:text-white rounded-2xl flex items-center gap-4 cursor-pointer font-bold uppercase text-xs tracking-widest transition-all"><i data-lucide="columns"></i> Kanban</div>
+      <div onclick="changeView('users'); toggleMenu(false)" class="nav-item-users admin-only hidden-view p-4 text-gray-500 hover:text-white rounded-2xl flex items-center gap-4 cursor-pointer font-bold uppercase text-xs tracking-widest transition-all"><i data-lucide="users"></i> Usuários</div>
       <div class="border-t border-white/5 pt-4 mt-4">
         <div onclick="window.openSettingsModal(); toggleMenu(false)" class="p-4 text-gray-500 hover:text-white rounded-2xl flex items-center gap-4 cursor-pointer font-bold uppercase text-xs tracking-widest transition-all"><i data-lucide="settings"></i> Configurações</div>
       </div>
@@ -94,7 +95,7 @@
             <div id="settings-avatar" class="w-20 h-20 rounded-2xl bg-red-600 flex items-center justify-center text-3xl font-black text-white border border-white/10 shadow-lg shadow-red-600/20">?</div>
             <div>
               <p id="settings-email" class="text-lg font-bold text-white"></p>
-              <p class="text-xs font-black uppercase tracking-widest text-red-500 mt-1">Analista Makro</p>
+              <p id="role-display" class="text-xs font-black uppercase tracking-widest text-red-500 mt-1">Carregando...</p>
             </div>
           </div>
         </div>
@@ -108,14 +109,6 @@
                 <p class="text-[10px] text-gray-500 mt-1 uppercase tracking-wider">Habilitar alertas no navegador</p>
               </div>
               <input type="checkbox" checked class="w-6 h-6 rounded border-white/20 bg-transparent text-red-500 cursor-pointer">
-            </div>
-            
-            <div class="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/5">
-              <div>
-                <p class="font-bold text-sm text-white">Modo Escuro</p>
-                <p class="text-[10px] text-gray-500 mt-1 uppercase tracking-wider">O tema atual não pode ser alterado</p>
-              </div>
-              <input type="checkbox" checked disabled class="w-6 h-6 rounded border-white/20 bg-transparent text-red-500 opacity-50 cursor-not-allowed">
             </div>
           </div>
         </div>
@@ -269,7 +262,7 @@
           </div>
           <div onclick="changeView('table')" class="nav-item-table p-4 text-gray-500 hover:text-white rounded-2xl flex items-center gap-4 cursor-pointer font-bold uppercase text-[10px] tracking-[2px] transition-all" title="Tabela">
             <i data-lucide="table" class="w-4 h-4 flex-shrink-0"></i> 
-            <span class="sidebar-text whitespace-nowrap flex items-center gap-2">Tabela <span class="bg-red-600 text-white text-[8px] px-1.5 py-0.5 rounded">NOVO</span></span>
+            <span class="sidebar-text whitespace-nowrap flex items-center gap-2">Tabela</span>
           </div>
           <div onclick="changeView('list')" class="nav-item-list p-4 text-gray-500 hover:text-white rounded-2xl flex items-center gap-4 cursor-pointer font-bold uppercase text-[10px] tracking-[2px] transition-all" title="Lista">
             <i data-lucide="list" class="w-4 h-4 flex-shrink-0"></i> 
@@ -278,6 +271,11 @@
           <div onclick="changeView('kanban')" class="nav-item-kanban p-4 text-gray-500 hover:text-white rounded-2xl flex items-center gap-4 cursor-pointer font-bold uppercase text-[10px] tracking-[2px] transition-all" title="Kanban">
             <i data-lucide="columns" class="w-4 h-4 flex-shrink-0"></i> 
             <span class="sidebar-text whitespace-nowrap">Kanban</span>
+          </div>
+
+          <div onclick="changeView('users')" class="nav-item-users admin-only hidden-view p-4 text-gray-500 hover:text-white rounded-2xl flex items-center gap-4 cursor-pointer font-bold uppercase text-[10px] tracking-[2px] transition-all" title="Gerir Usuários">
+            <i data-lucide="users" class="w-4 h-4 flex-shrink-0"></i> 
+            <span class="sidebar-text whitespace-nowrap">Usuários</span>
           </div>
           
           <div class="pt-4 mt-4 border-t border-white/5">
@@ -402,14 +400,41 @@
           </div>
         </div>
 
+        <div id="users-view" class="hidden-view animate-fadeup space-y-8">
+          <h2 class="text-xl font-black uppercase tracking-widest text-white mb-6">Gestão de Permissões</h2>
+          <div class="glass-card p-6 md:p-8">
+             <div class="flex flex-col md:flex-row gap-4 mb-6">
+                <input type="email" id="new-user-email" placeholder="E-mail do colaborador..." class="flex-1 p-4 rounded-xl text-sm" />
+                <select id="new-user-role" class="p-4 rounded-xl text-sm cursor-pointer w-full md:w-48">
+                  <option value="USER" class="bg-[#010816]">Usuário</option>
+                  <option value="ADM" class="bg-[#010816]">Administrador</option>
+                </select>
+                <button onclick="window.saveUserRole()" class="bg-red-600 hover:bg-red-700 px-8 py-4 rounded-xl font-black uppercase text-xs tracking-widest text-white transition-all w-full md:w-auto shadow-lg shadow-red-600/20">Salvar Permissão</button>
+             </div>
+             <div class="border border-white/5 rounded-2xl overflow-hidden">
+                <table class="w-full text-left border-collapse">
+                  <thead class="bg-white/5">
+                    <tr class="text-[9px] font-black uppercase tracking-[2px] text-gray-400">
+                      <th class="p-4 border-b border-white/10">E-mail Cadastrado</th>
+                      <th class="p-4 border-b border-white/10 text-center">Nível de Acesso</th>
+                      <th class="p-4 border-b border-white/10 text-right">Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody id="roles-list-content" class="divide-y divide-white/5 text-sm text-gray-300">
+                  </tbody>
+                </table>
+             </div>
+          </div>
+        </div>
+
       </main>
     </div>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut, GoogleAuthProvider, signInWithPopup, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import { getFirestore, collection, addDoc, onSnapshot, query, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, collection, addDoc, onSnapshot, query, deleteDoc, doc, updateDoc, getDoc, setDoc, where } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
     const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
       apiKey: "AIzaSyCGemp_OA8savCmLZfX7Us0nmDpdbpv4N0",
@@ -420,7 +445,6 @@
       appId: "1:647554172397:web:aac3ef00938ee7cd8f13e4"
     };
 
-    // MANTIDO EXATAMENTE COMO SOLICITADO
     const appId = typeof __app_id !== 'undefined' ? __app_id : 'saturday-v22'; 
     
     const app = initializeApp(firebaseConfig);
@@ -429,6 +453,7 @@
     const googleProvider = new GoogleAuthProvider();
     
     let user = null;
+    let userRole = 'USER'; // Definindo controle de acesso padrão
     let currentView = 'dashboard';
     let editingTaskId = null;
     let globalTasks = [];
@@ -445,7 +470,7 @@
       purple: { bg: 'bg-purple-500/20', text: 'text-purple-400', border: 'border-purple-500/30', label: 'Engenharia' }
     };
 
-    onAuthStateChanged(auth, (u) => {
+    onAuthStateChanged(auth, async (u) => {
       user = u;
       const authView = document.getElementById('auth-view');
       const appView = document.getElementById('app-view');
@@ -455,15 +480,35 @@
         authView.classList.add('hidden-view');
         appView.classList.remove('hidden-view');
         
-        // Atualiza Modal de Configurações com dados do usuário
+        // BUSCAR PERMISSÕES DO USUÁRIO
+        try {
+          // Buscamos o papel usando o email como chave
+          const roleDoc = await getDoc(doc(db, 'artifacts', appId, 'roles', user.email.toLowerCase()));
+          if (roleDoc.exists()) {
+            userRole = roleDoc.data().tipo; // Pega 'ADM' ou mantém 'USER'
+          } else {
+            userRole = 'USER';
+          }
+        } catch(e) {
+          console.error("Erro ao verificar nível de acesso", e);
+          userRole = 'USER';
+        }
+
+        // Habilita menus exclusivos de ADM
+        const adminElements = document.querySelectorAll('.admin-only');
+        adminElements.forEach(el => {
+           if(userRole === 'ADM') el.classList.remove('hidden-view');
+        });
+
+        // Atualiza UI de Configurações
         document.getElementById('settings-email').innerText = user.email || 'Usuário Makro';
+        document.getElementById('role-display').innerText = userRole === 'ADM' ? 'Administrador Sistema' : 'Analista Operacional';
         if (user.photoURL) {
           document.getElementById('settings-avatar').innerHTML = `<img src="${user.photoURL}" class="w-full h-full rounded-2xl object-cover" />`;
-        } else {
-          document.getElementById('settings-avatar').innerText = (user.email || 'U').charAt(0).toUpperCase();
         }
 
         loadTasks();
+        if(userRole === 'ADM') loadRoles();
       } else {
         authView.classList.remove('hidden-view');
         appView.classList.add('hidden-view');
@@ -486,20 +531,17 @@
     document.getElementById('btn-google').onclick = () => signInWithPopup(auth, googleProvider);
     window.handleLogout = () => signOut(auth);
 
-    // --- Sidebar Toggle Logic ---
     window.toggleDesktopSidebar = () => {
       const sidebar = document.getElementById('desktop-sidebar');
       const texts = document.querySelectorAll('.sidebar-text');
       const icon = document.getElementById('sidebar-toggle-icon');
       
       if (sidebar.classList.contains('w-64')) {
-        // Recolher
         sidebar.classList.remove('w-64', 'px-6');
         sidebar.classList.add('w-[84px]', 'px-3');
         texts.forEach(t => t.classList.add('hidden'));
         icon.setAttribute('data-lucide', 'chevron-right');
       } else {
-        // Expandir
         sidebar.classList.remove('w-[84px]', 'px-3');
         sidebar.classList.add('w-64', 'px-6');
         setTimeout(() => texts.forEach(t => t.classList.remove('hidden')), 150);
@@ -508,17 +550,9 @@
       lucide.createIcons();
     };
 
-    // --- Modal de Configurações ---
-    window.openSettingsModal = () => {
-      document.getElementById('settings-modal').classList.remove('hidden-view');
-      lucide.createIcons();
-    };
-    
-    window.closeSettingsModal = () => {
-      document.getElementById('settings-modal').classList.add('hidden-view');
-    };
+    window.openSettingsModal = () => { document.getElementById('settings-modal').classList.remove('hidden-view'); lucide.createIcons(); };
+    window.closeSettingsModal = () => { document.getElementById('settings-modal').classList.add('hidden-view'); };
 
-    // --- Modal de Tarefas ---
     window.openTaskModal = (id = null) => {
       editingTaskId = id;
       currentChecklist = [];
@@ -567,16 +601,8 @@
       renderChecklist();
     };
 
-    window.toggleCheck = (id) => {
-      const item = currentChecklist.find(i => i.id === id);
-      if(item) item.done = !item.done;
-      renderChecklist();
-    };
-
-    window.deleteCheck = (id) => {
-      currentChecklist = currentChecklist.filter(i => i.id !== id);
-      renderChecklist();
-    };
+    window.toggleCheck = (id) => { const item = currentChecklist.find(i => i.id === id); if(item) item.done = !item.done; renderChecklist(); };
+    window.deleteCheck = (id) => { currentChecklist = currentChecklist.filter(i => i.id !== id); renderChecklist(); };
 
     function renderChecklist() {
       const container = document.getElementById('checklist-items');
@@ -598,17 +624,8 @@
       lucide.createIcons();
     }
 
-    window.addLabel = (color) => {
-      if(!color || currentLabels.includes(color)) return;
-      currentLabels.push(color);
-      document.getElementById('label-selector').value = '';
-      renderLabels();
-    };
-
-    window.removeLabel = (color) => {
-      currentLabels = currentLabels.filter(c => c !== color);
-      renderLabels();
-    };
+    window.addLabel = (color) => { if(!color || currentLabels.includes(color)) return; currentLabels.push(color); document.getElementById('label-selector').value = ''; renderLabels(); };
+    window.removeLabel = (color) => { currentLabels = currentLabels.filter(c => c !== color); renderLabels(); };
 
     function renderLabels() {
       const container = document.getElementById('active-labels');
@@ -618,38 +635,8 @@
       }).join('');
     }
 
-  const monthlyNpsData = useMemo(() => {
-    // 1. Aplica todos os filtros (exceto mês) na base de dados
-    const baseFilteredData = data.filter(d => {
-        return (filters.unidade === 'Todas' || d.unidade === filters.unidade) &&
-               (filters.cliente === 'Todos' || d.cliente === filters.cliente) &&
-               (filters.contrato === 'Todos' || d.contrato === filters.contrato);
-    });
-
-    // 2. Extrai os meses disponíveis já com os filtros aplicados
-    let monthsToShow = [...new Set(baseFilteredData.map(r => r.mes))].filter(Boolean);
-    
-    // 3. Aplica o filtro de mês (caso selecionado no dropdown)
-    if (filters.mes !== 'Todos') {
-        if (filters.mes.startsWith('Ano ')) {
-            const targetYear = filters.mes.replace('Ano ', '');
-            monthsToShow = monthsToShow.filter(m => m.endsWith(targetYear));
-        } else {
-            monthsToShow = monthsToShow.filter(m => m === filters.mes);
-        }
-    }
-
-    const sortedMonths = sortMonthsChronologically(monthsToShow);
-    
-    // 4. Calcula o score usando a base pré-filtrada
-    return sortedMonths.map(m => {
-        const dMes = baseFilteredData.filter(x => x.mes === m); 
-        const p = dMes.filter(x => x.nota >= 9).length;
-        const det = dMes.filter(x => x.nota <= 6).length;
-        const nps = dMes.length > 0 ? Math.round(((p - det) / dMes.length) * 100) : 0;
-        return { mes: m, score: nps };
-    });
-}, [data, filters]); // Importante: 'filters' precisa estar no array de dependências
+    // NOVA ROTA GLOBAL (Corrigindo o sumiço dos dados)
+    function getTaskPath() { return collection(db, 'artifacts', appId, 'global_tasks'); }
 
     window.saveTask = async () => {
       if (!user) return;
@@ -665,12 +652,13 @@
         progress: parseInt(document.getElementById('task-progress').value),
         comment: document.getElementById('task-comment').value.trim(),
         checklist: currentChecklist,
-        labels: currentLabels
+        labels: currentLabels,
+        ownerEmail: user.email // Vinculando o dono da tarefa
       };
 
       try {
         if (editingTaskId) {
-          await updateDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'tasks', editingTaskId), data);
+          await updateDoc(doc(db, 'artifacts', appId, 'global_tasks', editingTaskId), data);
           showToast("Operação atualizada!");
         } else {
           await addDoc(getTaskPath(), { ...data, createdAt: Date.now() });
@@ -682,11 +670,67 @@
 
     function loadTasks() {
       if (!user) return;
-      onSnapshot(query(getTaskPath()), (snap) => {
+      
+      // Controle de leitura com base no Nível
+      let taskQuery;
+      if (userRole === 'ADM') {
+         taskQuery = query(getTaskPath()); // ADM vê a base inteira
+      } else {
+         taskQuery = query(getTaskPath(), where('ownerEmail', '==', user.email)); // USER vê só o dele
+      }
+
+      onSnapshot(taskQuery, (snap) => {
         globalTasks = [];
         snap.forEach(d => globalTasks.push({ id: d.id, ...d.data() }));
         globalTasks.sort((a, b) => b.createdAt - a.createdAt);
         render(globalTasks);
+      });
+    }
+
+    // GESTÃO DE USUÁRIOS
+    window.saveUserRole = async () => {
+      if (userRole !== 'ADM') return showToast("Acesso negado", "error");
+      const email = document.getElementById('new-user-email').value.trim().toLowerCase();
+      const role = document.getElementById('new-user-role').value;
+      
+      if(!email) return showToast("Digite um e-mail válido", "error");
+      
+      try {
+        await setDoc(doc(db, 'artifacts', appId, 'roles', email), { tipo: role });
+        showToast("Nível de acesso salvo com sucesso!");
+        document.getElementById('new-user-email').value = '';
+      } catch(e) { showToast("Erro ao salvar permissão", "error"); }
+    };
+
+    window.deleteUserRole = async (email) => {
+       if (userRole !== 'ADM') return;
+       if(confirm(`Deseja remover as permissões especiais de ${email}? Ele voltará a ser Usuário Padrão.`)) {
+         await deleteDoc(doc(db, 'artifacts', appId, 'roles', email));
+         showToast("Permissão removida");
+       }
+    };
+
+    function loadRoles() {
+      if (userRole !== 'ADM') return;
+      onSnapshot(collection(db, 'artifacts', appId, 'roles'), (snap) => {
+         const container = document.getElementById('roles-list-content');
+         let html = '';
+         snap.forEach(d => {
+           const data = d.data();
+           const isAdm = data.tipo === 'ADM';
+           html += `
+             <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
+               <td class="p-4 font-bold text-gray-100">${d.id}</td>
+               <td class="p-4 text-center"><span class="text-[9px] font-black px-2 py-1 rounded-md border border-white/10 ${isAdm ? 'text-red-500 bg-red-500/10' : 'text-blue-500 bg-blue-500/10'} uppercase whitespace-nowrap">${data.tipo}</span></td>
+               <td class="p-4 text-right">
+                 <button onclick="window.deleteUserRole('${d.id}')" class="text-red-500 bg-red-500/10 hover:bg-red-500/20 rounded-lg p-2 transition-colors"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+               </td>
+             </tr>
+           `;
+         });
+         if(!html) html = `<tr><td colspan="3" class="p-10 text-center opacity-30 text-xs font-black uppercase tracking-widest">Apenas usuários padrão no sistema</td></tr>`;
+         container.innerHTML = html;
+         lucide.createIcons();
       });
     }
 
@@ -770,7 +814,7 @@
         const checkHtml = checks.length > 0 ? `<span class="flex items-center gap-1 text-[9px] font-bold ${doneChecks === checks.length ? 'text-emerald-500' : 'text-gray-400'}"><i data-lucide="check-square" class="w-3 h-3"></i> ${doneChecks}/${checks.length}</span>` : '';
         
         return `
-          <div class="grid grid-cols-12 p-6 hover:bg-white/5 transition-all items-center">
+          <div class="grid grid-cols-12 p-6 hover:bg-white/5 transition-all items-center border-b border-white/5">
             <div class="col-span-5 md:col-span-5 px-2">
               ${labelsHtml}
               <p class="font-bold text-sm ${t.status === 'Concluído' ? 'line-through opacity-30' : 'text-white'}">${taskTitle}</p>
@@ -872,13 +916,13 @@
       try {
         let updateData = { status: newStatus };
         if(newStatus === 'Concluído') updateData.progress = 100;
-        await updateDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'tasks', taskId), updateData);
+        await updateDoc(doc(db, 'artifacts', appId, 'global_tasks', taskId), updateData);
       } catch (err) { showToast("Erro ao mover.", "error"); }
     };
 
     window.deleteTask = async (id) => {
       if(confirm("Deseja excluir este card?")) {
-        await deleteDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'tasks', id));
+        await deleteDoc(doc(db, 'artifacts', appId, 'global_tasks', id));
         showToast("Card excluído.", "error");
       }
     };
@@ -888,7 +932,7 @@
       let next = flow[(flow.indexOf(current) + 1) % flow.length];
       let updateData = { status: next };
       if(next === 'Concluído') updateData.progress = 100;
-      await updateDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'tasks', id), updateData);
+      await updateDoc(doc(db, 'artifacts', appId, 'global_tasks', id), updateData);
     };
 
     window.changeView = (view) => {
@@ -897,8 +941,9 @@
       document.getElementById('table-view').className = view === 'table' ? 'animate-fadeup h-full' : 'hidden-view';
       document.getElementById('list-view').className = view === 'list' ? 'animate-fadeup' : 'hidden-view';
       document.getElementById('kanban-view').className = view === 'kanban' ? 'h-full animate-fadeup' : 'hidden-view';
+      document.getElementById('users-view').className = view === 'users' ? 'animate-fadeup space-y-8' : 'hidden-view';
       
-      const navs = ['dashboard', 'table', 'list', 'kanban'];
+      const navs = ['dashboard', 'table', 'list', 'kanban', 'users'];
       const activeClass = "bg-red-600/10 text-red-500 hover:text-red-500";
       const inactiveClass = "text-gray-500 hover:text-white bg-transparent";
 
@@ -941,7 +986,7 @@
     
     function showToast(msg, type='success') {
       const t = document.createElement('div');
-      t.className = `p-4 rounded-xl bg-[#010816] border ${type === 'error' ? 'border-red-500 text-red-400' : 'border-emerald-500 text-emerald-400'} animate-fadeup shadow-2xl text-[10px] font-black uppercase tracking-widest`;
+      t.className = `p-4 rounded-xl bg-[#010816] border ${type === 'error' ? 'border-red-500 text-red-400' : 'border-emerald-500 text-emerald-400'} animate-fadeup shadow-2xl text-[10px] font-black uppercase tracking-widest z-[300]`;
       t.innerText = msg;
       document.getElementById('toast-container').appendChild(t);
       setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 3000);
