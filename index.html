@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gestor Makro v32 - Enterprise</title>
+  <title>Painel Makro v33</title>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700;900&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -618,7 +618,38 @@
       }).join('');
     }
 
-    function getTaskPath() { return collection(db, 'artifacts', appId, 'users', user.uid, 'tasks'); }
+  const monthlyNpsData = useMemo(() => {
+    // 1. Aplica todos os filtros (exceto mês) na base de dados
+    const baseFilteredData = data.filter(d => {
+        return (filters.unidade === 'Todas' || d.unidade === filters.unidade) &&
+               (filters.cliente === 'Todos' || d.cliente === filters.cliente) &&
+               (filters.contrato === 'Todos' || d.contrato === filters.contrato);
+    });
+
+    // 2. Extrai os meses disponíveis já com os filtros aplicados
+    let monthsToShow = [...new Set(baseFilteredData.map(r => r.mes))].filter(Boolean);
+    
+    // 3. Aplica o filtro de mês (caso selecionado no dropdown)
+    if (filters.mes !== 'Todos') {
+        if (filters.mes.startsWith('Ano ')) {
+            const targetYear = filters.mes.replace('Ano ', '');
+            monthsToShow = monthsToShow.filter(m => m.endsWith(targetYear));
+        } else {
+            monthsToShow = monthsToShow.filter(m => m === filters.mes);
+        }
+    }
+
+    const sortedMonths = sortMonthsChronologically(monthsToShow);
+    
+    // 4. Calcula o score usando a base pré-filtrada
+    return sortedMonths.map(m => {
+        const dMes = baseFilteredData.filter(x => x.mes === m); 
+        const p = dMes.filter(x => x.nota >= 9).length;
+        const det = dMes.filter(x => x.nota <= 6).length;
+        const nps = dMes.length > 0 ? Math.round(((p - det) / dMes.length) * 100) : 0;
+        return { mes: m, score: nps };
+    });
+}, [data, filters]); // Importante: 'filters' precisa estar no array de dependências
 
     window.saveTask = async () => {
       if (!user) return;
