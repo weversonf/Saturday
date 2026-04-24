@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SaaS Gestão | Saturday v25</title>
+    <title>SaaS Gestão | Saturday v26</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
-        /* ── Variáveis Globais (Light Mode) ── */
+        /* ── Variáveis Globais ── */
         :root { 
             --makro-red: #ED1C24; 
             --bg-body: #f1f5f9;
@@ -29,7 +29,6 @@
             --status-done: #10b981;
         }
 
-        /* ── Dark Mode ── */
         [data-theme="dark"] {
             --bg-body: #010816;
             --bg-sidebar: #010816;
@@ -55,19 +54,17 @@
         .login-card { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 20px; width: 100%; max-width: 400px; padding: 40px; box-shadow: var(--card-shadow); text-align: center; }
         .login-card .logo-text { font-size: 32px; font-weight: 900; letter-spacing: 2px; color: var(--makro-red); margin-bottom: 8px; }
         .login-card p { font-size: 12px; color: var(--text-muted); margin-bottom: 32px; font-weight: 500; }
-        
         #app-container { display: none; width: 100%; height: 100%; }
 
-        /* ── Sidebar (Menu Lateral Retrátil) ── */
+        /* ── Sidebar ── */
         #sidebar-spacer { width: 250px; flex-shrink: 0; transition: width 0.3s ease; }
         #sidebar-spacer.collapsed { width: 80px; }
 
         aside { 
             position: fixed; left: 0; top: 0; bottom: 0; width: 250px; background-color: var(--bg-sidebar); 
             border-right: 1px solid var(--border-color); display: flex; flex-direction: column; padding: 20px; 
-            z-index: 200; transition: width 0.3s ease, box-shadow 0.3s ease, padding 0.3s ease; overflow: hidden; white-space: nowrap;
+            z-index: 200; transition: width 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease, padding 0.3s ease; overflow: hidden; white-space: nowrap;
         }
-
         aside.collapsed:not(:hover) { width: 80px; padding: 20px 10px; }
         aside.collapsed:hover { width: 250px; box-shadow: 4px 0 15px rgba(0,0,0,0.1); }
 
@@ -78,8 +75,7 @@
 
         .btn-toggle-sidebar { background: transparent; border: none; color: var(--text-muted); cursor: pointer; padding: 6px; border-radius: 8px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
         .btn-toggle-sidebar:hover { background: var(--column-bg); color: var(--text-main); }
-        .btn-toggle-sidebar i { width: 20px; height: 20px; }
-
+        
         .hide-on-collapse { transition: opacity 0.2s ease; opacity: 1; }
         aside.collapsed:not(:hover) .hide-on-collapse { opacity: 0; pointer-events: none; display: none; }
         aside.collapsed:not(:hover) .sidebar-header { justify-content: center; }
@@ -91,10 +87,8 @@
         .nav-section { display: flex; justify-content: space-between; align-items: center; font-size: 9px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; color: var(--text-muted); margin-bottom: 10px; margin-top: 20px; }
         .btn-add-board { background: transparent; border: none; color: var(--text-muted); cursor: pointer; padding: 4px; border-radius: 4px; }
         .btn-add-board:hover { background: var(--column-bg); color: var(--text-main); }
-        .btn-add-board i { width: 14px; height: 14px; }
-
+        
         .nav-link { padding: 10px 14px; margin-bottom: 6px; border-radius: 10px; cursor: pointer; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 10px; color: var(--text-muted); transition: background 0.2s; }
-        .nav-link i { width: 18px; height: 18px; flex-shrink: 0; }
         .nav-link:hover { background: var(--column-bg); color: var(--text-main); }
         .nav-link.active { background: rgba(237, 28, 36, 0.1); color: var(--makro-red); }
         .nav-link.danger:hover { background: rgba(237, 28, 36, 0.1); color: var(--makro-red); }
@@ -105,43 +99,41 @@
         .user-profile.active .hide-on-collapse p:first-child { color: var(--makro-red); }
         .avatar { width: 32px; height: 32px; border-radius: 50%; background-color: var(--makro-red); color: white; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 12px; flex-shrink: 0; overflow: hidden; }
 
+        /* Mobile Overlay */
+        .mobile-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); z-index: 199; backdrop-filter: blur(2px); }
+
         /* ── Main Content ── */
         main { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
         header { height: 70px; padding: 0 28px; background-color: var(--bg-header); backdrop-filter: var(--glass-blur); border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
         
-        .header-title { font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; display: flex; align-items: center; gap: 8px; }
-        .header-title > i { width: 18px; height: 18px; }
+        .header-title-container { display: flex; align-items: center; gap: 16px; }
+        .btn-mobile-menu { display: none; background: transparent; border: none; color: var(--text-main); cursor: pointer; padding: 4px; border-radius: 8px; }
         
+        .header-title { font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; display: flex; align-items: center; gap: 8px; }
         .btn-edit-board { background: transparent; border: none; color: var(--text-muted); cursor: pointer; padding: 4px; border-radius: 6px; transition: 0.2s; display: flex; align-items: center; justify-content: center; opacity: 0.4; }
         .btn-edit-board:hover { background: var(--column-bg); color: var(--makro-red); opacity: 1; }
-        .btn-edit-board i { width: 12px !important; height: 12px !important; }
 
         .header-controls { display: flex; gap: 12px; align-items: center; }
         .view-toggle { display: flex; background-color: var(--bg-body); border-radius: 12px; padding: 4px; border: 1px solid var(--border-color); }
         .btn-view { background: transparent; border: none; padding: 6px 12px; border-radius: 8px; cursor: pointer; color: var(--text-muted); display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
-        .btn-view i { width: 16px; height: 16px; }
         .btn-view:hover { color: var(--text-main); }
         .btn-view.active { background-color: var(--bg-card); color: var(--text-main); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
 
         .btn { border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; font-family: 'Montserrat', sans-serif; }
         .btn-icon { width: 36px; height: 36px; border-radius: 10px; }
-        .btn-icon i { width: 18px; height: 18px; }
         .btn-text { padding: 10px 20px; border-radius: 10px; font-size: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
         
         .btn-theme { background: transparent; border: 1px solid var(--border-color); color: var(--text-main); }
         .btn-theme:hover { background: var(--column-bg); }
         .btn-primary { background-color: var(--makro-red); color: white; box-shadow: 0 4px 10px rgba(237, 28, 36, 0.2); }
         .btn-primary:hover { background-color: #d11820; }
-        .btn-primary:active { transform: scale(0.95); }
         .btn-danger { color: var(--makro-red); }
         .btn-danger:hover { background: rgba(237, 28, 36, 0.1); }
         .btn-google { background-color: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-color); width: 100%; gap: 12px; padding: 14px; margin-top: 10px; box-shadow: var(--card-shadow); }
-        .btn-google:hover { background-color: var(--column-bg); }
 
         /* ── Barra de Filtros ── */
         .filter-bar { display: flex; gap: 16px; padding: 16px 28px; background-color: var(--bg-header); border-bottom: 1px solid var(--border-color); align-items: center; flex-shrink: 0; }
         .search-box { display: flex; align-items: center; background-color: var(--bg-body); border: 1px solid var(--border-color); border-radius: 10px; padding: 0 12px; height: 36px; flex-grow: 1; max-width: 300px; }
-        .search-box i { width: 16px; height: 16px; color: var(--text-muted); }
         .search-box input { background: transparent; border: none; outline: none; padding: 0 10px; width: 100%; color: var(--text-main); font-size: 11px; font-weight: 500; }
         .filter-select { background-color: var(--bg-body); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 10px; padding: 0 12px; height: 36px; font-size: 11px; font-weight: 700; outline: none; cursor: pointer; }
 
@@ -152,13 +144,11 @@
         /* ── Telas de Sistema ── */
         .system-view { flex-direction: column; align-items: center; padding-top: 40px; }
         .settings-card { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 20px; width: 100%; max-width: 600px; padding: 32px; box-shadow: var(--card-shadow); margin-bottom: 30px; }
-        .settings-card h2 { font-size: 16px; font-weight: 900; text-transform: uppercase; margin-bottom: 24px; color: var(--text-main); border-bottom: 1px solid var(--border-color); padding-bottom: 12px; }
-        
+        .settings-card h2 { font-size: 16px; font-weight: 900; text-transform: uppercase; margin-bottom: 24px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; }
         .settings-group { margin-bottom: 20px; }
         .settings-group label { display: block; font-size: 10px; font-weight: 900; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; }
         .file-upload-wrapper { display: flex; align-items: center; gap: 12px; }
         .file-upload-btn { background: var(--column-bg); border: 1px solid var(--border-color); padding: 10px 16px; border-radius: 8px; font-size: 11px; font-weight: 700; color: var(--text-main); cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
-        .file-upload-btn:hover { background: var(--border-color); }
         input[type="file"] { display: none; }
 
         .users-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 12px; }
@@ -166,7 +156,6 @@
         .users-table td { padding: 12px; border-bottom: 1px solid var(--border-color); }
         .badge-role { padding: 4px 8px; border-radius: 4px; font-size: 9px; font-weight: 900; text-transform: uppercase; }
         .role-adm { background: rgba(237, 28, 36, 0.1); color: var(--makro-red); }
-        .role-member { background: var(--column-bg); color: var(--text-main); }
 
         /* ── Kanban Board ── */
         #view-kanban { gap: 20px; align-items: flex-start; }
@@ -174,71 +163,40 @@
         .column-header { padding: 16px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; border-radius: 16px 16px 0 0; }
         .column-header h3 { font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; }
         .badge-count { background: var(--bg-body); color: var(--text-muted); padding: 4px 8px; border-radius: 6px; font-size: 9px; font-weight: 900; }
-
         .col-todo { border-top: 3px solid var(--status-todo); }
         .col-progress { border-top: 3px solid var(--status-progress); }
         .col-waiting { border-top: 3px solid var(--status-waiting); }
         .col-done { border-top: 3px solid var(--status-done); }
-        .col-todo h3 { color: var(--status-todo); }
-        .col-progress h3 { color: var(--status-progress); }
-        .col-waiting h3 { color: var(--status-waiting); }
-        .col-done h3 { color: var(--status-done); }
-
         .task-list { padding: 12px; flex-grow: 1; overflow-y: auto; min-height: 120px; display: flex; flex-direction: column; gap: 10px; }
 
         /* ── Cards ── */
         .card { background-color: var(--bg-card); backdrop-filter: var(--glass-blur); border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; cursor: pointer; box-shadow: var(--card-shadow); position: relative; animation: fadeUp 0.3s ease; transition: transform 0.2s, box-shadow 0.2s; }
         .card:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.1); }
         .card.dragging { opacity: 0.4; cursor: grabbing; transform: scale(0.98); }
-
         @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         .card-labels { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
-        
         .badge-complex { font-size: 8px; font-weight: 900; padding: 3px 6px; border-radius: 4px; text-transform: uppercase; letter-spacing: 1px; display: inline-block; width: fit-content; margin-bottom: 4px;}
         .badge-complex-Baixa { background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.2); }
         .badge-complex-Média { background: rgba(234, 179, 8, 0.1); color: #eab308; border: 1px solid rgba(234, 179, 8, 0.2); }
         .badge-complex-Alta { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); }
 
         .card h4 { font-size: 12px; font-weight: 700; margin-bottom: 12px; line-height: 1.4; color: var(--text-main); }
-        
-        /* ── EFEITO LÍQUIDO MU FINANCE (BARRA DE PROGRESSO COM CORES DINÂMICAS) ── */
         .progress-container { margin-bottom: 12px; }
         .progress-header { display: flex; justify-content: space-between; font-size: 9px; font-weight: 900; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; }
-        
         .progress-bar-bg { width: 100%; height: 12px; background-color: var(--border-color); border-radius: 12px; overflow: hidden; box-shadow: inset 0 1px 2px rgba(0,0,0,0.1); }
-        .progress-bar-fill { 
-            height: 100%; 
-            border-radius: 12px; 
-            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.4s ease; 
-            background-image: radial-gradient(circle, rgba(255, 255, 255, 0.3) 35%, transparent 40%);
-            background-size: 18px 18px; 
-            background-position: 0 center; 
-            animation: liquidFlow 1.5s linear infinite;
-        }
-
+        .progress-bar-fill { height: 100%; border-radius: 12px; transition: width 0.4s ease, background-color 0.4s ease; background-image: radial-gradient(circle, rgba(255, 255, 255, 0.3) 35%, transparent 40%); background-size: 18px 18px; background-position: 0 center; animation: liquidFlow 1.5s linear infinite; }
         @keyframes liquidFlow { from { background-position: 0 center; } to { background-position: 18px center; } }
 
         .card-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 12px; }
         .deadline { display: flex; align-items: center; gap: 4px; font-size: 9px; font-weight: 900; color: var(--text-muted); text-transform: uppercase; }
-        .deadline i { width: 10px; height: 10px; }
 
         /* ── Lista (View) e Filtros na Tabela ── */
         #view-list { flex-direction: column; gap: 10px; }
         .list-header-row { display: grid; grid-template-columns: 3fr 1.5fr 1fr 1.5fr 50px; gap: 16px; padding: 0 16px 8px 16px; font-size: 9px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; color: var(--text-muted); border-bottom: 1px solid var(--border-color); align-items: center; }
-        
-        .header-filter-select { 
-            background-color: var(--column-bg); border: 1px solid var(--border-color); color: var(--text-muted); 
-            font-size: 9px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; outline: none; cursor: pointer; padding: 6px 24px 6px 12px; border-radius: 8px; width: auto; appearance: none;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="%2364748b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>');
-            background-repeat: no-repeat; background-position: right 8px center; transition: all 0.2s;
-        }
+        .header-filter-select { background-color: var(--column-bg); border: 1px solid var(--border-color); color: var(--text-muted); font-size: 9px; font-weight: 900; text-transform: uppercase; outline: none; cursor: pointer; padding: 6px 24px 6px 12px; border-radius: 8px; appearance: none; background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="%2364748b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>'); background-repeat: no-repeat; background-position: right 8px center; }
         [data-theme="dark"] .header-filter-select { background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="%2394a3b8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>'); }
-        .header-filter-select:hover { color: var(--text-main); background-color: var(--border-color); }
-        .header-filter-select option { background-color: var(--bg-card); color: var(--text-main); font-weight: 700; text-transform: uppercase; }
-
         .list-item { display: grid; grid-template-columns: 3fr 1.5fr 1fr 1.5fr 50px; gap: 16px; align-items: center; background-color: var(--bg-card); padding: 16px; border-radius: 12px; border: 1px solid var(--border-color); box-shadow: var(--card-shadow); transition: transform 0.2s; cursor: pointer; }
-        .list-item:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.1); }
         .list-item-title { display: flex; align-items: center; gap: 12px; font-size: 12px; font-weight: 700; }
         .status-badge { font-size: 9px; font-weight: 900; padding: 4px 8px; border-radius: 6px; text-transform: uppercase; letter-spacing: 1px; text-align: center; display: inline-block; }
         .status-badge.todo { background: var(--status-todo); color: white; }
@@ -246,7 +204,6 @@
         .status-badge.waiting { background: var(--status-waiting); color: white; }
         .status-badge.done { background: var(--status-done); color: white; }
         .list-action-btn { background: transparent; border: none; color: var(--text-muted); cursor: pointer; padding: 4px; border-radius: 4px; }
-        .list-action-btn:hover { color: var(--makro-red); background: var(--column-bg); }
 
         /* ── DASHBOARD ── */
         #view-dashboard { flex-direction: column; gap: 24px; padding-top: 24px; }
@@ -257,9 +214,7 @@
         .dash-card.todo { border-bottom: 4px solid var(--status-todo); }
         .dash-card.progress { border-bottom: 4px solid var(--status-progress); }
         .dash-card.done { border-bottom: 4px solid var(--status-done); }
-
         .dash-panel-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 24px; }
-        @media (max-width: 900px) { .dash-panel-grid { grid-template-columns: 1fr; } }
         .status-stat-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
         .status-stat-label { width: 110px; font-size: 10px; font-weight: 900; text-transform: uppercase; color: var(--text-muted); }
         .status-stat-pct { width: 40px; text-align: right; font-size: 10px; font-weight: 900; color: var(--text-main); }
@@ -269,30 +224,70 @@
         /* ── MODALS ── */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 1000; opacity: 0; transition: opacity 0.3s; }
         .modal-overlay.active { display: flex; opacity: 1; }
-        .modal-content { background-color: var(--bg-body); border: 1px solid var(--border-color); border-radius: 20px; width: 90%; max-width: 550px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); transform: translateY(20px); transition: transform 0.3s; }
+        .modal-content { background-color: var(--bg-body); border: 1px solid var(--border-color); border-radius: 20px; width: 90%; max-width: 550px; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 25px rgba(0,0,0,0.2); transform: translateY(20px); transition: transform 0.3s; }
         .modal-overlay.active .modal-content { transform: translateY(0); }
-        .modal-header { padding: 24px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+        .modal-header { padding: 24px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: var(--bg-body); z-index: 10; }
         .modal-header h3 { font-size: 14px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; color: var(--text-main); }
         .btn-close { background: transparent; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 8px; padding: 4px; transition: 0.2s; }
-        .btn-close:hover { background: var(--column-bg); color: var(--text-main); }
         .modal-body { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
         .input-group label { display: block; font-size: 10px; font-weight: 900; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 1px; }
-        
-        .input-group input[type="text"], .input-group input[type="date"], .input-group textarea, .input-group select { 
-            width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--border-color); background-color: var(--bg-card); color: var(--text-main); font-size: 13px; font-weight: 500; outline: none; transition: border-color 0.2s; font-family: 'Montserrat', sans-serif; 
-        }
+        .input-group input[type="text"], .input-group input[type="date"], .input-group textarea, .input-group select { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--border-color); background-color: var(--bg-card); color: var(--text-main); font-size: 13px; font-weight: 500; outline: none; font-family: 'Montserrat', sans-serif; }
         ::-webkit-calendar-picker-indicator { filter: invert(0.5); cursor: pointer; }
         [data-theme="dark"] ::-webkit-calendar-picker-indicator { filter: invert(1); }
-
-        .input-group input:focus, .input-group textarea:focus, .input-group select:focus { border-color: var(--makro-red); }
         .input-group input[type="range"] { width: 100%; accent-color: var(--makro-red); cursor: pointer; border: none; padding: 0; background: transparent; }
         .range-value { font-size: 14px; font-weight: 900; color: var(--makro-red); text-align: right; display: block; margin-top: 4px; }
-        .modal-footer { padding: 20px 24px; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; gap: 12px; background-color: var(--bg-card); border-radius: 0 0 20px 20px; }
-
+        .modal-footer { padding: 20px 24px; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; gap: 12px; background-color: var(--bg-card); border-radius: 0 0 20px 20px; position: sticky; bottom: 0; }
         .icon-grid { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
         .icon-option { width: 44px; height: 44px; border-radius: 12px; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-muted); transition: all 0.2s; background: var(--bg-body); }
-        .icon-option:hover { background: var(--column-bg); color: var(--text-main); }
         .icon-option.active { border-color: var(--makro-red); color: var(--makro-red); background: rgba(237, 28, 36, 0.1); }
+
+        /* ── RESPONSIVIDADE (MOBILE) ── */
+        @media (max-width: 768px) {
+            /* Header */
+            header { padding: 0 16px; height: 60px; }
+            .header-title-container { gap: 8px; }
+            .btn-mobile-menu { display: flex; }
+            .header-title > span { display: none; } /* Oculta nome do board no topo para dar espaço */
+            .btn-edit-board { margin-left: -4px; }
+            .header-controls { gap: 8px; }
+            .btn-text { font-size: 0; padding: 8px; }
+            .btn-text i { margin: 0 !important; }
+            .btn-view { padding: 6px 8px; }
+            #header-divider { margin: 0; }
+
+            /* Sidebar Drawer */
+            #sidebar-spacer { display: none !important; }
+            aside { transform: translateX(-100%); width: 280px !important; z-index: 201; padding: 16px; }
+            aside.mobile-open { transform: translateX(0); }
+            aside .sidebar-header .btn-toggle-sidebar { display: none; }
+            .mobile-overlay.active { display: block; }
+            .hide-on-collapse { opacity: 1; pointer-events: auto; display: flex; }
+            aside.collapsed:not(:hover) .hide-on-collapse { display: flex; opacity: 1; pointer-events: auto; } /* Reseta no mobile */
+
+            /* Filter Bar */
+            .filter-bar { flex-direction: column; padding: 12px 16px; align-items: stretch; gap: 10px; }
+            .search-box { max-width: 100%; }
+
+            /* Kanban View */
+            .view-container { padding: 16px; }
+            #view-kanban { padding-bottom: 30px; }
+
+            /* List View responsiva (Cards empilhados) */
+            .list-header-row { display: none; }
+            .list-item { grid-template-columns: 1fr; gap: 12px; position: relative; padding: 16px; }
+            .list-item > div:not(:first-child) { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+            .list-action-btn { position: absolute; top: 12px; right: 12px; }
+
+            /* Dashboard */
+            .dash-panel-grid { grid-template-columns: 1fr; }
+
+            /* Modals */
+            .modal-body > div[style*="display: flex"] { flex-direction: column; gap: 16px; }
+            .modal-content { max-height: 85vh; margin: 16px; width: 100%; }
+            .modal-footer { flex-direction: column-reverse; }
+            .modal-footer > div { flex-direction: column; width: 100%; }
+            .modal-footer button { width: 100%; justify-content: center; }
+        }
     </style>
 </head>
 <body data-theme="light">
@@ -301,7 +296,6 @@
         <div class="login-card">
             <h2 class="logo-text">SATURDAY</h2>
             <p>Gestão Inteligente e Descomplicada</p>
-            
             <button onclick="window.loginWithGoogle()" class="btn btn-google btn-text" style="display: flex; align-items: center; justify-content: center; width: 100%;">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -315,6 +309,9 @@
     </div>
 
     <div id="app-container">
+        
+        <div id="mobile-overlay" class="mobile-overlay" onclick="toggleMobileSidebar()"></div>
+
         <div id="sidebar-spacer"></div>
 
         <aside id="sidebar">
@@ -323,7 +320,7 @@
                     <h2 id="logo-text" class="logo-text">SATURDAY</h2>
                     <img id="logo-preview" style="display: none;" alt="Custom Logo">
                 </div>
-                <button class="btn-toggle-sidebar" onclick="toggleSidebar()" title="Recolher/Expandir Menu">
+                <button class="btn-toggle-sidebar" onclick="toggleDesktopSidebar()" title="Recolher/Expandir Menu">
                     <i data-lucide="menu"></i>
                 </button>
             </div>
@@ -364,12 +361,15 @@
 
         <main>
             <header>
-                <div class="header-title">
-                    <i data-lucide="layout-dashboard" style="color: var(--makro-red);" id="header-board-icon"></i> 
-                    <span id="board-title-text">Board de Marketing</span>
-                    <button class="btn-edit-board" onclick="openBoardModal('edit')" title="Editar Quadro" id="btn-edit-board">
-                        <i data-lucide="pencil"></i>
-                    </button>
+                <div class="header-title-container">
+                    <button class="btn-mobile-menu" onclick="toggleMobileSidebar()"><i data-lucide="menu"></i></button>
+                    <div class="header-title">
+                        <i data-lucide="layout-dashboard" style="color: var(--makro-red);" id="header-board-icon"></i> 
+                        <span id="board-title-text">Board de Marketing</span>
+                        <button class="btn-edit-board" onclick="openBoardModal('edit')" title="Editar Quadro" id="btn-edit-board">
+                            <i data-lucide="pencil"></i>
+                        </button>
+                    </div>
                 </div>
                 <div class="header-controls" id="header-controls">
                     <div class="view-toggle" id="view-toggle">
@@ -394,45 +394,18 @@
             </div>
 
             <div class="view-container active" id="view-kanban">
-                <div class="column col-todo">
-                    <div class="column-header"><h3>A fazer</h3><span class="badge-count" id="count-todo">0</span></div>
-                    <div class="task-list" id="todo" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-                </div>
-                <div class="column col-progress">
-                    <div class="column-header"><h3>Em progresso</h3><span class="badge-count" id="count-progress">0</span></div>
-                    <div class="task-list" id="progress" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-                </div>
-                <div class="column col-waiting">
-                    <div class="column-header"><h3>Aguardando aprovação</h3><span class="badge-count" id="count-waiting">0</span></div>
-                    <div class="task-list" id="waiting" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-                </div>
-                <div class="column col-done">
-                    <div class="column-header"><h3>Concluído</h3><span class="badge-count" id="count-done">0</span></div>
-                    <div class="task-list" id="done" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-                </div>
+                <div class="column col-todo"><div class="column-header"><h3>A fazer</h3><span class="badge-count" id="count-todo">0</span></div><div class="task-list" id="todo" ondrop="drop(event)" ondragover="allowDrop(event)"></div></div>
+                <div class="column col-progress"><div class="column-header"><h3>Em progresso</h3><span class="badge-count" id="count-progress">0</span></div><div class="task-list" id="progress" ondrop="drop(event)" ondragover="allowDrop(event)"></div></div>
+                <div class="column col-waiting"><div class="column-header"><h3>Aguardando aprovação</h3><span class="badge-count" id="count-waiting">0</span></div><div class="task-list" id="waiting" ondrop="drop(event)" ondragover="allowDrop(event)"></div></div>
+                <div class="column col-done"><div class="column-header"><h3>Concluído</h3><span class="badge-count" id="count-done">0</span></div><div class="task-list" id="done" ondrop="drop(event)" ondragover="allowDrop(event)"></div></div>
             </div>
 
             <div class="view-container" id="view-list">
                 <div class="list-header-row">
                     <div>Tarefa</div>
-                    <div>
-                        <select id="filter-status-table" class="header-filter-select" onchange="applyFilters()">
-                            <option value="all">Status</option>
-                            <option value="A fazer">A fazer</option>
-                            <option value="Em Progresso">Progresso</option>
-                            <option value="Aguardando aprovação">Aguardando</option>
-                            <option value="Concluído">Concluído</option>
-                        </select>
-                    </div>
+                    <div><select id="filter-status-table" class="header-filter-select" onchange="applyFilters()"><option value="all">Status</option><option value="A fazer">A fazer</option><option value="Em Progresso">Progresso</option><option value="Aguardando aprovação">Aguardando</option><option value="Concluído">Concluído</option></select></div>
                     <div>Progresso</div>
-                    <div>
-                        <select id="filter-deadline-table" class="header-filter-select" onchange="applyFilters()">
-                            <option value="all">Prazo</option>
-                            <option value="hoje">Hoje</option>
-                            <option value="atrasado">Atrasado</option>
-                            <option value="futuro">Futuro</option>
-                        </select>
-                    </div>
+                    <div><select id="filter-deadline-table" class="header-filter-select" onchange="applyFilters()"><option value="all">Prazo</option><option value="hoje">Hoje</option><option value="atrasado">Atrasado</option><option value="futuro">Futuro</option></select></div>
                     <div></div>
                 </div>
                 <div id="list-items-container" style="display: contents;"></div>
@@ -494,9 +467,7 @@
                     <div style="overflow-x: auto;">
                         <table class="users-table">
                             <thead><tr><th>Usuário</th><th>Email</th><th>Nível de Acesso</th><th>Status</th><th style="text-align: right;">Ações</th></tr></thead>
-                            <tbody id="users-table-body">
-                                <tr><td colspan="5" style="text-align: center; opacity: 0.5; padding: 20px;">Nenhum usuário cadastrado além de você.</td></tr>
-                            </tbody>
+                            <tbody id="users-table-body"><tr><td colspan="5" style="text-align: center; opacity: 0.5; padding: 20px;">Nenhum usuário cadastrado além de você.</td></tr></tbody>
                         </table>
                     </div>
                 </div>
@@ -586,7 +557,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBY-ooceqwTp-Hp3oZ6mCZq_U0qLbRtSfA",
@@ -601,32 +572,24 @@
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
         
-        const db = getFirestore(app);
-        window.db = db;
+        window.db = getFirestore(app);
         window.fs = { collection, addDoc, getDocs, updateDoc, deleteDoc, doc };
 
-        const loginContainer = document.getElementById('login-container');
-        const appContainer = document.getElementById('app-container');
-
-        window.loginWithGoogle = () => {
-            signInWithPopup(auth, provider).catch(err => { console.error(err); alert("Erro ao tentar fazer login com o Google."); });
-        };
-
+        window.loginWithGoogle = () => { signInWithPopup(auth, provider).catch(err => alert("Erro ao fazer login.")); };
         window.logout = () => { signOut(auth).catch(err => console.error(err)); };
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                loginContainer.style.display = 'none';
-                appContainer.style.display = 'flex';
+                document.getElementById('login-container').style.display = 'none';
+                document.getElementById('app-container').style.display = 'flex';
                 
                 const displayName = user.displayName || 'Usuário';
                 const firstLetter = displayName.charAt(0).toUpperCase();
-                const email = user.email || '';
 
                 document.getElementById('sidebar-user-name').innerText = displayName;
-                document.getElementById('sidebar-user-email').innerText = email;
+                document.getElementById('sidebar-user-email').innerText = user.email || '';
                 document.getElementById('profile-name').value = displayName;
-                document.getElementById('profile-email').value = email;
+                document.getElementById('profile-email').value = user.email || '';
 
                 const avatarElements = [document.getElementById('sidebar-user-avatar'), document.getElementById('profile-avatar')];
                 avatarElements.forEach(el => {
@@ -639,44 +602,32 @@
                     }
                 });
 
-                const usersTableBody = document.getElementById('users-table-body');
-                usersTableBody.innerHTML = `
+                document.getElementById('users-table-body').innerHTML = `
                     <tr>
                         <td style="display: flex; align-items: center; gap: 12px; border-bottom: none;">
-                            <div class="avatar" style="width: 28px; height: 28px; font-size: 10px;">${firstLetter}</div> 
-                            <strong>${displayName}</strong>
+                            <div class="avatar" style="width: 28px; height: 28px; font-size: 10px;">${firstLetter}</div> <strong>${displayName}</strong>
                         </td>
-                        <td>${email}</td>
-                        <td><span class="badge-role role-adm">Administrador</span></td>
+                        <td>${user.email}</td><td><span class="badge-role role-adm">Administrador</span></td>
                         <td><span style="color: var(--status-done); font-weight: 700;">Ativo</span></td>
                         <td style="text-align: right;"><button class="list-action-btn"><i data-lucide="more-horizontal"></i></button></td>
-                    </tr>
-                `;
+                    </tr>`;
 
-                const selectUser = document.getElementById('modal-input-user');
-                selectUser.innerHTML = `<option value="${displayName}">${displayName}</option>`;
-                
-                const filterUser = document.getElementById('user-filter');
-                filterUser.innerHTML = `<option value="all">Solicitante: Todos</option><option value="${displayName}">${displayName}</option>`;
+                document.getElementById('modal-input-user').innerHTML = `<option value="${displayName}">${displayName}</option>`;
+                document.getElementById('user-filter').innerHTML = `<option value="all">Solicitante: Todos</option><option value="${displayName}">${displayName}</option>`;
 
-                if(window.loadTasksFromDB) { window.loadTasksFromDB(); }
+                if(window.loadTasksFromDB) window.loadTasksFromDB();
                 if(typeof lucide !== 'undefined') lucide.createIcons();
-
             } else {
-                loginContainer.style.display = 'flex';
-                appContainer.style.display = 'none';
+                document.getElementById('login-container').style.display = 'flex';
+                document.getElementById('app-container').style.display = 'none';
             }
         });
     </script>
 
     <script>
-        let currentBoard = 'Marketing';
-        let currentBoardIcon = 'layout-dashboard';
-        let boardModalMode = 'create'; 
-        let selectedBoardIcon = 'folder';
-        
-        let isCreatingTask = false;
-        let currentEditingElementId = null;
+        let currentBoard = 'Marketing'; let currentBoardIcon = 'layout-dashboard';
+        let boardModalMode = 'create'; let selectedBoardIcon = 'folder';
+        let isCreatingTask = false; let currentEditingElementId = null;
         
         const availableIcons = ['layout-dashboard', 'briefcase', 'folder', 'star', 'box', 'pie-chart', 'zap', 'bookmark', 'target', 'monitor', 'clipboard', 'coffee'];
         const dateTodayObj = new Date();
@@ -689,37 +640,35 @@
                 document.getElementById('sidebar').classList.add('collapsed');
             }
             renderIconSelector();
-            
-            window.drag = function(ev) { 
-                ev.dataTransfer.setData("text", ev.target.id); 
-                setTimeout(() => { document.getElementById(ev.target.id).classList.add('dragging'); }, 0); 
-            };
+            window.drag = function(ev) { ev.dataTransfer.setData("text", ev.target.id); setTimeout(() => { document.getElementById(ev.target.id).classList.add('dragging'); }, 0); };
             window.allowDrop = function(ev) { ev.preventDefault(); };
         });
 
-        // ── FUNÇÃO DE CORES DINÂMICAS ──
-        function getProgressColor(progress) {
-            const p = parseInt(progress) || 0;
-            // 0% = Vermelho (Hue 0)
-            // 50% = Amarelo (Hue 60)
-            // 100% = Verde (Hue 120)
-            const hue = p * 1.2; 
-            return `hsl(${hue}, 85%, 50%)`;
-        }
-
-        // Atualiza a cor do texto do progresso dentro do modal ao arrastar
-        function updateModalProgressColor(value) {
-            const valLabel = document.getElementById('modal-progress-val');
-            valLabel.innerText = value + '%';
-            valLabel.style.color = getProgressColor(value);
-        }
-
-        function toggleSidebar() {
+        // Toggle Sidebar Desktop
+        function toggleDesktopSidebar() {
             const spacer = document.getElementById('sidebar-spacer');
             const sidebar = document.getElementById('sidebar');
             spacer.classList.toggle('collapsed');
             sidebar.classList.toggle('collapsed');
             localStorage.setItem('sidebar-collapsed', sidebar.classList.contains('collapsed'));
+        }
+
+        // Toggle Sidebar Mobile
+        function toggleMobileSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('mobile-overlay');
+            sidebar.classList.toggle('mobile-open');
+            overlay.classList.toggle('active');
+        }
+
+        function getProgressColor(progress) {
+            const p = parseInt(progress) || 0;
+            return `hsl(${p * 1.2}, 85%, 50%)`;
+        }
+
+        function updateModalProgressColor(value) {
+            const valLabel = document.getElementById('modal-progress-val');
+            valLabel.innerText = value + '%'; valLabel.style.color = getProgressColor(value);
         }
 
         function formatDisplayDate(dateStr) {
@@ -739,28 +688,18 @@
         window.loadTasksFromDB = async function() {
             ['todo', 'progress', 'waiting', 'done'].forEach(id => { document.getElementById(id).innerHTML = ''; });
             document.getElementById('list-items-container').innerHTML = '';
-
             try {
                 const querySnapshot = await window.fs.getDocs(window.fs.collection(window.db, "tasks"));
-                querySnapshot.forEach((doc) => {
-                    const data = doc.data();
-                    renderTaskInDOM(doc.id, data);
-                });
-                applyFilters();
-                updateDashboard();
-            } catch (error) {
-                console.error("Erro ao carregar tarefas: ", error);
-            }
+                querySnapshot.forEach((doc) => { renderTaskInDOM(doc.id, doc.data()); });
+                applyFilters(); updateDashboard();
+            } catch (error) { console.error(error); }
         };
 
         function renderTaskInDOM(id, data) {
-            const cardId = "t_" + id;
-            const listId = "l_" + id;
+            const cardId = "t_" + id; const listId = "l_" + id;
             const formattedDeadline = formatDisplayDate(data.deadline);
-            const board = data.board || 'Marketing';
-            const status = data.status || 'todo';
-            
-            const progColor = getProgressColor(data.progress); // <- Cor Dinâmica
+            const board = data.board || 'Marketing'; const status = data.status || 'todo';
+            const progColor = getProgressColor(data.progress); 
 
             let card = document.getElementById(cardId);
             if(!card) {
@@ -866,13 +805,10 @@
                         }
                     }
                     applyFilters(); updateDashboard();
-                } catch (error) {
-                    console.error("Erro ao atualizar status:", error); alert("Erro ao salvar mudança.");
-                }
+                } catch (error) { console.error("Erro ao atualizar status:", error); alert("Erro ao salvar mudança."); }
             }
         };
 
-        // ── FUNÇÕES SISTEMA ──
         function openSystemView(viewId, title, icon, navIdToActivate) {
             ['view-kanban', 'view-list', 'view-dashboard', 'view-settings', 'view-users', 'view-profile'].forEach(id => { document.getElementById(id).classList.remove('active'); });
             document.getElementById(viewId).classList.add('active');
@@ -885,21 +821,96 @@
             if (navIdToActivate) document.getElementById(navIdToActivate).classList.add('active');
             document.getElementById('board-title-text').innerText = title;
             document.getElementById('header-board-icon').setAttribute('data-lucide', icon);
+            
+            // Se tiver em mobile, fecha o sidebar
+            if(window.innerWidth <= 768) toggleMobileSidebar();
+            
             if (typeof lucide !== 'undefined') lucide.createIcons();
         }
+
         function openSettingsView() { openSystemView('view-settings', 'Configurações do Sistema', 'settings', 'nav-settings'); }
         function openUsersView() { openSystemView('view-users', 'Gestão de Usuários', 'users', 'nav-users'); }
         function openProfileView() { openSystemView('view-profile', 'Meu Perfil', 'user', 'nav-profile'); }
 
-        function closeSystemViews() {
-            document.getElementById('filter-bar').style.display = 'flex';
-            document.getElementById('view-toggle').style.display = 'flex';
-            document.getElementById('header-divider').style.display = 'block';
-            if(currentBoard) { document.getElementById('btn-add-task').style.display = 'flex'; document.getElementById('btn-edit-board').style.display = 'flex'; }
-            let targetView = 'kanban';
-            if (document.getElementById('btn-list').classList.contains('active')) targetView = 'list';
-            if (document.getElementById('btn-dashboard').classList.contains('active')) targetView = 'dashboard';
-            changeView(targetView);
+        function renderIconSelector() {
+            const container = document.getElementById('icon-selector'); container.innerHTML = '';
+            availableIcons.forEach(icon => {
+                const div = document.createElement('div'); div.className = `icon-option ${icon === selectedBoardIcon ? 'active' : ''}`; div.innerHTML = `<i data-lucide="${icon}"></i>`;
+                div.onclick = function() { document.querySelectorAll('.icon-option').forEach(el => el.classList.remove('active')); this.classList.add('active'); selectedBoardIcon = icon; };
+                container.appendChild(div);
+            });
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
+
+        function openBoardModal(mode) {
+            boardModalMode = mode;
+            const modal = document.getElementById('board-modal'); const titleEl = document.getElementById('board-modal-title'); const inputEl = document.getElementById('modal-input-board-name'); const deleteBtn = document.getElementById('btn-delete-board');
+            if (mode === 'create') { titleEl.innerText = "Novo Quadro"; inputEl.value = ""; selectedBoardIcon = 'folder'; deleteBtn.style.display = 'none'; } 
+            else if (mode === 'edit') { titleEl.innerText = "Editar Quadro"; inputEl.value = currentBoard; selectedBoardIcon = currentBoardIcon; deleteBtn.style.display = 'flex'; }
+            renderIconSelector(); modal.classList.add('active');
+        }
+
+        function closeBoardModal() { document.getElementById('board-modal').classList.remove('active'); }
+
+        function saveBoard() {
+            const inputName = document.getElementById('modal-input-board-name').value.trim(); if (!inputName) return;
+            if (boardModalMode === 'create') {
+                const list = document.getElementById('boards-list');
+                const newLink = document.createElement('div');
+                newLink.className = 'nav-link'; newLink.setAttribute('data-board-name', inputName); newLink.setAttribute('data-board-icon', selectedBoardIcon);
+                newLink.onclick = function() { switchBoard(this); };
+                newLink.innerHTML = `<i data-lucide="${selectedBoardIcon}"></i> <span class="hide-on-collapse">${inputName}</span>`;
+                list.appendChild(newLink); if (typeof lucide !== 'undefined') lucide.createIcons(); switchBoard(newLink);
+            } else if (boardModalMode === 'edit') {
+                const oldName = currentBoard; const activeLink = document.querySelector('#boards-list .nav-link.active');
+                if (activeLink) {
+                    activeLink.setAttribute('data-board-name', inputName); activeLink.setAttribute('data-board-icon', selectedBoardIcon);
+                    activeLink.innerHTML = `<i data-lucide="${selectedBoardIcon}"></i> <span class="hide-on-collapse">${inputName}</span>`;
+                }
+                document.querySelectorAll('.card, .list-item').forEach(el => { if (el.getAttribute('data-board') === oldName) el.setAttribute('data-board', inputName); });
+                if (typeof lucide !== 'undefined') lucide.createIcons(); switchBoard(activeLink);
+            }
+            closeBoardModal();
+        }
+
+        function deleteBoard() {
+            if(confirm(`ATENÇÃO: Tem certeza que deseja excluir o quadro "${currentBoard}" e todas as suas tarefas?\nEsta ação não pode ser desfeita.`)) {
+                const activeLink = document.querySelector('#boards-list .nav-link.active'); if(activeLink) activeLink.remove();
+                document.querySelectorAll('.card, .list-item').forEach(el => { if (el.getAttribute('data-board') === currentBoard) el.remove(); });
+                closeBoardModal();
+                const firstAvailableBoard = document.querySelector('#boards-list .nav-link');
+                if(firstAvailableBoard) { switchBoard(firstAvailableBoard); } 
+                else { 
+                    currentBoard = ''; document.getElementById('board-title-text').innerText = 'Nenhum Quadro'; document.getElementById('header-board-icon').setAttribute('data-lucide', 'slash'); 
+                    document.getElementById('btn-edit-board').style.display = 'none'; document.getElementById('btn-add-task').style.display = 'none'; 
+                    if (typeof lucide !== 'undefined') lucide.createIcons(); applyFilters(); updateDashboard(); 
+                }
+            }
+        }
+
+        function switchBoard(element) {
+            if (!element) return;
+            const name = element.getAttribute('data-board-name'); const icon = element.getAttribute('data-board-icon');
+            currentBoard = name; currentBoardIcon = icon;
+            document.querySelectorAll('aside .nav-link, aside .user-profile').forEach(link => link.classList.remove('active')); element.classList.add('active');
+            document.getElementById('board-title-text').innerText = `Board de ${name}`; document.getElementById('header-board-icon').setAttribute('data-lucide', icon);
+            
+            if(window.innerWidth <= 768) toggleMobileSidebar();
+            
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+            document.getElementById('btn-edit-board').style.display = 'flex'; document.getElementById('btn-add-task').style.display = 'flex'; 
+            
+            // Retorna para o kanban
+            changeView('kanban');
+            applyFilters(); updateDashboard();
+        }
+
+        function loadLogo(event) {
+            const output = document.getElementById('logo-preview'); const textLogo = document.getElementById('logo-text');
+            if (event.target.files && event.target.files[0]) {
+                output.src = URL.createObjectURL(event.target.files[0]); output.style.display = 'block'; textLogo.style.display = 'none';
+                output.onload = function() { URL.revokeObjectURL(output.src); }
+            }
         }
 
         function changeView(viewType) {
@@ -907,7 +918,7 @@
             ['btn-kanban', 'btn-list', 'btn-dashboard'].forEach(id => { document.getElementById(id).classList.remove('active'); });
             document.getElementById('view-' + viewType).classList.add('active'); document.getElementById('btn-' + viewType).classList.add('active');
             document.getElementById('filter-bar').style.display = 'flex'; document.getElementById('view-toggle').style.display = 'flex'; document.getElementById('header-divider').style.display = 'block';
-            if(currentBoard) { document.getElementById('btn-add-task').style.display = 'flex'; }
+            if(currentBoard) { document.getElementById('btn-add-task').style.display = 'flex'; document.getElementById('btn-edit-board').style.display = 'flex';}
             if (viewType === 'dashboard') updateDashboard();
         }
 
@@ -917,26 +928,29 @@
             const statusFilter = document.getElementById('filter-status-table').value;
             const deadlineFilter = document.getElementById('filter-deadline-table').value;
 
-            const cards = document.querySelectorAll('#view-kanban .card');
-            cards.forEach(card => {
+            document.querySelectorAll('#view-kanban .card').forEach(card => {
                 const text = card.querySelector('h4').innerText.toLowerCase(); const user = card.getAttribute('data-user'); const board = card.getAttribute('data-board'); const deadline = card.getAttribute('data-deadline') || '';
                 let cardStatus = '';
                 if(card.closest('#todo')) cardStatus = 'A fazer'; else if(card.closest('#progress')) cardStatus = 'Em Progresso'; else if(card.closest('#waiting')) cardStatus = 'Aguardando aprovação'; else if(card.closest('#done')) cardStatus = 'Concluído';
+                
                 const matchSearch = text.includes(searchTerm); const matchUser = userFilter === 'all' || user === userFilter; const matchBoard = board === currentBoard; const matchStatus = statusFilter === 'all' || cardStatus === statusFilter;
                 let matchDeadline = true;
                 if (deadlineFilter === 'hoje') matchDeadline = (deadline === localISOString); else if (deadlineFilter === 'atrasado') matchDeadline = (deadline < localISOString && cardStatus !== 'Concluído'); else if (deadlineFilter === 'futuro') matchDeadline = (deadline > localISOString);
+
                 card.style.display = (matchSearch && matchUser && matchBoard && matchStatus && matchDeadline) ? 'block' : 'none';
             });
 
-            const listItems = document.querySelectorAll('#view-list .list-item');
-            listItems.forEach(item => {
+            document.querySelectorAll('#view-list .list-item').forEach(item => {
                 const text = item.querySelector('.list-item-title').innerText.toLowerCase(); const user = item.getAttribute('data-user'); const board = item.getAttribute('data-board'); const deadline = item.getAttribute('data-deadline') || '';
                 const itemStatus = item.querySelector('.status-badge').innerText.trim();
+                
                 const matchSearch = text.includes(searchTerm); const matchUser = userFilter === 'all' || user === userFilter; const matchBoard = board === currentBoard; const matchStatus = statusFilter === 'all' || itemStatus === statusFilter;
                 let matchDeadline = true;
                 if (deadlineFilter === 'hoje') matchDeadline = (deadline === localISOString); else if (deadlineFilter === 'atrasado') matchDeadline = (deadline < localISOString && itemStatus !== 'Concluído'); else if (deadlineFilter === 'futuro') matchDeadline = (deadline > localISOString);
+
                 item.style.display = (matchSearch && matchUser && matchBoard && matchStatus && matchDeadline) ? 'grid' : 'none';
             });
+
             updateCounts();
         }
 
@@ -946,24 +960,24 @@
                 const visibleCards = Array.from(document.getElementById(colId).children).filter(card => card.style.display !== 'none').length;
                 document.getElementById(`count-${colId}`).innerText = visibleCards;
             });
+            // Somente atualiza se a view de dashboard estiver visivel ou for acionada, pra poupar proc.
+            if(document.getElementById('view-dashboard').classList.contains('active')) updateDashboard(); 
         }
 
         function updateDashboard() {
             const cards = Array.from(document.querySelectorAll('#view-kanban .card')).filter(card => card.getAttribute('data-board') === currentBoard);
             const total = cards.length; let aFazer = 0, emProgresso = 0, aguardando = 0, concluidas = 0, sumProgress = 0; let userStats = {};
+
             cards.forEach(card => {
                 const user = card.getAttribute('data-user') || 'Desconhecido';
                 if(!userStats[user]) userStats[user] = { total: 0, done: 0, color: getAvatarColor(user) }; userStats[user].total++;
                 if(card.closest('#todo')) { aFazer++; } else if(card.closest('#progress')) { emProgresso++; } else if(card.closest('#waiting')) { aguardando++; } else if(card.closest('#done')) { concluidas++; userStats[user].done++; }
                 const progressText = card.querySelector('.progress-header span:last-child').innerText; sumProgress += parseInt(progressText.replace('%', '')) || 0;
             });
+
             document.getElementById('dash-total').innerText = total; document.getElementById('dash-todo').innerText = aFazer; document.getElementById('dash-progress').innerText = emProgresso; document.getElementById('dash-done').innerText = concluidas;
-            
             const progressPct = total === 0 ? 0 : Math.round(sumProgress / total);
-            document.getElementById('dash-progress-pct').innerText = progressPct + '%'; 
-            document.getElementById('dash-progress-pct').style.color = getProgressColor(progressPct); 
-            document.getElementById('dash-progress-bar').style.width = progressPct + '%';
-            document.getElementById('dash-progress-bar').style.backgroundColor = getProgressColor(progressPct); // Dash Global Color
+            document.getElementById('dash-progress-pct').innerText = progressPct + '%'; document.getElementById('dash-progress-pct').style.color = getProgressColor(progressPct); document.getElementById('dash-progress-bar').style.width = progressPct + '%'; document.getElementById('dash-progress-bar').style.backgroundColor = getProgressColor(progressPct);
 
             const pctTodo = total === 0 ? 0 : Math.round((aFazer/total)*100); const pctProg = total === 0 ? 0 : Math.round((emProgresso/total)*100); const pctWait = total === 0 ? 0 : Math.round((aguardando/total)*100); const pctDone = total === 0 ? 0 : Math.round((concluidas/total)*100);
             document.getElementById('dash-bar-todo').style.width = pctTodo + '%'; document.getElementById('dash-pct-todo').innerText = pctTodo + '%'; document.getElementById('dash-bar-prog').style.width = pctProg + '%'; document.getElementById('dash-pct-prog').innerText = pctProg + '%'; document.getElementById('dash-bar-wait').style.width = pctWait + '%'; document.getElementById('dash-pct-wait').innerText = pctWait + '%'; document.getElementById('dash-bar-done').style.width = pctDone + '%'; document.getElementById('dash-pct-done').innerText = pctDone + '%';
@@ -980,62 +994,6 @@
             }
         }
 
-        // ── BOARDS MODAL ──
-        function renderIconSelector() {
-            const container = document.getElementById('icon-selector'); container.innerHTML = '';
-            availableIcons.forEach(icon => {
-                const div = document.createElement('div'); div.className = `icon-option ${icon === selectedBoardIcon ? 'active' : ''}`; div.innerHTML = `<i data-lucide="${icon}"></i>`;
-                div.onclick = function() { document.querySelectorAll('.icon-option').forEach(el => el.classList.remove('active')); this.classList.add('active'); selectedBoardIcon = icon; };
-                container.appendChild(div);
-            });
-            if (typeof lucide !== 'undefined') lucide.createIcons();
-        }
-
-        function openBoardModal(mode) {
-            boardModalMode = mode; const modal = document.getElementById('board-modal'); const titleEl = document.getElementById('board-modal-title'); const inputEl = document.getElementById('modal-input-board-name'); const deleteBtn = document.getElementById('btn-delete-board');
-            if (mode === 'create') { titleEl.innerText = "Novo Quadro"; inputEl.value = ""; selectedBoardIcon = 'folder'; deleteBtn.style.display = 'none'; } 
-            else if (mode === 'edit') { titleEl.innerText = "Editar Quadro"; inputEl.value = currentBoard; selectedBoardIcon = currentBoardIcon; deleteBtn.style.display = 'flex'; }
-            renderIconSelector(); modal.classList.add('active');
-        }
-
-        function closeBoardModal() { document.getElementById('board-modal').classList.remove('active'); }
-
-        function saveBoard() {
-            const inputName = document.getElementById('modal-input-board-name').value.trim(); if (!inputName) return;
-            if (boardModalMode === 'create') {
-                const list = document.getElementById('boards-list'); const newLink = document.createElement('div'); newLink.className = 'nav-link'; newLink.setAttribute('data-board-name', inputName); newLink.setAttribute('data-board-icon', selectedBoardIcon);
-                newLink.onclick = function() { switchBoard(this); }; newLink.innerHTML = `<i data-lucide="${selectedBoardIcon}"></i> <span class="hide-on-collapse">${inputName}</span>`;
-                list.appendChild(newLink); if (typeof lucide !== 'undefined') lucide.createIcons(); switchBoard(newLink);
-            } else if (boardModalMode === 'edit') {
-                const oldName = currentBoard; const activeLink = document.querySelector('#boards-list .nav-link.active');
-                if (activeLink) { activeLink.setAttribute('data-board-name', inputName); activeLink.setAttribute('data-board-icon', selectedBoardIcon); activeLink.innerHTML = `<i data-lucide="${selectedBoardIcon}"></i> <span class="hide-on-collapse">${inputName}</span>`; }
-                document.querySelectorAll('.card, .list-item').forEach(el => { if (el.getAttribute('data-board') === oldName) el.setAttribute('data-board', inputName); });
-                if (typeof lucide !== 'undefined') lucide.createIcons(); switchBoard(activeLink);
-            }
-            closeBoardModal();
-        }
-
-        function deleteBoard() {
-            if(confirm(`ATENÇÃO: Tem certeza que deseja excluir o quadro "${currentBoard}" e todas as suas tarefas?\nEsta ação não pode ser desfeita.`)) {
-                const activeLink = document.querySelector('#boards-list .nav-link.active'); if(activeLink) activeLink.remove();
-                document.querySelectorAll('.card, .list-item').forEach(el => { if (el.getAttribute('data-board') === currentBoard) el.remove(); });
-                closeBoardModal();
-                const firstAvailableBoard = document.querySelector('#boards-list .nav-link');
-                if(firstAvailableBoard) { switchBoard(firstAvailableBoard); } 
-                else { currentBoard = ''; document.getElementById('board-title-text').innerText = 'Nenhum Quadro'; document.getElementById('header-board-icon').setAttribute('data-lucide', 'slash'); document.getElementById('btn-edit-board').style.display = 'none'; document.getElementById('btn-add-task').style.display = 'none'; if (typeof lucide !== 'undefined') lucide.createIcons(); applyFilters(); updateDashboard(); }
-            }
-        }
-
-        function switchBoard(element) {
-            if (!element) return;
-            const name = element.getAttribute('data-board-name'); const icon = element.getAttribute('data-board-icon'); currentBoard = name; currentBoardIcon = icon;
-            document.querySelectorAll('aside .nav-link, aside .user-profile').forEach(link => link.classList.remove('active')); element.classList.add('active');
-            document.getElementById('board-title-text').innerText = `Board de ${name}`; document.getElementById('header-board-icon').setAttribute('data-lucide', icon);
-            if (typeof lucide !== 'undefined') lucide.createIcons();
-            document.getElementById('btn-edit-board').style.display = 'flex'; document.getElementById('btn-add-task').style.display = 'flex'; 
-            closeSystemViews(); applyFilters(); updateDashboard();
-        }
-
         function toggleTheme() {
             const body = document.body; const themeBtn = document.getElementById('theme-btn');
             if (body.getAttribute('data-theme') === 'light') { body.setAttribute('data-theme', 'dark'); if(themeBtn) themeBtn.innerHTML = '<i data-lucide="sun" id="theme-icon"></i>'; } 
@@ -1043,7 +1001,6 @@
             if (typeof lucide !== 'undefined') lucide.createIcons();
         }
 
-        // ── TASK MODAL ──
         function openNewTaskModal() {
             isCreatingTask = true; currentEditingElementId = null; document.getElementById('task-modal-title').innerText = "Nova Tarefa";
             document.getElementById('modal-input-title').value = ''; document.getElementById('modal-input-desc').value = ''; 
@@ -1070,32 +1027,29 @@
         function closeTaskModal() { document.getElementById('task-modal').classList.remove('active'); currentEditingElementId = null; isCreatingTask = false; }
 
         async function saveTaskDetails() {
-            const newTitle = document.getElementById('modal-input-title').value.trim(); if (!newTitle && isCreatingTask) { alert("O título da tarefa é obrigatório."); return; }
+            const newTitle = document.getElementById('modal-input-title').value.trim(); 
+            if (!newTitle && isCreatingTask) { alert("O título da tarefa é obrigatório."); return; }
+            
             const newUser = document.getElementById('modal-input-user').value; const newComplexity = document.getElementById('modal-input-complexity').value; const newProgress = document.getElementById('modal-input-progress').value; const newDeadline = document.getElementById('modal-input-deadline').value; const newDesc = document.getElementById('modal-input-desc').value;
-
             const taskData = { title: newTitle, user: newUser, board: currentBoard, deadline: newDeadline, desc: newDesc, complexity: newComplexity, progress: newProgress, status: 'todo' };
 
             if (isCreatingTask) {
                 try {
                     const docRef = await window.fs.addDoc(window.fs.collection(window.db, "tasks"), taskData);
                     renderTaskInDOM(docRef.id, taskData);
-                } catch(error) { console.error("Erro ao adicionar tarefa:", error); alert("Erro ao salvar no banco. Verifique as permissões do Firestore."); }
+                } catch(error) { console.error("Erro ao adicionar tarefa:", error); alert("Erro ao salvar no banco."); }
             } else {
                 if (!currentEditingElementId) return; 
-                const element = document.getElementById(currentEditingElementId);
-                const dbId = element.getAttribute('data-dbid');
+                const element = document.getElementById(currentEditingElementId); const dbId = element.getAttribute('data-dbid');
                 try {
                     let currentStatus = 'todo';
                     if(element.closest('#progress')) currentStatus = 'progress'; else if(element.closest('#waiting')) currentStatus = 'waiting'; else if(element.closest('#done')) currentStatus = 'done';
                     taskData.status = currentStatus;
                     const docRef = window.fs.doc(window.db, "tasks", dbId);
                     await window.fs.updateDoc(docRef, taskData);
-                    
-                    // Atualiza DOM
                     renderTaskInDOM(dbId, taskData);
                 } catch(error) { console.error("Erro ao atualizar tarefa:", error); }
             }
-
             closeTaskModal(); applyFilters(); updateDashboard(); 
         }
 
