@@ -623,7 +623,71 @@
             }
         });
     </script>
+<script type="module">
+    // ... (suas importações do firebase continuam iguais)
 
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            const userRef = window.fs.doc(window.db, "users", user.uid);
+            const userSnap = await window.fs.getDoc(userRef);
+            
+            let userData;
+
+            if (!userSnap.exists()) {
+                // PRIMEIRO ACESSO: Criamos o usuário e vinculamos ele a você (Adm) 
+                // ou criamos um novo grupo se ele for o dono.
+                userData = { 
+                    name: user.displayName, 
+                    email: user.email, 
+                    photo: user.photoURL, 
+                    role: user.email === 'weverson@makro.com.br' ? 'Administrador' : 'Membro',
+                    // AQUI ESTÁ A CHAVE: Se não for você, o Admin deve setar qual grupo esse usuário pertence
+                    organizationId: user.email === 'weverson@makro.com.br' ? 'org_makro_001' : 'org_makro_001' 
+                };
+                await window.fs.setDoc(userRef, userData);
+            } else {
+                userData = userSnap.data();
+            }
+
+            // GUARDAMOS A ORG NA MEMÓRIA PARA FILTRAR TUDO
+            window.userOrgId = userData.organizationId;
+
+            // ... (restante da inicialização)
+            loadMembers();
+        }
+    });
+
+    // ATUALIZAÇÃO DA FUNÇÃO QUE CARREGA MEMBROS (Filtro por Organização)
+    async function loadMembers() {
+        // Criamos uma consulta que diz: "Me traga usuários onde a organizationId seja igual a minha"
+        const usersRef = window.fs.collection(window.db, "users");
+        const q = window.fs.query(usersRef, window.fs.where("organizationId", "==", window.userOrgId));
+        
+        const snap = await window.fs.getDocs(q);
+        
+        // Agora o 'snap' só contém pessoas do seu grupo!
+        const select = document.getElementById('modal-input-user');
+        const table = document.getElementById('users-table-body');
+        
+        select.innerHTML = '';
+        table.innerHTML = '';
+
+        snap.forEach(d => {
+            const u = d.data();
+            // ... (renderiza apenas quem é da sua org)
+        });
+    }
+
+    // ATUALIZAÇÃO DA FUNÇÃO QUE CARREGA TAREFAS (Segurança em dobro)
+    window.loadTasksFromDB = async function() {
+        const tasksRef = window.fs.collection(window.db, "tasks");
+        // Regra: Só vejo tarefas da minha organização
+        const q = window.fs.query(tasksRef, window.fs.where("organizationId", "==", window.userOrgId));
+        
+        const snap = await window.fs.getDocs(q);
+        // ... (limpa e renderiza apenas o que é seu)
+    }
+</script>
     <script>
         let currentBoard = 'Marketing'; let currentBoardIcon = 'layout-dashboard';
         let boardModalMode = 'create'; let selectedBoardIcon = 'folder';
