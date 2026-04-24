@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SaaS Gestão | Saturday v21</title>
+    <title>SaaS Gestão | Saturday v22</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -274,6 +274,7 @@
         }
         ::-webkit-calendar-picker-indicator { filter: invert(0.5); cursor: pointer; }
         [data-theme="dark"] ::-webkit-calendar-picker-indicator { filter: invert(1); }
+
         .input-group input:focus, .input-group textarea:focus, .input-group select:focus { border-color: var(--makro-red); }
         .input-group input[type="range"] { width: 100%; accent-color: var(--makro-red); cursor: pointer; border: none; padding: 0; background: transparent; }
         .range-value { font-size: 14px; font-weight: 900; color: var(--makro-red); text-align: right; display: block; margin-top: 4px; }
@@ -383,10 +384,7 @@
                 </div>
                 <select class="filter-select" id="user-filter" onchange="applyFilters()">
                     <option value="all">Solicitante: Todos</option>
-                    <option value="Weverson">Weverson</option>
-                    <option value="Pry">Pry</option>
-                    <option value="Sávio">Sávio</option>
-                </select>
+                    </select>
             </div>
 
             <div class="view-container active" id="view-kanban">
@@ -489,10 +487,8 @@
                     <div style="overflow-x: auto;">
                         <table class="users-table">
                             <thead><tr><th>Usuário</th><th>Email</th><th>Nível de Acesso</th><th>Status</th><th style="text-align: right;">Ações</th></tr></thead>
-                            <tbody>
-                                <tr><td style="display: flex; align-items: center; gap: 12px; border-bottom: none;"><div class="avatar" style="width: 28px; height: 28px; font-size: 10px;">W</div> <strong>Weverson</strong></td><td>weverson@makro.com.br</td><td><span class="badge-role role-adm">Administrador</span></td><td><span style="color: var(--status-done); font-weight: 700;">Ativo</span></td><td style="text-align: right;"><button class="list-action-btn"><i data-lucide="more-horizontal"></i></button></td></tr>
-                                <tr><td style="display: flex; align-items: center; gap: 12px; border-bottom: none;"><div class="avatar" style="width: 28px; height: 28px; font-size: 10px; background: #eab308;">P</div> <strong>Pry</strong></td><td>pry@makro.com.br</td><td><span class="badge-role role-member">Membro</span></td><td><span style="color: var(--status-done); font-weight: 700;">Ativo</span></td><td style="text-align: right;"><button class="list-action-btn"><i data-lucide="more-horizontal"></i></button></td></tr>
-                                <tr><td style="display: flex; align-items: center; gap: 12px; border-bottom: none;"><div class="avatar" style="width: 28px; height: 28px; font-size: 10px; background: #8b5cf6;">S</div> <strong>Sávio</strong></td><td>savio@makro.com.br</td><td><span class="badge-role role-member">Membro</span></td><td><span style="color: var(--status-done); font-weight: 700;">Ativo</span></td><td style="text-align: right;"><button class="list-action-btn"><i data-lucide="more-horizontal"></i></button></td></tr>
+                            <tbody id="users-table-body">
+                                <tr><td colspan="5" style="text-align: center; opacity: 0.5; padding: 20px;">Nenhum usuário cadastrado</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -523,7 +519,7 @@
                 <div class="input-group"><label>Ícone do Quadro</label><div class="icon-grid" id="icon-selector"></div></div>
             </div>
             <div class="modal-footer" style="justify-content: space-between;">
-                <button class="btn btn-theme btn-text btn-danger" id="btn-delete-board" onclick="deleteBoard()" style="display: none;"><i data-lucide="trash-2" style="margin-right:8px; width:16px;"></i> Excluir</button>
+                <button class="btn btn-theme btn-text btn-danger" id="btn-delete-board" onclick="deleteBoard()" style="display: none;"><i data-lucide="trash-2" style="margin-right:8px; width:16px;"></i> Excluir Quadro</button>
                 <div style="display: flex; gap: 12px;">
                     <button class="btn btn-theme btn-text" onclick="closeBoardModal()">Cancelar</button>
                     <button class="btn btn-primary btn-text" onclick="saveBoard()"><i data-lucide="save" style="margin-right:8px; width:16px;"></i> Salvar</button>
@@ -539,12 +535,19 @@
                 <div class="input-group"><label>Título da Tarefa</label><input type="text" id="modal-input-title" placeholder="Descreva a atividade..."></div>
                 <div class="input-group"><label>Anotações / Descrição</label><textarea id="modal-input-desc" rows="3" placeholder="Detalhes adicionais da tarefa..."></textarea></div>
                 <div style="display: flex; gap: 16px;">
-                    <div class="input-group" style="flex: 1;"><label>Responsável</label><select id="modal-input-user"><option value="Weverson">Weverson</option><option value="Pry">Pry</option><option value="Sávio">Sávio</option></select></div>
-                    <div class="input-group" style="flex: 1;"><label>Prazo Final</label><input type="date" id="modal-input-deadline"></div>
+                    <div class="input-group" style="flex: 1;">
+                        <label>Responsável</label>
+                        <select id="modal-input-user">
+                            </select>
+                    </div>
+                    <div class="input-group" style="flex: 1;">
+                        <label>Prazo Final</label>
+                        <input type="date" id="modal-input-deadline">
+                    </div>
                 </div>
                 <div class="input-group"><label>Progresso de Execução</label><input type="range" id="modal-input-progress" min="0" max="100" step="5" oninput="document.getElementById('modal-progress-val').innerText = this.value + '%'"><span id="modal-progress-val" class="range-value">0%</span></div>
             </div>
-            <div class="modal-footer"><button class="btn btn-theme btn-text" onclick="closeTaskModal()">Cancelar</button><button class="btn btn-primary btn-text" onclick="saveTaskDetails()"><i data-lucide="save" style="margin-right:8px; width:16px;"></i> Salvar</button></div>
+            <div class="modal-footer"><button class="btn btn-theme btn-text" onclick="closeTaskModal()">Cancelar</button><button class="btn btn-primary btn-text" onclick="saveTaskDetails()"><i data-lucide="save" style="margin-right:8px; width:16px;"></i> Salvar Alterações</button></div>
         </div>
     </div>
 
@@ -568,7 +571,6 @@
         const loginContainer = document.getElementById('login-container');
         const appContainer = document.getElementById('app-container');
 
-        // Expondo funções para o window para serem chamadas pelo HTML
         window.loginWithGoogle = () => {
             signInWithPopup(auth, provider).catch(err => {
                 console.error(err);
@@ -580,10 +582,8 @@
             signOut(auth).catch(err => console.error(err));
         };
 
-        // Escuta o estado da autenticação
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                // Autenticado: Esconde Login, Mostra App
                 loginContainer.style.display = 'none';
                 appContainer.style.display = 'flex';
                 
@@ -591,15 +591,12 @@
                 const firstLetter = displayName.charAt(0).toUpperCase();
                 const email = user.email || '';
 
-                // Atualiza Sidebar
                 document.getElementById('sidebar-user-name').innerText = displayName;
                 document.getElementById('sidebar-user-email').innerText = email;
                 
-                // Atualiza Tela de Perfil
                 document.getElementById('profile-name').value = displayName;
                 document.getElementById('profile-email').value = email;
 
-                // Atualiza Avatares (se tiver foto, usa, senão usa a letra)
                 const avatarElements = [document.getElementById('sidebar-user-avatar'), document.getElementById('profile-avatar')];
                 avatarElements.forEach(el => {
                     if (user.photoURL) {
@@ -611,22 +608,15 @@
                     }
                 });
 
-                // Adiciona o usuário logado dinamicamente no Select do Modal
+                // Atualiza o select de Responsável no Modal
                 const selectUser = document.getElementById('modal-input-user');
-                let userExists = false;
-                for(let i=0; i<selectUser.options.length; i++) {
-                    if(selectUser.options[i].value === displayName) userExists = true;
-                }
-                if(!userExists) {
-                    const opt = document.createElement('option');
-                    opt.value = displayName;
-                    opt.innerText = displayName;
-                    selectUser.appendChild(opt);
-                }
-                selectUser.value = displayName;
+                selectUser.innerHTML = `<option value="${displayName}">${displayName}</option>`;
+                
+                // Atualiza o filtro de Usuários na barra do topo
+                const filterUser = document.getElementById('user-filter');
+                filterUser.innerHTML = `<option value="all">Solicitante: Todos</option><option value="${displayName}">${displayName}</option>`;
 
             } else {
-                // Deslogado: Mostra Login, Esconde App
                 loginContainer.style.display = 'flex';
                 appContainer.style.display = 'none';
             }
@@ -673,9 +663,7 @@
         }
 
         function getAvatarColor(user) {
-            if(user === 'Pry') return '#eab308';
-            if(user === 'Sávio') return '#8b5cf6';
-            return 'var(--makro-red)';
+            return 'var(--makro-red)'; // Por enquanto o avatar pega a cor padrão
         }
 
         function openSystemView(viewId, title, icon, navIdToActivate) {
@@ -758,6 +746,7 @@
                 list.appendChild(newLink);
                 if (typeof lucide !== 'undefined') lucide.createIcons();
                 switchBoard(newLink);
+
             } else if (boardModalMode === 'edit') {
                 const oldName = currentBoard;
                 const activeLink = document.querySelector('#boards-list .nav-link.active');
@@ -765,87 +754,157 @@
                     activeLink.setAttribute('data-board-name', inputName); activeLink.setAttribute('data-board-icon', selectedBoardIcon);
                     activeLink.innerHTML = `<i data-lucide="${selectedBoardIcon}"></i> <span class="hide-on-collapse">${inputName}</span>`;
                 }
-                document.querySelectorAll('.card, .list-item').forEach(el => { if (el.getAttribute('data-board') === oldName) el.setAttribute('data-board', inputName); });
+
+                document.querySelectorAll('.card, .list-item').forEach(el => {
+                    if (el.getAttribute('data-board') === oldName) el.setAttribute('data-board', inputName);
+                });
+
                 if (typeof lucide !== 'undefined') lucide.createIcons();
                 switchBoard(activeLink);
             }
+
             closeBoardModal();
         }
 
         function deleteBoard() {
             if(confirm(`ATENÇÃO: Tem certeza que deseja excluir o quadro "${currentBoard}" e todas as suas tarefas?\nEsta ação não pode ser desfeita.`)) {
+                
                 const activeLink = document.querySelector('#boards-list .nav-link.active');
                 if(activeLink) activeLink.remove();
-                document.querySelectorAll('.card, .list-item').forEach(el => { if (el.getAttribute('data-board') === currentBoard) el.remove(); });
+
+                document.querySelectorAll('.card, .list-item').forEach(el => {
+                    if (el.getAttribute('data-board') === currentBoard) el.remove();
+                });
+
                 closeBoardModal();
+
                 const firstAvailableBoard = document.querySelector('#boards-list .nav-link');
                 if(firstAvailableBoard) {
                     switchBoard(firstAvailableBoard);
                 } else {
-                    currentBoard = ''; document.getElementById('board-title-text').innerText = 'Nenhum Quadro'; document.getElementById('header-board-icon').setAttribute('data-lucide', 'slash');
-                    document.getElementById('btn-edit-board').style.display = 'none'; document.getElementById('btn-add-task').style.display = 'none';
-                    if (typeof lucide !== 'undefined') lucide.createIcons(); applyFilters(); updateDashboard();
+                    currentBoard = '';
+                    document.getElementById('board-title-text').innerText = 'Nenhum Quadro';
+                    document.getElementById('header-board-icon').setAttribute('data-lucide', 'slash');
+                    document.getElementById('btn-edit-board').style.display = 'none';
+                    document.getElementById('btn-add-task').style.display = 'none';
+                    if (typeof lucide !== 'undefined') lucide.createIcons();
+                    applyFilters();
+                    updateDashboard();
                 }
             }
         }
 
         function switchBoard(element) {
             if (!element) return;
-            const name = element.getAttribute('data-board-name'); const icon = element.getAttribute('data-board-icon');
-            currentBoard = name; currentBoardIcon = icon;
-            document.querySelectorAll('aside .nav-link, aside .user-profile').forEach(link => link.classList.remove('active')); element.classList.add('active');
+            
+            const name = element.getAttribute('data-board-name');
+            const icon = element.getAttribute('data-board-icon');
+
+            currentBoard = name;
+            currentBoardIcon = icon;
+
+            document.querySelectorAll('aside .nav-link, aside .user-profile').forEach(link => link.classList.remove('active'));
+            element.classList.add('active');
+
             document.getElementById('board-title-text').innerText = `Board de ${name}`;
-            document.getElementById('header-board-icon').setAttribute('data-lucide', icon);
+            const headerIcon = document.getElementById('header-board-icon');
+            headerIcon.setAttribute('data-lucide', icon);
+            
             if (typeof lucide !== 'undefined') lucide.createIcons();
-            document.getElementById('btn-edit-board').style.display = 'flex'; document.getElementById('btn-add-task').style.display = 'flex'; 
-            closeSystemViews(); applyFilters(); updateDashboard();
+
+            document.getElementById('btn-edit-board').style.display = 'flex'; 
+            closeSystemViews();
+            applyFilters();
         }
 
         function loadLogo(event) {
-            const output = document.getElementById('logo-preview'); const textLogo = document.getElementById('logo-text');
+            const output = document.getElementById('logo-preview');
+            const textLogo = document.getElementById('logo-text');
             if (event.target.files && event.target.files[0]) {
-                output.src = URL.createObjectURL(event.target.files[0]); output.style.display = 'block'; textLogo.style.display = 'none';
+                output.src = URL.createObjectURL(event.target.files[0]);
+                output.style.display = 'block';
+                textLogo.style.display = 'none';
                 output.onload = function() { URL.revokeObjectURL(output.src); }
             }
         }
 
         function changeView(viewType) {
-            ['view-settings', 'view-users', 'view-profile', 'view-kanban', 'view-list', 'view-dashboard'].forEach(id => { document.getElementById(id).classList.remove('active'); });
-            ['btn-kanban', 'btn-list', 'btn-dashboard'].forEach(id => { document.getElementById(id).classList.remove('active'); });
-            document.getElementById('view-' + viewType).classList.add('active'); document.getElementById('btn-' + viewType).classList.add('active');
-            document.getElementById('filter-bar').style.display = 'flex'; document.getElementById('view-toggle').style.display = 'flex'; document.getElementById('header-divider').style.display = 'block';
-            if(currentBoard) { document.getElementById('btn-add-task').style.display = 'flex'; }
-            if (viewType === 'dashboard') updateDashboard();
+            ['view-settings', 'view-users', 'view-profile', 'view-kanban', 'view-list', 'view-dashboard'].forEach(id => {
+                document.getElementById(id).classList.remove('active');
+            });
+            ['btn-kanban', 'btn-list', 'btn-dashboard'].forEach(id => {
+                document.getElementById(id).classList.remove('active');
+            });
+
+            document.getElementById('view-' + viewType).classList.add('active');
+            document.getElementById('btn-' + viewType).classList.add('active');
+            
+            document.getElementById('filter-bar').style.display = 'flex';
+            document.getElementById('view-toggle').style.display = 'flex';
+            document.getElementById('header-divider').style.display = 'block';
+            
+            if(currentBoard) {
+                document.getElementById('btn-add-task').style.display = 'flex';
+            }
+            if (viewType === 'dashboard') {
+                updateDashboard();
+            }
         }
 
         function applyFilters() {
-            const searchTerm = document.getElementById('search-input').value.toLowerCase(); const userFilter = document.getElementById('user-filter').value;
-            const statusFilter = document.getElementById('filter-status-table').value; const deadlineFilter = document.getElementById('filter-deadline-table').value;
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const userFilter = document.getElementById('user-filter').value;
+            const statusFilter = document.getElementById('filter-status-table').value;
+            const deadlineFilter = document.getElementById('filter-deadline-table').value;
 
             const cards = document.querySelectorAll('#view-kanban .card');
             cards.forEach(card => {
-                const text = card.querySelector('h4').innerText.toLowerCase(); const user = card.getAttribute('data-user'); const board = card.getAttribute('data-board'); const deadline = card.getAttribute('data-deadline') || '';
+                const text = card.querySelector('h4').innerText.toLowerCase();
+                const user = card.getAttribute('data-user');
+                const board = card.getAttribute('data-board');
+                const deadline = card.getAttribute('data-deadline') || '';
+                
                 let cardStatus = '';
-                if(card.closest('#todo')) cardStatus = 'A fazer'; else if(card.closest('#progress')) cardStatus = 'Em Progresso'; else if(card.closest('#waiting')) cardStatus = 'Aguardando aprovação'; else if(card.closest('#done')) cardStatus = 'Concluído';
+                if(card.closest('#todo')) cardStatus = 'A fazer';
+                else if(card.closest('#progress')) cardStatus = 'Em Progresso';
+                else if(card.closest('#waiting')) cardStatus = 'Aguardando aprovação';
+                else if(card.closest('#done')) cardStatus = 'Concluído';
 
-                const matchSearch = text.includes(searchTerm); const matchUser = userFilter === 'all' || user === userFilter; const matchBoard = board === currentBoard; const matchStatus = statusFilter === 'all' || cardStatus === statusFilter;
+                const matchSearch = text.includes(searchTerm);
+                const matchUser = userFilter === 'all' || user === userFilter;
+                const matchBoard = board === currentBoard; 
+                const matchStatus = statusFilter === 'all' || cardStatus === statusFilter;
+                
                 let matchDeadline = true;
-                if (deadlineFilter === 'hoje') matchDeadline = (deadline === localISOString); else if (deadlineFilter === 'atrasado') matchDeadline = (deadline < localISOString && cardStatus !== 'Concluído'); else if (deadlineFilter === 'futuro') matchDeadline = (deadline > localISOString);
+                if (deadlineFilter === 'hoje') matchDeadline = (deadline === localISOString);
+                else if (deadlineFilter === 'atrasado') matchDeadline = (deadline < localISOString && cardStatus !== 'Concluído');
+                else if (deadlineFilter === 'futuro') matchDeadline = (deadline > localISOString);
 
                 card.style.display = (matchSearch && matchUser && matchBoard && matchStatus && matchDeadline) ? 'block' : 'none';
             });
 
             const listItems = document.querySelectorAll('#view-list .list-item');
             listItems.forEach(item => {
-                const text = item.querySelector('.list-item-title').innerText.toLowerCase(); const user = item.getAttribute('data-user'); const board = item.getAttribute('data-board'); const deadline = item.getAttribute('data-deadline') || '';
+                const text = item.querySelector('.list-item-title').innerText.toLowerCase();
+                const user = item.getAttribute('data-user');
+                const board = item.getAttribute('data-board');
+                const deadline = item.getAttribute('data-deadline') || '';
+                
                 const itemStatus = item.querySelector('.status-badge').innerText.trim();
 
-                const matchSearch = text.includes(searchTerm); const matchUser = userFilter === 'all' || user === userFilter; const matchBoard = board === currentBoard; const matchStatus = statusFilter === 'all' || itemStatus === statusFilter;
+                const matchSearch = text.includes(searchTerm);
+                const matchUser = userFilter === 'all' || user === userFilter;
+                const matchBoard = board === currentBoard;
+                const matchStatus = statusFilter === 'all' || itemStatus === statusFilter;
+
                 let matchDeadline = true;
-                if (deadlineFilter === 'hoje') matchDeadline = (deadline === localISOString); else if (deadlineFilter === 'atrasado') matchDeadline = (deadline < localISOString && itemStatus !== 'Concluído'); else if (deadlineFilter === 'futuro') matchDeadline = (deadline > localISOString);
+                if (deadlineFilter === 'hoje') matchDeadline = (deadline === localISOString);
+                else if (deadlineFilter === 'atrasado') matchDeadline = (deadline < localISOString && itemStatus !== 'Concluído');
+                else if (deadlineFilter === 'futuro') matchDeadline = (deadline > localISOString);
 
                 item.style.display = (matchSearch && matchUser && matchBoard && matchStatus && matchDeadline) ? 'grid' : 'none';
             });
+
             updateCounts();
         }
 
@@ -860,33 +919,73 @@
 
         function updateDashboard() {
             const cards = Array.from(document.querySelectorAll('#view-kanban .card')).filter(card => card.getAttribute('data-board') === currentBoard);
-            const total = cards.length; let aFazer = 0, emProgresso = 0, aguardando = 0, concluidas = 0, sumProgress = 0; let userStats = {};
+            
+            const total = cards.length;
+            let aFazer = 0;
+            let emProgresso = 0;
+            let concluidas = 0;
+            let sumProgress = 0;
+            let userStats = {};
 
             cards.forEach(card => {
                 const user = card.getAttribute('data-user') || 'Desconhecido';
                 if(!userStats[user]) userStats[user] = { total: 0, done: 0, color: getAvatarColor(user) };
                 userStats[user].total++;
 
-                if(card.closest('#todo')) { aFazer++; } else if(card.closest('#progress')) { emProgresso++; } else if(card.closest('#waiting')) { aguardando++; } else if(card.closest('#done')) { concluidas++; userStats[user].done++; }
-                const progressText = card.querySelector('.progress-header span:last-child').innerText; sumProgress += parseInt(progressText.replace('%', '')) || 0;
+                if(card.closest('#todo')) { aFazer++; }
+                else if(card.closest('#progress')) { emProgresso++; }
+                else if(card.closest('#done')) { concluidas++; userStats[user].done++; }
+
+                const progressText = card.querySelector('.progress-header span:last-child').innerText;
+                sumProgress += parseInt(progressText.replace('%', '')) || 0;
             });
 
-            document.getElementById('dash-total').innerText = total; document.getElementById('dash-todo').innerText = aFazer; document.getElementById('dash-progress').innerText = emProgresso; document.getElementById('dash-done').innerText = concluidas;
+            document.getElementById('dash-total').innerText = total;
+            document.getElementById('dash-todo').innerText = aFazer;
+            document.getElementById('dash-progress').innerText = emProgresso;
+            document.getElementById('dash-done').innerText = concluidas;
 
             const progressPct = total === 0 ? 0 : Math.round(sumProgress / total);
-            document.getElementById('dash-progress-pct').innerText = progressPct + '%'; document.getElementById('dash-progress-bar').style.width = progressPct + '%';
+            document.getElementById('dash-progress-pct').innerText = progressPct + '%';
+            document.getElementById('dash-progress-bar').style.width = progressPct + '%';
 
-            const pctTodo = total === 0 ? 0 : Math.round((aFazer/total)*100); const pctProg = total === 0 ? 0 : Math.round((emProgresso/total)*100); const pctWait = total === 0 ? 0 : Math.round((aguardando/total)*100); const pctDone = total === 0 ? 0 : Math.round((concluidas/total)*100);
+            const pctTodo = total === 0 ? 0 : Math.round((aFazer/total)*100);
+            const pctProg = total === 0 ? 0 : Math.round((emProgresso/total)*100);
+            const pctWait = total === 0 ? 0 : Math.round((0/total)*100); // Aguardando fixo 0 pro mock
+            const pctDone = total === 0 ? 0 : Math.round((concluidas/total)*100);
 
-            document.getElementById('dash-bar-todo').style.width = pctTodo + '%'; document.getElementById('dash-pct-todo').innerText = pctTodo + '%'; document.getElementById('dash-bar-prog').style.width = pctProg + '%'; document.getElementById('dash-pct-prog').innerText = pctProg + '%'; document.getElementById('dash-bar-wait').style.width = pctWait + '%'; document.getElementById('dash-pct-wait').innerText = pctWait + '%'; document.getElementById('dash-bar-done').style.width = pctDone + '%'; document.getElementById('dash-pct-done').innerText = pctDone + '%';
+            document.getElementById('dash-bar-todo').style.width = pctTodo + '%';
+            document.getElementById('dash-pct-todo').innerText = pctTodo + '%';
+            document.getElementById('dash-bar-prog').style.width = pctProg + '%';
+            document.getElementById('dash-pct-prog').innerText = pctProg + '%';
+            document.getElementById('dash-bar-wait').style.width = pctWait + '%';
+            document.getElementById('dash-pct-wait').innerText = pctWait + '%';
+            document.getElementById('dash-bar-done').style.width = pctDone + '%';
+            document.getElementById('dash-pct-done').innerText = pctDone + '%';
 
-            const userContainer = document.getElementById('dash-user-stats'); userContainer.innerHTML = '';
+            const userContainer = document.getElementById('dash-user-stats');
+            userContainer.innerHTML = '';
             if (Object.keys(userStats).length === 0) {
                 userContainer.innerHTML = '<p style="font-size:11px; color:var(--text-muted);">Nenhuma tarefa neste quadro.</p>';
             } else {
                 Object.keys(userStats).sort((a,b) => userStats[b].total - userStats[a].total).forEach(user => {
-                    const stat = userStats[user]; const pct = stat.total === 0 ? 0 : Math.round((stat.done/stat.total)*100);
-                    const html = `<div class="user-stat-row"><div style="display:flex; align-items:center; gap:8px; width: 110px;"><div class="avatar" style="width:24px; height:24px; font-size:10px; background:${stat.color}">${user.charAt(0)}</div><span style="font-size:11px; font-weight:700; color:var(--text-main);">${user}</span></div><div style="flex:1;"><div style="display:flex; justify-content:space-between; font-size:9px; font-weight:900; color:var(--text-muted); margin-bottom:6px;"><span>${stat.done} de ${stat.total}</span><span style="color:var(--text-main);">${pct}%</span></div><div class="progress-bar-bg" style="height:12px;"><div class="progress-bar-fill" style="width:${pct}%; background-color:${stat.color};"></div></div></div></div>`;
+                    const stat = userStats[user];
+                    const pct = stat.total === 0 ? 0 : Math.round((stat.done/stat.total)*100);
+                    const html = `
+                        <div class="user-stat-row">
+                            <div style="display:flex; align-items:center; gap:8px; width: 110px;">
+                                <div class="avatar" style="width:24px; height:24px; font-size:10px; background:${stat.color}">${user.charAt(0)}</div>
+                                <span style="font-size:11px; font-weight:700; color:var(--text-main);">${user}</span>
+                            </div>
+                            <div style="flex:1;">
+                                <div style="display:flex; justify-content:space-between; font-size:9px; font-weight:900; color:var(--text-muted); margin-bottom:6px;">
+                                    <span>${stat.done} de ${stat.total}</span>
+                                    <span style="color:var(--text-main);">${pct}%</span>
+                                </div>
+                                <div class="progress-bar-bg" style="height:12px;"><div class="progress-bar-fill" style="width:${pct}%; background-color:${stat.color};"></div></div>
+                            </div>
+                        </div>
+                    `;
                     userContainer.innerHTML += html;
                 });
             }
@@ -897,8 +996,18 @@
         function drop(ev) {
             ev.preventDefault(); var data = ev.dataTransfer.getData("text"); var dropzone = ev.target; var element = document.getElementById(data);
             if (!element) return; element.classList.remove('dragging');
-            if (dropzone.classList.contains('task-list')) { dropzone.appendChild(element); } else if (dropzone.closest('.task-list')) { dropzone.closest('.task-list').appendChild(element); }
-            if (element.parentNode.id === 'done') { element.querySelector('.progress-header span:last-child').innerText = '100%'; element.querySelector('.progress-bar-fill').style.width = '100%'; element.querySelector('.progress-bar-fill').style.backgroundColor = 'var(--status-done)'; }
+            
+            if (dropzone.classList.contains('task-list')) {
+                dropzone.appendChild(element);
+            } else if (dropzone.closest('.task-list')) {
+                dropzone.closest('.task-list').appendChild(element);
+            }
+            
+            if (element.parentNode.id === 'done') {
+                element.querySelector('.progress-header span:last-child').innerText = '100%';
+                element.querySelector('.progress-bar-fill').style.width = '100%';
+                element.querySelector('.progress-bar-fill').style.backgroundColor = 'var(--status-done)';
+            }
             
             const listElement = document.getElementById(element.id.replace('t','l'));
             if(listElement) {
@@ -906,11 +1015,19 @@
                 if(element.parentNode.id === 'todo') { badge.className = 'status-badge todo'; badge.innerText = 'A fazer'; }
                 else if(element.parentNode.id === 'progress') { badge.className = 'status-badge progress'; badge.innerText = 'Em Progresso'; }
                 else if(element.parentNode.id === 'waiting') { badge.className = 'status-badge waiting'; badge.innerText = 'Aguardando'; }
-                else if(element.parentNode.id === 'done') { badge.className = 'status-badge done'; badge.innerText = 'Concluído'; listElement.querySelector('.progress-val-hidden').innerText = '100%'; listElement.querySelector('.progress-bar-fill').style.width = '100%'; }
+                else if(element.parentNode.id === 'done') { 
+                    badge.className = 'status-badge done'; badge.innerText = 'Concluído';
+                    listElement.querySelector('.progress-val-hidden').innerText = '100%'; 
+                    listElement.querySelector('.progress-bar-fill').style.width = '100%'; 
+                }
             }
+
             applyFilters(); 
         }
-        document.addEventListener('dragend', function(ev) { if(ev.target && ev.target.classList) ev.target.classList.remove('dragging'); });
+
+        document.addEventListener('dragend', function(ev) {
+            if(ev.target && ev.target.classList) ev.target.classList.remove('dragging');
+        });
 
         function toggleTheme() {
             const body = document.body; const themeBtn = document.getElementById('theme-btn');
@@ -920,26 +1037,56 @@
         }
 
         function openNewTaskModal() {
-            isCreatingTask = true; currentEditingElementId = null; document.getElementById('task-modal-title').innerText = "Nova Tarefa";
-            document.getElementById('modal-input-title').value = ''; document.getElementById('modal-input-desc').value = ''; 
-            // O usuário default será o próprio logado se possível
+            isCreatingTask = true;
+            currentEditingElementId = null;
+            document.getElementById('task-modal-title').innerText = "Nova Tarefa";
+            
+            document.getElementById('modal-input-title').value = '';
+            document.getElementById('modal-input-desc').value = '';
+            
             const loggedUser = document.getElementById('sidebar-user-name').innerText;
             document.getElementById('modal-input-user').value = loggedUser || 'Weverson'; 
-            document.getElementById('modal-input-deadline').value = localISOString; document.getElementById('modal-input-progress').value = '0'; document.getElementById('modal-progress-val').innerText = '0%';
+            
+            document.getElementById('modal-input-deadline').value = localISOString;
+            document.getElementById('modal-input-progress').value = '0';
+            document.getElementById('modal-progress-val').innerText = '0%';
+            
             document.getElementById('task-modal').classList.add('active');
         }
 
         function openTaskModal(elementId) {
-            isCreatingTask = false; currentEditingElementId = elementId; document.getElementById('task-modal-title').innerText = "Detalhes da Operação";
-            const element = document.getElementById(elementId); if (!element) return;
+            isCreatingTask = false;
+            currentEditingElementId = elementId; 
+            document.getElementById('task-modal-title').innerText = "Detalhes da Operação";
+            
+            const element = document.getElementById(elementId); 
+            if (!element) return;
+            
             let title, user, progressRaw, deadlineRaw, descRaw;
+            
             if (element.classList.contains('card')) {
-                title = element.querySelector('h4').innerText; user = element.getAttribute('data-user') || 'Weverson'; progressRaw = element.querySelector('.progress-header span:last-child').innerText; deadlineRaw = element.getAttribute('data-deadline') || ''; descRaw = element.getAttribute('data-desc') || '';
+                title = element.querySelector('h4').innerText; 
+                user = element.getAttribute('data-user') || 'Weverson'; 
+                progressRaw = element.querySelector('.progress-header span:last-child').innerText; 
+                deadlineRaw = element.getAttribute('data-deadline') || '';
+                descRaw = element.getAttribute('data-desc') || '';
             } else if (element.classList.contains('list-item')) {
-                title = element.querySelector('.list-item-title h4').innerText; user = element.getAttribute('data-user') || 'Weverson'; progressRaw = element.querySelector('.progress-val-hidden').innerText; deadlineRaw = element.getAttribute('data-deadline') || ''; descRaw = element.getAttribute('data-desc') || '';
+                title = element.querySelector('.list-item-title h4').innerText; 
+                user = element.getAttribute('data-user') || 'Weverson'; 
+                progressRaw = element.querySelector('.progress-val-hidden').innerText; 
+                deadlineRaw = element.getAttribute('data-deadline') || '';
+                descRaw = element.getAttribute('data-desc') || '';
             }
+            
             const progress = progressRaw.replace('%', '');
-            document.getElementById('modal-input-title').value = title; document.getElementById('modal-input-desc').value = descRaw; document.getElementById('modal-input-user').value = user; document.getElementById('modal-input-progress').value = progress; document.getElementById('modal-progress-val').innerText = progressRaw; document.getElementById('modal-input-deadline').value = deadlineRaw;
+            
+            document.getElementById('modal-input-title').value = title; 
+            document.getElementById('modal-input-desc').value = descRaw; 
+            document.getElementById('modal-input-user').value = user; 
+            document.getElementById('modal-input-progress').value = progress; 
+            document.getElementById('modal-progress-val').innerText = progressRaw; 
+            document.getElementById('modal-input-deadline').value = deadlineRaw;
+            
             document.getElementById('task-modal').classList.add('active');
         }
 
@@ -949,39 +1096,112 @@
             const newTitle = document.getElementById('modal-input-title').value.trim(); 
             if (!newTitle && isCreatingTask) { alert("O título da tarefa é obrigatório."); return; }
             
-            const newUser = document.getElementById('modal-input-user').value; const newProgress = document.getElementById('modal-input-progress').value; const newDeadline = document.getElementById('modal-input-deadline').value; const newDesc = document.getElementById('modal-input-desc').value;
+            const newUser = document.getElementById('modal-input-user').value; 
+            const newProgress = document.getElementById('modal-input-progress').value; 
+            const newDeadline = document.getElementById('modal-input-deadline').value;
+            const newDesc = document.getElementById('modal-input-desc').value;
 
             if (isCreatingTask) {
-                const idNum = Date.now(); const cardId = "t" + idNum; const listId = "l" + idNum; const formattedDeadline = formatDisplayDate(newDeadline);
+                const idNum = Date.now(); 
+                const cardId = "t" + idNum; 
+                const listId = "l" + idNum; 
+                const formattedDeadline = formatDisplayDate(newDeadline);
                 
-                const card = document.createElement('div'); card.className = 'card'; card.draggable = true; card.id = cardId; card.setAttribute('data-user', newUser); card.setAttribute('data-board', currentBoard); card.setAttribute('data-deadline', newDeadline); card.setAttribute('data-desc', newDesc); card.onclick = function() { openTaskModal(this.id); }; card.ondragstart = drag;
-                card.innerHTML = `<div class="card-labels"><div class="label" style="background: var(--text-muted);"></div></div><h4>${newTitle || 'Nova Tarefa'}</h4><div class="progress-container"><div class="progress-header"><span>Progresso</span><span>${newProgress}%</span></div><div class="progress-bar-bg"><div class="progress-bar-fill" style="width: ${newProgress}%;"></div></div></div><div class="card-footer"><div class="deadline"><i data-lucide="calendar"></i> ${formattedDeadline}</div><div class="avatar" style="width: 20px; height: 20px; font-size: 9px; background: ${getAvatarColor(newUser)};" title="${newUser}">${newUser.charAt(0).toUpperCase()}</div></div>`;
+                const card = document.createElement('div'); 
+                card.className = 'card'; card.draggable = true; card.id = cardId; 
+                card.setAttribute('data-user', newUser); 
+                card.setAttribute('data-board', currentBoard); 
+                card.setAttribute('data-deadline', newDeadline); 
+                card.setAttribute('data-desc', newDesc); 
+                card.onclick = function() { openTaskModal(this.id); }; 
+                card.ondragstart = drag;
+                
+                card.innerHTML = `
+                    <div class="card-labels"><div class="label" style="background: var(--text-muted);"></div></div>
+                    <h4>${newTitle || 'Nova Tarefa'}</h4>
+                    <div class="progress-container">
+                        <div class="progress-header"><span>Progresso</span><span>${newProgress}%</span></div>
+                        <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: ${newProgress}%;"></div></div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="deadline"><i data-lucide="calendar"></i> ${formattedDeadline}</div>
+                        <div class="avatar" style="width: 20px; height: 20px; font-size: 9px; background: ${getAvatarColor(newUser)};" title="${newUser}">${newUser.charAt(0).toUpperCase()}</div>
+                    </div>
+                `;
                 document.getElementById('todo').prepend(card);
 
-                const listItem = document.createElement('div'); listItem.className = 'list-item'; listItem.id = listId; listItem.setAttribute('data-user', newUser); listItem.setAttribute('data-board', currentBoard); listItem.setAttribute('data-deadline', newDeadline); listItem.setAttribute('data-desc', newDesc); listItem.onclick = function() { openTaskModal(this.id); };
-                listItem.innerHTML = `<div class="list-item-title"><div class="label" style="background: var(--text-muted); width: 6px; height: 24px;"></div><h4 style="margin:0;">${newTitle || 'Nova Tarefa'}</h4></div><div><span class="status-badge todo">A fazer</span></div><div><div class="progress-container" style="margin: 0;"><span style="display:none" class="progress-val-hidden">${newProgress}%</span><div class="progress-bar-bg"><div class="progress-bar-fill" style="width: ${newProgress}%;"></div></div></div></div><div class="deadline" style="text-transform: none;"><i data-lucide="calendar"></i> ${formattedDeadline}</div><button class="list-action-btn" onclick="event.stopPropagation();"><i data-lucide="more-horizontal"></i></button>`;
+                const listItem = document.createElement('div'); 
+                listItem.className = 'list-item'; listItem.id = listId; 
+                listItem.setAttribute('data-user', newUser); 
+                listItem.setAttribute('data-board', currentBoard); 
+                listItem.setAttribute('data-deadline', newDeadline); 
+                listItem.setAttribute('data-desc', newDesc); 
+                listItem.onclick = function() { openTaskModal(this.id); };
                 
-                const viewList = document.getElementById('view-list'); viewList.insertBefore(listItem, viewList.children[1]);
+                listItem.innerHTML = `
+                    <div class="list-item-title">
+                        <div class="label" style="background: var(--text-muted); width: 6px; height: 24px;"></div>
+                        <h4 style="margin:0;">${newTitle || 'Nova Tarefa'}</h4>
+                    </div>
+                    <div><span class="status-badge todo">A fazer</span></div>
+                    <div>
+                        <div class="progress-container" style="margin: 0;">
+                            <span style="display:none" class="progress-val-hidden">${newProgress}%</span>
+                            <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: ${newProgress}%;"></div></div>
+                        </div>
+                    </div>
+                    <div class="deadline" style="text-transform: none;"><i data-lucide="calendar"></i> ${formattedDeadline}</div>
+                    <button class="list-action-btn" onclick="event.stopPropagation();"><i data-lucide="more-horizontal"></i></button>
+                `;
+                
+                const viewList = document.getElementById('view-list'); 
+                viewList.insertBefore(listItem, viewList.children[1]);
 
             } else {
-                if (!currentEditingElementId) return; const element = document.getElementById(currentEditingElementId);
+                if (!currentEditingElementId) return; 
+                const element = document.getElementById(currentEditingElementId);
                 let cardElement, listElement;
                 if(element.classList.contains('card')) { cardElement = element; listElement = document.getElementById(element.id.replace('t','l')); } 
                 else { listElement = element; cardElement = document.getElementById(element.id.replace('l','t')); }
 
                 if (cardElement) {
-                    cardElement.querySelector('h4').innerText = newTitle; cardElement.setAttribute('data-user', newUser); cardElement.setAttribute('data-deadline', newDeadline); cardElement.setAttribute('data-desc', newDesc); cardElement.querySelector('.progress-header span:last-child').innerText = newProgress + '%'; cardElement.querySelector('.progress-bar-fill').style.width = newProgress + '%'; cardElement.querySelector('.deadline').innerHTML = `<i data-lucide="calendar"></i> ${formatDisplayDate(newDeadline)}`; 
-                    const avatar = cardElement.querySelector('.avatar'); avatar.innerText = newUser.charAt(0).toUpperCase(); avatar.title = newUser; avatar.style.background = getAvatarColor(newUser);
+                    cardElement.querySelector('h4').innerText = newTitle; 
+                    cardElement.setAttribute('data-user', newUser); 
+                    cardElement.setAttribute('data-deadline', newDeadline);
+                    cardElement.setAttribute('data-desc', newDesc); 
+                    cardElement.querySelector('.progress-header span:last-child').innerText = newProgress + '%'; 
+                    cardElement.querySelector('.progress-bar-fill').style.width = newProgress + '%'; 
+                    cardElement.querySelector('.deadline').innerHTML = `<i data-lucide="calendar"></i> ${formatDisplayDate(newDeadline)}`; 
+                    
+                    const avatar = cardElement.querySelector('.avatar'); 
+                    avatar.innerText = newUser.charAt(0).toUpperCase(); 
+                    avatar.title = newUser;
+                    avatar.style.background = getAvatarColor(newUser);
                 }
                 if (listElement) {
-                    listElement.querySelector('h4').innerText = newTitle; listElement.setAttribute('data-user', newUser); listElement.setAttribute('data-deadline', newDeadline); listElement.setAttribute('data-desc', newDesc); listElement.querySelector('.progress-val-hidden').innerText = newProgress + '%'; listElement.querySelector('.progress-bar-fill').style.width = newProgress + '%'; listElement.querySelector('.deadline').innerHTML = `<i data-lucide="calendar"></i> ${formatDisplayDate(newDeadline)}`;
+                    listElement.querySelector('h4').innerText = newTitle; 
+                    listElement.setAttribute('data-user', newUser); 
+                    listElement.setAttribute('data-deadline', newDeadline);
+                    listElement.setAttribute('data-desc', newDesc); 
+                    listElement.querySelector('.progress-val-hidden').innerText = newProgress + '%'; 
+                    listElement.querySelector('.progress-bar-fill').style.width = newProgress + '%'; 
+                    listElement.querySelector('.deadline').innerHTML = `<i data-lucide="calendar"></i> ${formatDisplayDate(newDeadline)}`;
                 }
             }
 
-            closeTaskModal(); applyFilters(); updateDashboard(); if (typeof lucide !== 'undefined') lucide.createIcons();
+            closeTaskModal(); 
+            applyFilters(); 
+            if (typeof lucide !== 'undefined') lucide.createIcons();
         }
 
-        document.querySelectorAll('.modal-overlay').forEach(modal => { modal.addEventListener('click', function(e) { if (e.target === this) { if (this.id === 'board-modal') closeBoardModal(); if (this.id === 'task-modal') closeTaskModal(); } }); });
+        document.querySelectorAll('.modal-overlay').forEach(modal => { 
+            modal.addEventListener('click', function(e) { 
+                if (e.target === this) { 
+                    if (this.id === 'board-modal') closeBoardModal(); 
+                    if (this.id === 'task-modal') closeTaskModal(); 
+                } 
+            }); 
+        });
     </script>
 </body>
 </html>
