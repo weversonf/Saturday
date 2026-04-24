@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SaaS Gestão | Saturday v22</title>
+    <title>SaaS Gestão | Saturday v23</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -193,8 +193,15 @@
 
         @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .card-labels { display: flex; gap: 4px; margin-bottom: 10px; }
-        .label { width: 28px; height: 4px; border-radius: 2px; }
+        .card-labels { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
+        .label-group { display: flex; align-items: center; gap: 4px; justify-content: space-between; }
+        
+        /* NOVO: Estilo das Badges de Complexidade */
+        .badge-complex { font-size: 8px; font-weight: 900; padding: 3px 6px; border-radius: 4px; text-transform: uppercase; letter-spacing: 1px; display: inline-block; }
+        .badge-complex-Baixa { background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.2); }
+        .badge-complex-Média { background: rgba(234, 179, 8, 0.1); color: #eab308; border: 1px solid rgba(234, 179, 8, 0.2); }
+        .badge-complex-Alta { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); }
+
         .card h4 { font-size: 12px; font-weight: 700; margin-bottom: 12px; line-height: 1.4; color: var(--text-main); }
         
         /* ── EFEITO LÍQUIDO MU FINANCE ── */
@@ -260,13 +267,13 @@
         /* ── MODALS ── */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 1000; opacity: 0; transition: opacity 0.3s; }
         .modal-overlay.active { display: flex; opacity: 1; }
-        .modal-content { background-color: var(--bg-body); border: 1px solid var(--border-color); border-radius: 20px; width: 90%; max-width: 500px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); transform: translateY(20px); transition: transform 0.3s; }
+        .modal-content { background-color: var(--bg-body); border: 1px solid var(--border-color); border-radius: 20px; width: 90%; max-width: 550px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); transform: translateY(20px); transition: transform 0.3s; }
         .modal-overlay.active .modal-content { transform: translateY(0); }
         .modal-header { padding: 24px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
         .modal-header h3 { font-size: 14px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; color: var(--text-main); }
         .btn-close { background: transparent; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 8px; padding: 4px; transition: 0.2s; }
         .btn-close:hover { background: var(--column-bg); color: var(--text-main); }
-        .modal-body { padding: 24px; display: flex; flex-direction: column; gap: 20px; }
+        .modal-body { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
         .input-group label { display: block; font-size: 10px; font-weight: 900; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 1px; }
         
         .input-group input[type="text"], .input-group input[type="date"], .input-group textarea, .input-group select { 
@@ -390,11 +397,13 @@
             <div class="view-container active" id="view-kanban">
                 <div class="column col-todo">
                     <div class="column-header"><h3>A fazer</h3><span class="badge-count" id="count-todo">0</span></div>
-                    <div class="task-list" id="todo" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+                    <div class="task-list" id="todo" ondrop="drop(event)" ondragover="allowDrop(event)">
+                        </div>
                 </div>
                 <div class="column col-progress">
                     <div class="column-header"><h3>Em progresso</h3><span class="badge-count" id="count-progress">0</span></div>
-                    <div class="task-list" id="progress" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+                    <div class="task-list" id="progress" ondrop="drop(event)" ondragover="allowDrop(event)">
+                        </div>
                 </div>
                 <div class="column col-waiting">
                     <div class="column-header"><h3>Aguardando aprovação</h3><span class="badge-count" id="count-waiting">0</span></div>
@@ -530,24 +539,50 @@
 
     <div id="task-modal" class="modal-overlay">
         <div class="modal-content">
-            <div class="modal-header"><h3 id="task-modal-title">Detalhes da Operação</h3><button class="btn-close" onclick="closeTaskModal()"><i data-lucide="x"></i></button></div>
+            <div class="modal-header">
+                <h3 id="task-modal-title">Nova Tarefa</h3>
+                <button class="btn-close" onclick="closeTaskModal()"><i data-lucide="x"></i></button>
+            </div>
             <div class="modal-body">
-                <div class="input-group"><label>Título da Tarefa</label><input type="text" id="modal-input-title" placeholder="Descreva a atividade..."></div>
-                <div class="input-group"><label>Anotações / Descrição</label><textarea id="modal-input-desc" rows="3" placeholder="Detalhes adicionais da tarefa..."></textarea></div>
+                <div class="input-group">
+                    <label>Título da Tarefa</label>
+                    <input type="text" id="modal-input-title" placeholder="Descreva a atividade...">
+                </div>
+                <div class="input-group">
+                    <label>Anotações / Descrição</label>
+                    <textarea id="modal-input-desc" rows="3" placeholder="Detalhes adicionais da tarefa..."></textarea>
+                </div>
+                
                 <div style="display: flex; gap: 16px;">
-                    <div class="input-group" style="flex: 1;">
+                    <div class="input-group" style="flex: 1.2;">
                         <label>Responsável</label>
                         <select id="modal-input-user">
                             </select>
+                    </div>
+                    <div class="input-group" style="flex: 1;">
+                        <label>Complexidade</label>
+                        <select id="modal-input-complexity">
+                            <option value="Baixa">Baixa</option>
+                            <option value="Média">Média</option>
+                            <option value="Alta">Alta</option>
+                        </select>
                     </div>
                     <div class="input-group" style="flex: 1;">
                         <label>Prazo Final</label>
                         <input type="date" id="modal-input-deadline">
                     </div>
                 </div>
-                <div class="input-group"><label>Progresso de Execução</label><input type="range" id="modal-input-progress" min="0" max="100" step="5" oninput="document.getElementById('modal-progress-val').innerText = this.value + '%'"><span id="modal-progress-val" class="range-value">0%</span></div>
+                
+                <div class="input-group">
+                    <label>Progresso de Execução</label>
+                    <input type="range" id="modal-input-progress" min="0" max="100" step="5" oninput="document.getElementById('modal-progress-val').innerText = this.value + '%'">
+                    <span id="modal-progress-val" class="range-value">0%</span>
+                </div>
             </div>
-            <div class="modal-footer"><button class="btn btn-theme btn-text" onclick="closeTaskModal()">Cancelar</button><button class="btn btn-primary btn-text" onclick="saveTaskDetails()"><i data-lucide="save" style="margin-right:8px; width:16px;"></i> Salvar Alterações</button></div>
+            <div class="modal-footer" style="justify-content: flex-end;">
+                <button class="btn btn-theme btn-text" onclick="closeTaskModal()">Cancelar</button>
+                <button class="btn btn-primary btn-text" onclick="saveTaskDetails()"><i data-lucide="save" style="margin-right:8px; width:16px;"></i> Salvar Alterações</button>
+            </div>
         </div>
     </div>
 
@@ -663,7 +698,13 @@
         }
 
         function getAvatarColor(user) {
-            return 'var(--makro-red)'; // Por enquanto o avatar pega a cor padrão
+            return 'var(--makro-red)'; // Pode ser dinâmico depois
+        }
+
+        // Helper para gerar o HTML da Badge de Complexidade
+        function getComplexityBadge(complexity) {
+            const safeComp = complexity || 'Baixa';
+            return `<span class="badge-complex badge-complex-${safeComp}">${safeComp}</span>`;
         }
 
         function openSystemView(viewId, title, icon, navIdToActivate) {
@@ -746,7 +787,6 @@
                 list.appendChild(newLink);
                 if (typeof lucide !== 'undefined') lucide.createIcons();
                 switchBoard(newLink);
-
             } else if (boardModalMode === 'edit') {
                 const oldName = currentBoard;
                 const activeLink = document.querySelector('#boards-list .nav-link.active');
@@ -754,101 +794,62 @@
                     activeLink.setAttribute('data-board-name', inputName); activeLink.setAttribute('data-board-icon', selectedBoardIcon);
                     activeLink.innerHTML = `<i data-lucide="${selectedBoardIcon}"></i> <span class="hide-on-collapse">${inputName}</span>`;
                 }
-
-                document.querySelectorAll('.card, .list-item').forEach(el => {
-                    if (el.getAttribute('data-board') === oldName) el.setAttribute('data-board', inputName);
-                });
-
+                document.querySelectorAll('.card, .list-item').forEach(el => { if (el.getAttribute('data-board') === oldName) el.setAttribute('data-board', inputName); });
                 if (typeof lucide !== 'undefined') lucide.createIcons();
                 switchBoard(activeLink);
             }
-
             closeBoardModal();
         }
 
         function deleteBoard() {
             if(confirm(`ATENÇÃO: Tem certeza que deseja excluir o quadro "${currentBoard}" e todas as suas tarefas?\nEsta ação não pode ser desfeita.`)) {
-                
                 const activeLink = document.querySelector('#boards-list .nav-link.active');
                 if(activeLink) activeLink.remove();
-
                 document.querySelectorAll('.card, .list-item').forEach(el => {
                     if (el.getAttribute('data-board') === currentBoard) el.remove();
                 });
-
                 closeBoardModal();
-
                 const firstAvailableBoard = document.querySelector('#boards-list .nav-link');
                 if(firstAvailableBoard) {
                     switchBoard(firstAvailableBoard);
                 } else {
-                    currentBoard = '';
-                    document.getElementById('board-title-text').innerText = 'Nenhum Quadro';
-                    document.getElementById('header-board-icon').setAttribute('data-lucide', 'slash');
-                    document.getElementById('btn-edit-board').style.display = 'none';
-                    document.getElementById('btn-add-task').style.display = 'none';
-                    if (typeof lucide !== 'undefined') lucide.createIcons();
-                    applyFilters();
-                    updateDashboard();
+                    currentBoard = ''; document.getElementById('board-title-text').innerText = 'Nenhum Quadro'; document.getElementById('header-board-icon').setAttribute('data-lucide', 'slash');
+                    document.getElementById('btn-edit-board').style.display = 'none'; document.getElementById('btn-add-task').style.display = 'none';
+                    if (typeof lucide !== 'undefined') lucide.createIcons(); applyFilters(); updateDashboard();
                 }
             }
         }
 
         function switchBoard(element) {
             if (!element) return;
-            
             const name = element.getAttribute('data-board-name');
             const icon = element.getAttribute('data-board-icon');
-
-            currentBoard = name;
-            currentBoardIcon = icon;
-
-            document.querySelectorAll('aside .nav-link, aside .user-profile').forEach(link => link.classList.remove('active'));
-            element.classList.add('active');
-
+            currentBoard = name; currentBoardIcon = icon;
+            document.querySelectorAll('aside .nav-link, aside .user-profile').forEach(link => link.classList.remove('active')); element.classList.add('active');
             document.getElementById('board-title-text').innerText = `Board de ${name}`;
             const headerIcon = document.getElementById('header-board-icon');
             headerIcon.setAttribute('data-lucide', icon);
-            
             if (typeof lucide !== 'undefined') lucide.createIcons();
-
             document.getElementById('btn-edit-board').style.display = 'flex'; 
-            closeSystemViews();
-            applyFilters();
+            document.getElementById('btn-add-task').style.display = 'flex'; 
+            closeSystemViews(); applyFilters(); updateDashboard();
         }
 
         function loadLogo(event) {
-            const output = document.getElementById('logo-preview');
-            const textLogo = document.getElementById('logo-text');
+            const output = document.getElementById('logo-preview'); const textLogo = document.getElementById('logo-text');
             if (event.target.files && event.target.files[0]) {
-                output.src = URL.createObjectURL(event.target.files[0]);
-                output.style.display = 'block';
-                textLogo.style.display = 'none';
+                output.src = URL.createObjectURL(event.target.files[0]); output.style.display = 'block'; textLogo.style.display = 'none';
                 output.onload = function() { URL.revokeObjectURL(output.src); }
             }
         }
 
         function changeView(viewType) {
-            ['view-settings', 'view-users', 'view-profile', 'view-kanban', 'view-list', 'view-dashboard'].forEach(id => {
-                document.getElementById(id).classList.remove('active');
-            });
-            ['btn-kanban', 'btn-list', 'btn-dashboard'].forEach(id => {
-                document.getElementById(id).classList.remove('active');
-            });
-
-            document.getElementById('view-' + viewType).classList.add('active');
-            document.getElementById('btn-' + viewType).classList.add('active');
-            
-            document.getElementById('filter-bar').style.display = 'flex';
-            document.getElementById('view-toggle').style.display = 'flex';
-            document.getElementById('header-divider').style.display = 'block';
-            
-            if(currentBoard) {
-                document.getElementById('btn-add-task').style.display = 'flex';
-            }
-            if (viewType === 'dashboard') {
-                updateDashboard();
-            }
+            ['view-settings', 'view-users', 'view-profile', 'view-kanban', 'view-list', 'view-dashboard'].forEach(id => { document.getElementById(id).classList.remove('active'); });
+            ['btn-kanban', 'btn-list', 'btn-dashboard'].forEach(id => { document.getElementById(id).classList.remove('active'); });
+            document.getElementById('view-' + viewType).classList.add('active'); document.getElementById('btn-' + viewType).classList.add('active');
+            document.getElementById('filter-bar').style.display = 'flex'; document.getElementById('view-toggle').style.display = 'flex'; document.getElementById('header-divider').style.display = 'block';
+            if(currentBoard) { document.getElementById('btn-add-task').style.display = 'flex'; }
+            if (viewType === 'dashboard') updateDashboard();
         }
 
         function applyFilters() {
@@ -889,7 +890,6 @@
                 const user = item.getAttribute('data-user');
                 const board = item.getAttribute('data-board');
                 const deadline = item.getAttribute('data-deadline') || '';
-                
                 const itemStatus = item.querySelector('.status-badge').innerText.trim();
 
                 const matchSearch = text.includes(searchTerm);
@@ -919,73 +919,33 @@
 
         function updateDashboard() {
             const cards = Array.from(document.querySelectorAll('#view-kanban .card')).filter(card => card.getAttribute('data-board') === currentBoard);
-            
-            const total = cards.length;
-            let aFazer = 0;
-            let emProgresso = 0;
-            let concluidas = 0;
-            let sumProgress = 0;
-            let userStats = {};
+            const total = cards.length; let aFazer = 0, emProgresso = 0, aguardando = 0, concluidas = 0, sumProgress = 0; let userStats = {};
 
             cards.forEach(card => {
                 const user = card.getAttribute('data-user') || 'Desconhecido';
                 if(!userStats[user]) userStats[user] = { total: 0, done: 0, color: getAvatarColor(user) };
                 userStats[user].total++;
 
-                if(card.closest('#todo')) { aFazer++; }
-                else if(card.closest('#progress')) { emProgresso++; }
-                else if(card.closest('#done')) { concluidas++; userStats[user].done++; }
-
-                const progressText = card.querySelector('.progress-header span:last-child').innerText;
-                sumProgress += parseInt(progressText.replace('%', '')) || 0;
+                if(card.closest('#todo')) { aFazer++; } else if(card.closest('#progress')) { emProgresso++; } else if(card.closest('#waiting')) { aguardando++; } else if(card.closest('#done')) { concluidas++; userStats[user].done++; }
+                const progressText = card.querySelector('.progress-header span:last-child').innerText; sumProgress += parseInt(progressText.replace('%', '')) || 0;
             });
 
-            document.getElementById('dash-total').innerText = total;
-            document.getElementById('dash-todo').innerText = aFazer;
-            document.getElementById('dash-progress').innerText = emProgresso;
-            document.getElementById('dash-done').innerText = concluidas;
+            document.getElementById('dash-total').innerText = total; document.getElementById('dash-todo').innerText = aFazer; document.getElementById('dash-progress').innerText = emProgresso; document.getElementById('dash-done').innerText = concluidas;
 
             const progressPct = total === 0 ? 0 : Math.round(sumProgress / total);
-            document.getElementById('dash-progress-pct').innerText = progressPct + '%';
-            document.getElementById('dash-progress-bar').style.width = progressPct + '%';
+            document.getElementById('dash-progress-pct').innerText = progressPct + '%'; document.getElementById('dash-progress-bar').style.width = progressPct + '%';
 
-            const pctTodo = total === 0 ? 0 : Math.round((aFazer/total)*100);
-            const pctProg = total === 0 ? 0 : Math.round((emProgresso/total)*100);
-            const pctWait = total === 0 ? 0 : Math.round((0/total)*100); // Aguardando fixo 0 pro mock
-            const pctDone = total === 0 ? 0 : Math.round((concluidas/total)*100);
+            const pctTodo = total === 0 ? 0 : Math.round((aFazer/total)*100); const pctProg = total === 0 ? 0 : Math.round((emProgresso/total)*100); const pctWait = total === 0 ? 0 : Math.round((aguardando/total)*100); const pctDone = total === 0 ? 0 : Math.round((concluidas/total)*100);
 
-            document.getElementById('dash-bar-todo').style.width = pctTodo + '%';
-            document.getElementById('dash-pct-todo').innerText = pctTodo + '%';
-            document.getElementById('dash-bar-prog').style.width = pctProg + '%';
-            document.getElementById('dash-pct-prog').innerText = pctProg + '%';
-            document.getElementById('dash-bar-wait').style.width = pctWait + '%';
-            document.getElementById('dash-pct-wait').innerText = pctWait + '%';
-            document.getElementById('dash-bar-done').style.width = pctDone + '%';
-            document.getElementById('dash-pct-done').innerText = pctDone + '%';
+            document.getElementById('dash-bar-todo').style.width = pctTodo + '%'; document.getElementById('dash-pct-todo').innerText = pctTodo + '%'; document.getElementById('dash-bar-prog').style.width = pctProg + '%'; document.getElementById('dash-pct-prog').innerText = pctProg + '%'; document.getElementById('dash-bar-wait').style.width = pctWait + '%'; document.getElementById('dash-pct-wait').innerText = pctWait + '%'; document.getElementById('dash-bar-done').style.width = pctDone + '%'; document.getElementById('dash-pct-done').innerText = pctDone + '%';
 
-            const userContainer = document.getElementById('dash-user-stats');
-            userContainer.innerHTML = '';
+            const userContainer = document.getElementById('dash-user-stats'); userContainer.innerHTML = '';
             if (Object.keys(userStats).length === 0) {
                 userContainer.innerHTML = '<p style="font-size:11px; color:var(--text-muted);">Nenhuma tarefa neste quadro.</p>';
             } else {
                 Object.keys(userStats).sort((a,b) => userStats[b].total - userStats[a].total).forEach(user => {
-                    const stat = userStats[user];
-                    const pct = stat.total === 0 ? 0 : Math.round((stat.done/stat.total)*100);
-                    const html = `
-                        <div class="user-stat-row">
-                            <div style="display:flex; align-items:center; gap:8px; width: 110px;">
-                                <div class="avatar" style="width:24px; height:24px; font-size:10px; background:${stat.color}">${user.charAt(0)}</div>
-                                <span style="font-size:11px; font-weight:700; color:var(--text-main);">${user}</span>
-                            </div>
-                            <div style="flex:1;">
-                                <div style="display:flex; justify-content:space-between; font-size:9px; font-weight:900; color:var(--text-muted); margin-bottom:6px;">
-                                    <span>${stat.done} de ${stat.total}</span>
-                                    <span style="color:var(--text-main);">${pct}%</span>
-                                </div>
-                                <div class="progress-bar-bg" style="height:12px;"><div class="progress-bar-fill" style="width:${pct}%; background-color:${stat.color};"></div></div>
-                            </div>
-                        </div>
-                    `;
+                    const stat = userStats[user]; const pct = stat.total === 0 ? 0 : Math.round((stat.done/stat.total)*100);
+                    const html = `<div class="user-stat-row"><div style="display:flex; align-items:center; gap:8px; width: 110px;"><div class="avatar" style="width:24px; height:24px; font-size:10px; background:${stat.color}">${user.charAt(0)}</div><span style="font-size:11px; font-weight:700; color:var(--text-main);">${user}</span></div><div style="flex:1;"><div style="display:flex; justify-content:space-between; font-size:9px; font-weight:900; color:var(--text-muted); margin-bottom:6px;"><span>${stat.done} de ${stat.total}</span><span style="color:var(--text-main);">${pct}%</span></div><div class="progress-bar-bg" style="height:12px;"><div class="progress-bar-fill" style="width:${pct}%; background-color:${stat.color};"></div></div></div></div>`;
                     userContainer.innerHTML += html;
                 });
             }
@@ -996,18 +956,8 @@
         function drop(ev) {
             ev.preventDefault(); var data = ev.dataTransfer.getData("text"); var dropzone = ev.target; var element = document.getElementById(data);
             if (!element) return; element.classList.remove('dragging');
-            
-            if (dropzone.classList.contains('task-list')) {
-                dropzone.appendChild(element);
-            } else if (dropzone.closest('.task-list')) {
-                dropzone.closest('.task-list').appendChild(element);
-            }
-            
-            if (element.parentNode.id === 'done') {
-                element.querySelector('.progress-header span:last-child').innerText = '100%';
-                element.querySelector('.progress-bar-fill').style.width = '100%';
-                element.querySelector('.progress-bar-fill').style.backgroundColor = 'var(--status-done)';
-            }
+            if (dropzone.classList.contains('task-list')) { dropzone.appendChild(element); } else if (dropzone.closest('.task-list')) { dropzone.closest('.task-list').appendChild(element); }
+            if (element.parentNode.id === 'done') { element.querySelector('.progress-header span:last-child').innerText = '100%'; element.querySelector('.progress-bar-fill').style.width = '100%'; element.querySelector('.progress-bar-fill').style.backgroundColor = 'var(--status-done)'; }
             
             const listElement = document.getElementById(element.id.replace('t','l'));
             if(listElement) {
@@ -1021,13 +971,9 @@
                     listElement.querySelector('.progress-bar-fill').style.width = '100%'; 
                 }
             }
-
             applyFilters(); 
         }
-
-        document.addEventListener('dragend', function(ev) {
-            if(ev.target && ev.target.classList) ev.target.classList.remove('dragging');
-        });
+        document.addEventListener('dragend', function(ev) { if(ev.target && ev.target.classList) ev.target.classList.remove('dragging'); });
 
         function toggleTheme() {
             const body = document.body; const themeBtn = document.getElementById('theme-btn');
@@ -1036,6 +982,7 @@
             if (typeof lucide !== 'undefined') lucide.createIcons();
         }
 
+        // ── Lógica de Abertura de Modal de Tarefas ──
         function openNewTaskModal() {
             isCreatingTask = true;
             currentEditingElementId = null;
@@ -1047,6 +994,7 @@
             const loggedUser = document.getElementById('sidebar-user-name').innerText;
             document.getElementById('modal-input-user').value = loggedUser || 'Weverson'; 
             
+            document.getElementById('modal-input-complexity').value = 'Baixa';
             document.getElementById('modal-input-deadline').value = localISOString;
             document.getElementById('modal-input-progress').value = '0';
             document.getElementById('modal-progress-val').innerText = '0%';
@@ -1062,7 +1010,7 @@
             const element = document.getElementById(elementId); 
             if (!element) return;
             
-            let title, user, progressRaw, deadlineRaw, descRaw;
+            let title, user, progressRaw, deadlineRaw, descRaw, compRaw;
             
             if (element.classList.contains('card')) {
                 title = element.querySelector('h4').innerText; 
@@ -1070,12 +1018,14 @@
                 progressRaw = element.querySelector('.progress-header span:last-child').innerText; 
                 deadlineRaw = element.getAttribute('data-deadline') || '';
                 descRaw = element.getAttribute('data-desc') || '';
+                compRaw = element.getAttribute('data-complexity') || 'Baixa';
             } else if (element.classList.contains('list-item')) {
                 title = element.querySelector('.list-item-title h4').innerText; 
                 user = element.getAttribute('data-user') || 'Weverson'; 
                 progressRaw = element.querySelector('.progress-val-hidden').innerText; 
                 deadlineRaw = element.getAttribute('data-deadline') || '';
                 descRaw = element.getAttribute('data-desc') || '';
+                compRaw = element.getAttribute('data-complexity') || 'Baixa';
             }
             
             const progress = progressRaw.replace('%', '');
@@ -1083,6 +1033,7 @@
             document.getElementById('modal-input-title').value = title; 
             document.getElementById('modal-input-desc').value = descRaw; 
             document.getElementById('modal-input-user').value = user; 
+            document.getElementById('modal-input-complexity').value = compRaw;
             document.getElementById('modal-input-progress').value = progress; 
             document.getElementById('modal-progress-val').innerText = progressRaw; 
             document.getElementById('modal-input-deadline').value = deadlineRaw;
@@ -1097,6 +1048,7 @@
             if (!newTitle && isCreatingTask) { alert("O título da tarefa é obrigatório."); return; }
             
             const newUser = document.getElementById('modal-input-user').value; 
+            const newComplexity = document.getElementById('modal-input-complexity').value; 
             const newProgress = document.getElementById('modal-input-progress').value; 
             const newDeadline = document.getElementById('modal-input-deadline').value;
             const newDesc = document.getElementById('modal-input-desc').value;
@@ -1107,17 +1059,22 @@
                 const listId = "l" + idNum; 
                 const formattedDeadline = formatDisplayDate(newDeadline);
                 
+                // Cria Card
                 const card = document.createElement('div'); 
                 card.className = 'card'; card.draggable = true; card.id = cardId; 
                 card.setAttribute('data-user', newUser); 
                 card.setAttribute('data-board', currentBoard); 
                 card.setAttribute('data-deadline', newDeadline); 
                 card.setAttribute('data-desc', newDesc); 
+                card.setAttribute('data-complexity', newComplexity); 
                 card.onclick = function() { openTaskModal(this.id); }; 
                 card.ondragstart = drag;
                 
                 card.innerHTML = `
-                    <div class="card-labels"><div class="label" style="background: var(--text-muted);"></div></div>
+                    <div class="card-labels">
+                        <div class="label" style="background: var(--text-muted);"></div>
+                    </div>
+                    ${getComplexityBadge(newComplexity)}
                     <h4>${newTitle || 'Nova Tarefa'}</h4>
                     <div class="progress-container">
                         <div class="progress-header"><span>Progresso</span><span>${newProgress}%</span></div>
@@ -1130,18 +1087,23 @@
                 `;
                 document.getElementById('todo').prepend(card);
 
+                // Cria Lista
                 const listItem = document.createElement('div'); 
                 listItem.className = 'list-item'; listItem.id = listId; 
                 listItem.setAttribute('data-user', newUser); 
                 listItem.setAttribute('data-board', currentBoard); 
                 listItem.setAttribute('data-deadline', newDeadline); 
                 listItem.setAttribute('data-desc', newDesc); 
+                listItem.setAttribute('data-complexity', newComplexity); 
                 listItem.onclick = function() { openTaskModal(this.id); };
                 
                 listItem.innerHTML = `
                     <div class="list-item-title">
                         <div class="label" style="background: var(--text-muted); width: 6px; height: 24px;"></div>
-                        <h4 style="margin:0;">${newTitle || 'Nova Tarefa'}</h4>
+                        <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 4px;">
+                            ${getComplexityBadge(newComplexity)}
+                            <h4 style="margin:0;">${newTitle || 'Nova Tarefa'}</h4>
+                        </div>
                     </div>
                     <div><span class="status-badge todo">A fazer</span></div>
                     <div>
@@ -1169,6 +1131,17 @@
                     cardElement.setAttribute('data-user', newUser); 
                     cardElement.setAttribute('data-deadline', newDeadline);
                     cardElement.setAttribute('data-desc', newDesc); 
+                    cardElement.setAttribute('data-complexity', newComplexity); 
+                    
+                    let badge = cardElement.querySelector('.badge-complex');
+                    if(badge) {
+                        badge.className = `badge-complex badge-complex-${newComplexity}`;
+                        badge.innerText = newComplexity;
+                    } else {
+                        // Insere caso não tenha (ex: compatibilidade com old state)
+                        cardElement.querySelector('h4').insertAdjacentHTML('beforebegin', getComplexityBadge(newComplexity));
+                    }
+
                     cardElement.querySelector('.progress-header span:last-child').innerText = newProgress + '%'; 
                     cardElement.querySelector('.progress-bar-fill').style.width = newProgress + '%'; 
                     cardElement.querySelector('.deadline').innerHTML = `<i data-lucide="calendar"></i> ${formatDisplayDate(newDeadline)}`; 
@@ -1183,6 +1156,14 @@
                     listElement.setAttribute('data-user', newUser); 
                     listElement.setAttribute('data-deadline', newDeadline);
                     listElement.setAttribute('data-desc', newDesc); 
+                    listElement.setAttribute('data-complexity', newComplexity); 
+
+                    let badge = listElement.querySelector('.badge-complex');
+                    if(badge) {
+                        badge.className = `badge-complex badge-complex-${newComplexity}`;
+                        badge.innerText = newComplexity;
+                    }
+
                     listElement.querySelector('.progress-val-hidden').innerText = newProgress + '%'; 
                     listElement.querySelector('.progress-bar-fill').style.width = newProgress + '%'; 
                     listElement.querySelector('.deadline').innerHTML = `<i data-lucide="calendar"></i> ${formatDisplayDate(newDeadline)}`;
