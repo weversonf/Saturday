@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SaaS Gestão | Saturday v24</title>
+    <title>SaaS Gestão | Saturday v25</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -194,24 +194,27 @@
         @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         .card-labels { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
-        .label-group { display: flex; align-items: center; gap: 4px; justify-content: space-between; }
         
-        .badge-complex { font-size: 8px; font-weight: 900; padding: 3px 6px; border-radius: 4px; text-transform: uppercase; letter-spacing: 1px; display: inline-block; }
+        .badge-complex { font-size: 8px; font-weight: 900; padding: 3px 6px; border-radius: 4px; text-transform: uppercase; letter-spacing: 1px; display: inline-block; width: fit-content; margin-bottom: 4px;}
         .badge-complex-Baixa { background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.2); }
         .badge-complex-Média { background: rgba(234, 179, 8, 0.1); color: #eab308; border: 1px solid rgba(234, 179, 8, 0.2); }
         .badge-complex-Alta { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); }
 
         .card h4 { font-size: 12px; font-weight: 700; margin-bottom: 12px; line-height: 1.4; color: var(--text-main); }
         
-        /* ── EFEITO LÍQUIDO MU FINANCE ── */
+        /* ── EFEITO LÍQUIDO MU FINANCE (BARRA DE PROGRESSO COM CORES DINÂMICAS) ── */
         .progress-container { margin-bottom: 12px; }
         .progress-header { display: flex; justify-content: space-between; font-size: 9px; font-weight: 900; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; }
         
         .progress-bar-bg { width: 100%; height: 12px; background-color: var(--border-color); border-radius: 12px; overflow: hidden; box-shadow: inset 0 1px 2px rgba(0,0,0,0.1); }
         .progress-bar-fill { 
-            height: 100%; background-color: var(--makro-red); border-radius: 12px; transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s; 
+            height: 100%; 
+            border-radius: 12px; 
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.4s ease; 
             background-image: radial-gradient(circle, rgba(255, 255, 255, 0.3) 35%, transparent 40%);
-            background-size: 18px 18px; background-position: 0 center; animation: liquidFlow 1.5s linear infinite;
+            background-size: 18px 18px; 
+            background-position: 0 center; 
+            animation: liquidFlow 1.5s linear infinite;
         }
 
         @keyframes liquidFlow { from { background-position: 0 center; } to { background-position: 18px center; } }
@@ -266,13 +269,13 @@
         /* ── MODALS ── */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 1000; opacity: 0; transition: opacity 0.3s; }
         .modal-overlay.active { display: flex; opacity: 1; }
-        .modal-content { background-color: var(--bg-body); border: 1px solid var(--border-color); border-radius: 20px; width: 90%; max-width: 500px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); transform: translateY(20px); transition: transform 0.3s; }
+        .modal-content { background-color: var(--bg-body); border: 1px solid var(--border-color); border-radius: 20px; width: 90%; max-width: 550px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); transform: translateY(20px); transition: transform 0.3s; }
         .modal-overlay.active .modal-content { transform: translateY(0); }
         .modal-header { padding: 24px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
         .modal-header h3 { font-size: 14px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; color: var(--text-main); }
         .btn-close { background: transparent; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 8px; padding: 4px; transition: 0.2s; }
         .btn-close:hover { background: var(--column-bg); color: var(--text-main); }
-        .modal-body { padding: 24px; display: flex; flex-direction: column; gap: 20px; }
+        .modal-body { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
         .input-group label { display: block; font-size: 10px; font-weight: 900; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 1px; }
         
         .input-group input[type="text"], .input-group input[type="date"], .input-group textarea, .input-group select { 
@@ -298,6 +301,7 @@
         <div class="login-card">
             <h2 class="logo-text">SATURDAY</h2>
             <p>Gestão Inteligente e Descomplicada</p>
+            
             <button onclick="window.loginWithGoogle()" class="btn btn-google btn-text" style="display: flex; align-items: center; justify-content: center; width: 100%;">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -550,8 +554,7 @@
                 <div style="display: flex; gap: 16px;">
                     <div class="input-group" style="flex: 1.2;">
                         <label>Responsável</label>
-                        <select id="modal-input-user">
-                            </select>
+                        <select id="modal-input-user"></select>
                     </div>
                     <div class="input-group" style="flex: 1;">
                         <label>Complexidade</label>
@@ -569,8 +572,8 @@
                 
                 <div class="input-group">
                     <label>Progresso de Execução</label>
-                    <input type="range" id="modal-input-progress" min="0" max="100" step="5" oninput="document.getElementById('modal-progress-val').innerText = this.value + '%'">
-                    <span id="modal-progress-val" class="range-value">0%</span>
+                    <input type="range" id="modal-input-progress" min="0" max="100" step="5" oninput="updateModalProgressColor(this.value)">
+                    <span id="modal-progress-val" class="range-value" style="color: var(--makro-red);">0%</span>
                 </div>
             </div>
             <div class="modal-footer" style="justify-content: flex-end;">
@@ -598,7 +601,6 @@
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
         
-        // Expondo o DB para a interface usar
         const db = getFirestore(app);
         window.db = db;
         window.fs = { collection, addDoc, getDocs, updateDoc, deleteDoc, doc };
@@ -607,15 +609,10 @@
         const appContainer = document.getElementById('app-container');
 
         window.loginWithGoogle = () => {
-            signInWithPopup(auth, provider).catch(err => {
-                console.error(err);
-                alert("Erro ao tentar fazer login com o Google. Verifique o console.");
-            });
+            signInWithPopup(auth, provider).catch(err => { console.error(err); alert("Erro ao tentar fazer login com o Google."); });
         };
 
-        window.logout = () => {
-            signOut(auth).catch(err => console.error(err));
-        };
+        window.logout = () => { signOut(auth).catch(err => console.error(err)); };
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
@@ -642,7 +639,6 @@
                     }
                 });
 
-                // Tabela de usuários: Mostrar o usuário logado
                 const usersTableBody = document.getElementById('users-table-body');
                 usersTableBody.innerHTML = `
                     <tr>
@@ -657,18 +653,13 @@
                     </tr>
                 `;
 
-                // Filtros e Selects baseados no usuário logado
                 const selectUser = document.getElementById('modal-input-user');
                 selectUser.innerHTML = `<option value="${displayName}">${displayName}</option>`;
                 
                 const filterUser = document.getElementById('user-filter');
                 filterUser.innerHTML = `<option value="all">Solicitante: Todos</option><option value="${displayName}">${displayName}</option>`;
 
-                // CARREGAR TAREFAS DO BANCO APÓS LOGIN
-                if(window.loadTasksFromDB) {
-                    window.loadTasksFromDB();
-                }
-
+                if(window.loadTasksFromDB) { window.loadTasksFromDB(); }
                 if(typeof lucide !== 'undefined') lucide.createIcons();
 
             } else {
@@ -699,13 +690,29 @@
             }
             renderIconSelector();
             
-            // Expondo a lógica do arrastar para o window pro HTML achar
             window.drag = function(ev) { 
                 ev.dataTransfer.setData("text", ev.target.id); 
                 setTimeout(() => { document.getElementById(ev.target.id).classList.add('dragging'); }, 0); 
             };
             window.allowDrop = function(ev) { ev.preventDefault(); };
         });
+
+        // ── FUNÇÃO DE CORES DINÂMICAS ──
+        function getProgressColor(progress) {
+            const p = parseInt(progress) || 0;
+            // 0% = Vermelho (Hue 0)
+            // 50% = Amarelo (Hue 60)
+            // 100% = Verde (Hue 120)
+            const hue = p * 1.2; 
+            return `hsl(${hue}, 85%, 50%)`;
+        }
+
+        // Atualiza a cor do texto do progresso dentro do modal ao arrastar
+        function updateModalProgressColor(value) {
+            const valLabel = document.getElementById('modal-progress-val');
+            valLabel.innerText = value + '%';
+            valLabel.style.color = getProgressColor(value);
+        }
 
         function toggleSidebar() {
             const spacer = document.getElementById('sidebar-spacer');
@@ -722,26 +729,18 @@
             return dateStr;
         }
 
-        function getAvatarColor(user) {
-            return 'var(--makro-red)'; 
-        }
+        function getAvatarColor(user) { return 'var(--makro-red)'; }
 
         function getComplexityBadge(complexity) {
             const safeComp = complexity || 'Baixa';
             return `<span class="badge-complex badge-complex-${safeComp}">${safeComp}</span>`;
         }
 
-        // ── LIGAÇÃO COM BANCO DE DADOS (FIRESTORE) ──
-
         window.loadTasksFromDB = async function() {
-            // Limpa as colunas do DOM
-            ['todo', 'progress', 'waiting', 'done'].forEach(id => {
-                document.getElementById(id).innerHTML = '';
-            });
+            ['todo', 'progress', 'waiting', 'done'].forEach(id => { document.getElementById(id).innerHTML = ''; });
             document.getElementById('list-items-container').innerHTML = '';
 
             try {
-                // Busca todas as tarefas
                 const querySnapshot = await window.fs.getDocs(window.fs.collection(window.db, "tasks"));
                 querySnapshot.forEach((doc) => {
                     const data = doc.data();
@@ -754,43 +753,31 @@
             }
         };
 
-        // Função central para renderizar a tarefa no HTML baseada nos dados do Firebase
         function renderTaskInDOM(id, data) {
             const cardId = "t_" + id;
             const listId = "l_" + id;
             const formattedDeadline = formatDisplayDate(data.deadline);
-            
-            // Garantir que a tarefa tenha os atributos necessários para os filtros
             const board = data.board || 'Marketing';
             const status = data.status || 'todo';
+            
+            const progColor = getProgressColor(data.progress); // <- Cor Dinâmica
 
-            // 1. Criar/Atualizar Card (Kanban)
             let card = document.getElementById(cardId);
             if(!card) {
-                card = document.createElement('div');
-                card.className = 'card'; 
-                card.draggable = true; 
-                card.id = cardId;
-                card.onclick = function() { openTaskModal(this.id); }; 
-                card.ondragstart = window.drag;
+                card = document.createElement('div'); card.className = 'card'; card.draggable = true; card.id = cardId;
+                card.onclick = function() { openTaskModal(this.id); }; card.ondragstart = window.drag;
             }
             
-            card.setAttribute('data-dbid', id);
-            card.setAttribute('data-user', data.user); 
-            card.setAttribute('data-board', board); 
-            card.setAttribute('data-deadline', data.deadline); 
-            card.setAttribute('data-desc', data.desc); 
-            card.setAttribute('data-complexity', data.complexity); 
+            card.setAttribute('data-dbid', id); card.setAttribute('data-user', data.user); card.setAttribute('data-board', board); 
+            card.setAttribute('data-deadline', data.deadline); card.setAttribute('data-desc', data.desc); card.setAttribute('data-complexity', data.complexity); 
             
             card.innerHTML = `
-                <div class="card-labels">
-                    <div class="label" style="background: var(--text-muted);"></div>
-                </div>
+                <div class="card-labels"><div class="label" style="background: var(--text-muted);"></div></div>
                 ${getComplexityBadge(data.complexity)}
                 <h4>${data.title}</h4>
                 <div class="progress-container">
-                    <div class="progress-header"><span>Progresso</span><span>${data.progress}%</span></div>
-                    <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: ${data.progress}%;"></div></div>
+                    <div class="progress-header"><span>Progresso</span><span style="color:${progColor}">${data.progress}%</span></div>
+                    <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: ${data.progress}%; background-color: ${progColor};"></div></div>
                 </div>
                 <div class="card-footer">
                     <div class="deadline"><i data-lucide="calendar"></i> ${formattedDeadline}</div>
@@ -798,29 +785,17 @@
                 </div>
             `;
             
-            // Insere na coluna correta
             const columnEl = document.getElementById(status);
-            if(columnEl && !document.getElementById(cardId)) {
-                columnEl.prepend(card);
-            }
+            if(columnEl && !document.getElementById(cardId)) columnEl.prepend(card);
 
-            // 2. Criar/Atualizar List Item
             let listItem = document.getElementById(listId);
             if(!listItem) {
-                listItem = document.createElement('div');
-                listItem.className = 'list-item'; 
-                listItem.id = listId;
-                listItem.onclick = function() { openTaskModal(this.id); };
+                listItem = document.createElement('div'); listItem.className = 'list-item'; listItem.id = listId; listItem.onclick = function() { openTaskModal(this.id); };
             }
 
-            listItem.setAttribute('data-dbid', id);
-            listItem.setAttribute('data-user', data.user); 
-            listItem.setAttribute('data-board', board); 
-            listItem.setAttribute('data-deadline', data.deadline); 
-            listItem.setAttribute('data-desc', data.desc); 
-            listItem.setAttribute('data-complexity', data.complexity); 
+            listItem.setAttribute('data-dbid', id); listItem.setAttribute('data-user', data.user); listItem.setAttribute('data-board', board); 
+            listItem.setAttribute('data-deadline', data.deadline); listItem.setAttribute('data-desc', data.desc); listItem.setAttribute('data-complexity', data.complexity); 
 
-            // Textos amigáveis de status para a lista
             let statusText = 'A fazer'; let badgeClass = 'todo';
             if(status === 'progress') { statusText = 'Em Progresso'; badgeClass = 'progress'; }
             if(status === 'waiting') { statusText = 'Aguardando'; badgeClass = 'waiting'; }
@@ -838,60 +813,44 @@
                 <div>
                     <div class="progress-container" style="margin: 0;">
                         <span style="display:none" class="progress-val-hidden">${data.progress}%</span>
-                        <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: ${data.progress}%;"></div></div>
+                        <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: ${data.progress}%; background-color: ${progColor};"></div></div>
                     </div>
                 </div>
                 <div class="deadline" style="text-transform: none;"><i data-lucide="calendar"></i> ${formattedDeadline}</div>
                 <button class="list-action-btn" onclick="event.stopPropagation();"><i data-lucide="more-horizontal"></i></button>
             `;
             
-            if(!document.getElementById(listId)) {
-                document.getElementById('list-items-container').prepend(listItem);
-            }
-
+            if(!document.getElementById(listId)) document.getElementById('list-items-container').prepend(listItem);
             if (typeof lucide !== 'undefined') lucide.createIcons();
         }
 
-        // Função de Drag & Drop atualizada para banco de dados
         window.drop = async function(ev) {
-            ev.preventDefault(); 
-            var data = ev.dataTransfer.getData("text"); 
-            var dropzone = ev.target; 
-            var element = document.getElementById(data);
-            
-            if (!element) return; 
-            element.classList.remove('dragging');
+            ev.preventDefault(); var data = ev.dataTransfer.getData("text"); var dropzone = ev.target; var element = document.getElementById(data);
+            if (!element) return; element.classList.remove('dragging');
             
             let targetColumn = dropzone.closest('.task-list');
-            if (dropzone.classList.contains('task-list')) {
-                targetColumn = dropzone;
-            }
+            if (dropzone.classList.contains('task-list')) targetColumn = dropzone;
             
             if (targetColumn) {
                 targetColumn.appendChild(element);
-                
-                // Pega o ID do documento do Firebase
                 const dbId = element.getAttribute('data-dbid');
-                const newStatus = targetColumn.id; // 'todo', 'progress', 'waiting', 'done'
+                const newStatus = targetColumn.id; 
 
-                // Ajustes visuais automáticos para concluído
                 let updatedProgress = element.querySelector('.progress-header span:last-child').innerText.replace('%','');
+                
                 if (newStatus === 'done') { 
                     updatedProgress = '100';
+                    const progColor = getProgressColor(100);
                     element.querySelector('.progress-header span:last-child').innerText = '100%'; 
+                    element.querySelector('.progress-header span:last-child').style.color = progColor; 
                     element.querySelector('.progress-bar-fill').style.width = '100%'; 
-                    element.querySelector('.progress-bar-fill').style.backgroundColor = 'var(--status-done)'; 
+                    element.querySelector('.progress-bar-fill').style.backgroundColor = progColor; 
                 }
 
-                // Salvar alteração de coluna no Firebase
                 try {
                     const docRef = window.fs.doc(window.db, "tasks", dbId);
-                    await window.fs.updateDoc(docRef, {
-                        status: newStatus,
-                        progress: updatedProgress
-                    });
+                    await window.fs.updateDoc(docRef, { status: newStatus, progress: updatedProgress });
                     
-                    // Sincroniza a lista com o novo status
                     const listElement = document.getElementById(element.id.replace('t_','l_'));
                     if(listElement) {
                         const badge = listElement.querySelector('.status-badge');
@@ -901,24 +860,19 @@
                         else if(newStatus === 'done') { 
                             badge.className = 'status-badge done'; badge.innerText = 'Concluído';
                             listElement.querySelector('.progress-val-hidden').innerText = '100%'; 
+                            const progColor = getProgressColor(100);
                             listElement.querySelector('.progress-bar-fill').style.width = '100%'; 
+                            listElement.querySelector('.progress-bar-fill').style.backgroundColor = progColor;
                         }
                     }
-
-                    applyFilters(); 
+                    applyFilters(); updateDashboard();
                 } catch (error) {
-                    console.error("Erro ao atualizar status:", error);
-                    alert("Erro ao salvar mudança. Atualize a página.");
+                    console.error("Erro ao atualizar status:", error); alert("Erro ao salvar mudança.");
                 }
             }
         };
 
-        document.addEventListener('dragend', function(ev) { 
-            if(ev.target && ev.target.classList) ev.target.classList.remove('dragging'); 
-        });
-
-        // ── RESTANTE DA LÓGICA DE UI ──
-
+        // ── FUNÇÕES SISTEMA ──
         function openSystemView(viewId, title, icon, navIdToActivate) {
             ['view-kanban', 'view-list', 'view-dashboard', 'view-settings', 'view-users', 'view-profile'].forEach(id => { document.getElementById(id).classList.remove('active'); });
             document.getElementById(viewId).classList.add('active');
@@ -933,7 +887,6 @@
             document.getElementById('header-board-icon').setAttribute('data-lucide', icon);
             if (typeof lucide !== 'undefined') lucide.createIcons();
         }
-
         function openSettingsView() { openSystemView('view-settings', 'Configurações do Sistema', 'settings', 'nav-settings'); }
         function openUsersView() { openSystemView('view-users', 'Gestão de Usuários', 'users', 'nav-users'); }
         function openProfileView() { openSystemView('view-profile', 'Meu Perfil', 'user', 'nav-profile'); }
@@ -942,158 +895,20 @@
             document.getElementById('filter-bar').style.display = 'flex';
             document.getElementById('view-toggle').style.display = 'flex';
             document.getElementById('header-divider').style.display = 'block';
-            if(currentBoard) {
-                document.getElementById('btn-add-task').style.display = 'flex';
-                document.getElementById('btn-edit-board').style.display = 'flex';
-            }
+            if(currentBoard) { document.getElementById('btn-add-task').style.display = 'flex'; document.getElementById('btn-edit-board').style.display = 'flex'; }
             let targetView = 'kanban';
             if (document.getElementById('btn-list').classList.contains('active')) targetView = 'list';
             if (document.getElementById('btn-dashboard').classList.contains('active')) targetView = 'dashboard';
             changeView(targetView);
         }
 
-        function renderIconSelector() {
-            const container = document.getElementById('icon-selector');
-            container.innerHTML = '';
-            availableIcons.forEach(icon => {
-                const div = document.createElement('div');
-                div.className = `icon-option ${icon === selectedBoardIcon ? 'active' : ''}`;
-                div.innerHTML = `<i data-lucide="${icon}"></i>`;
-                div.onclick = function() {
-                    document.querySelectorAll('.icon-option').forEach(el => el.classList.remove('active'));
-                    this.classList.add('active'); selectedBoardIcon = icon;
-                };
-                container.appendChild(div);
-            });
-            if (typeof lucide !== 'undefined') lucide.createIcons();
-        }
-
-        function openBoardModal(mode) {
-            boardModalMode = mode;
-            const modal = document.getElementById('board-modal');
-            const titleEl = document.getElementById('board-modal-title');
-            const inputEl = document.getElementById('modal-input-board-name');
-            const deleteBtn = document.getElementById('btn-delete-board');
-            
-            if (mode === 'create') { 
-                titleEl.innerText = "Novo Quadro"; inputEl.value = ""; selectedBoardIcon = 'folder'; deleteBtn.style.display = 'none';
-            } else if (mode === 'edit') { 
-                titleEl.innerText = "Editar Quadro"; inputEl.value = currentBoard; selectedBoardIcon = currentBoardIcon; deleteBtn.style.display = 'flex';
-            }
-            renderIconSelector();
-            modal.classList.add('active');
-        }
-
-        function closeBoardModal() { document.getElementById('board-modal').classList.remove('active'); }
-
-        function saveBoard() {
-            const inputName = document.getElementById('modal-input-board-name').value.trim();
-            if (!inputName) { alert("O nome do quadro não pode ficar vazio."); return; }
-
-            if (boardModalMode === 'create') {
-                const list = document.getElementById('boards-list');
-                const newLink = document.createElement('div');
-                newLink.className = 'nav-link'; newLink.setAttribute('data-board-name', inputName); newLink.setAttribute('data-board-icon', selectedBoardIcon);
-                newLink.onclick = function() { switchBoard(this); };
-                newLink.innerHTML = `<i data-lucide="${selectedBoardIcon}"></i> <span class="hide-on-collapse">${inputName}</span>`;
-                list.appendChild(newLink);
-                if (typeof lucide !== 'undefined') lucide.createIcons();
-                switchBoard(newLink);
-
-            } else if (boardModalMode === 'edit') {
-                const oldName = currentBoard;
-                const activeLink = document.querySelector('#boards-list .nav-link.active');
-                if (activeLink) {
-                    activeLink.setAttribute('data-board-name', inputName); activeLink.setAttribute('data-board-icon', selectedBoardIcon);
-                    activeLink.innerHTML = `<i data-lucide="${selectedBoardIcon}"></i> <span class="hide-on-collapse">${inputName}</span>`;
-                }
-
-                document.querySelectorAll('.card, .list-item').forEach(el => {
-                    if (el.getAttribute('data-board') === oldName) el.setAttribute('data-board', inputName);
-                });
-
-                if (typeof lucide !== 'undefined') lucide.createIcons();
-                switchBoard(activeLink);
-            }
-
-            closeBoardModal();
-        }
-
-        function deleteBoard() {
-            if(confirm(`ATENÇÃO: Tem certeza que deseja excluir o quadro "${currentBoard}" e todas as suas tarefas?\nEsta ação não pode ser desfeita.`)) {
-                const activeLink = document.querySelector('#boards-list .nav-link.active');
-                if(activeLink) activeLink.remove();
-
-                document.querySelectorAll('.card, .list-item').forEach(el => {
-                    if (el.getAttribute('data-board') === currentBoard) el.remove();
-                });
-
-                closeBoardModal();
-
-                const firstAvailableBoard = document.querySelector('#boards-list .nav-link');
-                if(firstAvailableBoard) {
-                    switchBoard(firstAvailableBoard);
-                } else {
-                    currentBoard = '';
-                    document.getElementById('board-title-text').innerText = 'Nenhum Quadro';
-                    document.getElementById('header-board-icon').setAttribute('data-lucide', 'slash');
-                    document.getElementById('btn-edit-board').style.display = 'none';
-                    document.getElementById('btn-add-task').style.display = 'none';
-                    if (typeof lucide !== 'undefined') lucide.createIcons();
-                    applyFilters();
-                    updateDashboard();
-                }
-            }
-        }
-
-        function switchBoard(element) {
-            if (!element) return;
-            const name = element.getAttribute('data-board-name');
-            const icon = element.getAttribute('data-board-icon');
-            currentBoard = name; currentBoardIcon = icon;
-            document.querySelectorAll('aside .nav-link, aside .user-profile').forEach(link => link.classList.remove('active'));
-            element.classList.add('active');
-            document.getElementById('board-title-text').innerText = `Board de ${name}`;
-            const headerIcon = document.getElementById('header-board-icon');
-            headerIcon.setAttribute('data-lucide', icon);
-            if (typeof lucide !== 'undefined') lucide.createIcons();
-            document.getElementById('btn-edit-board').style.display = 'flex'; 
-            document.getElementById('btn-add-task').style.display = 'flex'; 
-            closeSystemViews(); applyFilters(); updateDashboard();
-        }
-
-        function loadLogo(event) {
-            const output = document.getElementById('logo-preview');
-            const textLogo = document.getElementById('logo-text');
-            if (event.target.files && event.target.files[0]) {
-                output.src = URL.createObjectURL(event.target.files[0]);
-                output.style.display = 'block';
-                textLogo.style.display = 'none';
-                output.onload = function() { URL.revokeObjectURL(output.src); }
-            }
-        }
-
         function changeView(viewType) {
-            ['view-settings', 'view-users', 'view-profile', 'view-kanban', 'view-list', 'view-dashboard'].forEach(id => {
-                document.getElementById(id).classList.remove('active');
-            });
-            ['btn-kanban', 'btn-list', 'btn-dashboard'].forEach(id => {
-                document.getElementById(id).classList.remove('active');
-            });
-
-            document.getElementById('view-' + viewType).classList.add('active');
-            document.getElementById('btn-' + viewType).classList.add('active');
-            
-            document.getElementById('filter-bar').style.display = 'flex';
-            document.getElementById('view-toggle').style.display = 'flex';
-            document.getElementById('header-divider').style.display = 'block';
-            
-            if(currentBoard) {
-                document.getElementById('btn-add-task').style.display = 'flex';
-            }
-            if (viewType === 'dashboard') {
-                updateDashboard();
-            }
+            ['view-settings', 'view-users', 'view-profile', 'view-kanban', 'view-list', 'view-dashboard'].forEach(id => { document.getElementById(id).classList.remove('active'); });
+            ['btn-kanban', 'btn-list', 'btn-dashboard'].forEach(id => { document.getElementById(id).classList.remove('active'); });
+            document.getElementById('view-' + viewType).classList.add('active'); document.getElementById('btn-' + viewType).classList.add('active');
+            document.getElementById('filter-bar').style.display = 'flex'; document.getElementById('view-toggle').style.display = 'flex'; document.getElementById('header-divider').style.display = 'block';
+            if(currentBoard) { document.getElementById('btn-add-task').style.display = 'flex'; }
+            if (viewType === 'dashboard') updateDashboard();
         }
 
         function applyFilters() {
@@ -1104,51 +919,24 @@
 
             const cards = document.querySelectorAll('#view-kanban .card');
             cards.forEach(card => {
-                const text = card.querySelector('h4').innerText.toLowerCase();
-                const user = card.getAttribute('data-user');
-                const board = card.getAttribute('data-board');
-                const deadline = card.getAttribute('data-deadline') || '';
-                
+                const text = card.querySelector('h4').innerText.toLowerCase(); const user = card.getAttribute('data-user'); const board = card.getAttribute('data-board'); const deadline = card.getAttribute('data-deadline') || '';
                 let cardStatus = '';
-                if(card.closest('#todo')) cardStatus = 'A fazer';
-                else if(card.closest('#progress')) cardStatus = 'Em Progresso';
-                else if(card.closest('#waiting')) cardStatus = 'Aguardando aprovação';
-                else if(card.closest('#done')) cardStatus = 'Concluído';
-
-                const matchSearch = text.includes(searchTerm);
-                const matchUser = userFilter === 'all' || user === userFilter;
-                const matchBoard = board === currentBoard; 
-                const matchStatus = statusFilter === 'all' || cardStatus === statusFilter;
-                
+                if(card.closest('#todo')) cardStatus = 'A fazer'; else if(card.closest('#progress')) cardStatus = 'Em Progresso'; else if(card.closest('#waiting')) cardStatus = 'Aguardando aprovação'; else if(card.closest('#done')) cardStatus = 'Concluído';
+                const matchSearch = text.includes(searchTerm); const matchUser = userFilter === 'all' || user === userFilter; const matchBoard = board === currentBoard; const matchStatus = statusFilter === 'all' || cardStatus === statusFilter;
                 let matchDeadline = true;
-                if (deadlineFilter === 'hoje') matchDeadline = (deadline === localISOString);
-                else if (deadlineFilter === 'atrasado') matchDeadline = (deadline < localISOString && cardStatus !== 'Concluído');
-                else if (deadlineFilter === 'futuro') matchDeadline = (deadline > localISOString);
-
+                if (deadlineFilter === 'hoje') matchDeadline = (deadline === localISOString); else if (deadlineFilter === 'atrasado') matchDeadline = (deadline < localISOString && cardStatus !== 'Concluído'); else if (deadlineFilter === 'futuro') matchDeadline = (deadline > localISOString);
                 card.style.display = (matchSearch && matchUser && matchBoard && matchStatus && matchDeadline) ? 'block' : 'none';
             });
 
             const listItems = document.querySelectorAll('#view-list .list-item');
             listItems.forEach(item => {
-                const text = item.querySelector('.list-item-title').innerText.toLowerCase();
-                const user = item.getAttribute('data-user');
-                const board = item.getAttribute('data-board');
-                const deadline = item.getAttribute('data-deadline') || '';
+                const text = item.querySelector('.list-item-title').innerText.toLowerCase(); const user = item.getAttribute('data-user'); const board = item.getAttribute('data-board'); const deadline = item.getAttribute('data-deadline') || '';
                 const itemStatus = item.querySelector('.status-badge').innerText.trim();
-
-                const matchSearch = text.includes(searchTerm);
-                const matchUser = userFilter === 'all' || user === userFilter;
-                const matchBoard = board === currentBoard;
-                const matchStatus = statusFilter === 'all' || itemStatus === statusFilter;
-
+                const matchSearch = text.includes(searchTerm); const matchUser = userFilter === 'all' || user === userFilter; const matchBoard = board === currentBoard; const matchStatus = statusFilter === 'all' || itemStatus === statusFilter;
                 let matchDeadline = true;
-                if (deadlineFilter === 'hoje') matchDeadline = (deadline === localISOString);
-                else if (deadlineFilter === 'atrasado') matchDeadline = (deadline < localISOString && itemStatus !== 'Concluído');
-                else if (deadlineFilter === 'futuro') matchDeadline = (deadline > localISOString);
-
+                if (deadlineFilter === 'hoje') matchDeadline = (deadline === localISOString); else if (deadlineFilter === 'atrasado') matchDeadline = (deadline < localISOString && itemStatus !== 'Concluído'); else if (deadlineFilter === 'futuro') matchDeadline = (deadline > localISOString);
                 item.style.display = (matchSearch && matchUser && matchBoard && matchStatus && matchDeadline) ? 'grid' : 'none';
             });
-
             updateCounts();
         }
 
@@ -1158,79 +946,94 @@
                 const visibleCards = Array.from(document.getElementById(colId).children).filter(card => card.style.display !== 'none').length;
                 document.getElementById(`count-${colId}`).innerText = visibleCards;
             });
-            updateDashboard(); 
         }
 
         function updateDashboard() {
             const cards = Array.from(document.querySelectorAll('#view-kanban .card')).filter(card => card.getAttribute('data-board') === currentBoard);
-            
-            const total = cards.length;
-            let aFazer = 0, emProgresso = 0, aguardando = 0, concluidas = 0, sumProgress = 0;
-            let userStats = {};
-
+            const total = cards.length; let aFazer = 0, emProgresso = 0, aguardando = 0, concluidas = 0, sumProgress = 0; let userStats = {};
             cards.forEach(card => {
                 const user = card.getAttribute('data-user') || 'Desconhecido';
-                if(!userStats[user]) userStats[user] = { total: 0, done: 0, color: getAvatarColor(user) };
-                userStats[user].total++;
-
-                if(card.closest('#todo')) { aFazer++; }
-                else if(card.closest('#progress')) { emProgresso++; }
-                else if(card.closest('#waiting')) { aguardando++; }
-                else if(card.closest('#done')) { concluidas++; userStats[user].done++; }
-
-                const progressText = card.querySelector('.progress-header span:last-child').innerText;
-                sumProgress += parseInt(progressText.replace('%', '')) || 0;
+                if(!userStats[user]) userStats[user] = { total: 0, done: 0, color: getAvatarColor(user) }; userStats[user].total++;
+                if(card.closest('#todo')) { aFazer++; } else if(card.closest('#progress')) { emProgresso++; } else if(card.closest('#waiting')) { aguardando++; } else if(card.closest('#done')) { concluidas++; userStats[user].done++; }
+                const progressText = card.querySelector('.progress-header span:last-child').innerText; sumProgress += parseInt(progressText.replace('%', '')) || 0;
             });
-
-            document.getElementById('dash-total').innerText = total;
-            document.getElementById('dash-todo').innerText = aFazer;
-            document.getElementById('dash-progress').innerText = emProgresso;
-            document.getElementById('dash-done').innerText = concluidas;
-
+            document.getElementById('dash-total').innerText = total; document.getElementById('dash-todo').innerText = aFazer; document.getElementById('dash-progress').innerText = emProgresso; document.getElementById('dash-done').innerText = concluidas;
+            
             const progressPct = total === 0 ? 0 : Math.round(sumProgress / total);
-            document.getElementById('dash-progress-pct').innerText = progressPct + '%';
+            document.getElementById('dash-progress-pct').innerText = progressPct + '%'; 
+            document.getElementById('dash-progress-pct').style.color = getProgressColor(progressPct); 
             document.getElementById('dash-progress-bar').style.width = progressPct + '%';
+            document.getElementById('dash-progress-bar').style.backgroundColor = getProgressColor(progressPct); // Dash Global Color
 
-            const pctTodo = total === 0 ? 0 : Math.round((aFazer/total)*100);
-            const pctProg = total === 0 ? 0 : Math.round((emProgresso/total)*100);
-            const pctWait = total === 0 ? 0 : Math.round((aguardando/total)*100);
-            const pctDone = total === 0 ? 0 : Math.round((concluidas/total)*100);
+            const pctTodo = total === 0 ? 0 : Math.round((aFazer/total)*100); const pctProg = total === 0 ? 0 : Math.round((emProgresso/total)*100); const pctWait = total === 0 ? 0 : Math.round((aguardando/total)*100); const pctDone = total === 0 ? 0 : Math.round((concluidas/total)*100);
+            document.getElementById('dash-bar-todo').style.width = pctTodo + '%'; document.getElementById('dash-pct-todo').innerText = pctTodo + '%'; document.getElementById('dash-bar-prog').style.width = pctProg + '%'; document.getElementById('dash-pct-prog').innerText = pctProg + '%'; document.getElementById('dash-bar-wait').style.width = pctWait + '%'; document.getElementById('dash-pct-wait').innerText = pctWait + '%'; document.getElementById('dash-bar-done').style.width = pctDone + '%'; document.getElementById('dash-pct-done').innerText = pctDone + '%';
 
-            document.getElementById('dash-bar-todo').style.width = pctTodo + '%';
-            document.getElementById('dash-pct-todo').innerText = pctTodo + '%';
-            document.getElementById('dash-bar-prog').style.width = pctProg + '%';
-            document.getElementById('dash-pct-prog').innerText = pctProg + '%';
-            document.getElementById('dash-bar-wait').style.width = pctWait + '%';
-            document.getElementById('dash-pct-wait').innerText = pctWait + '%';
-            document.getElementById('dash-bar-done').style.width = pctDone + '%';
-            document.getElementById('dash-pct-done').innerText = pctDone + '%';
-
-            const userContainer = document.getElementById('dash-user-stats');
-            userContainer.innerHTML = '';
+            const userContainer = document.getElementById('dash-user-stats'); userContainer.innerHTML = '';
             if (Object.keys(userStats).length === 0) {
                 userContainer.innerHTML = '<p style="font-size:11px; color:var(--text-muted);">Nenhuma tarefa neste quadro.</p>';
             } else {
                 Object.keys(userStats).sort((a,b) => userStats[b].total - userStats[a].total).forEach(user => {
-                    const stat = userStats[user];
-                    const pct = stat.total === 0 ? 0 : Math.round((stat.done/stat.total)*100);
-                    const html = `
-                        <div class="user-stat-row">
-                            <div style="display:flex; align-items:center; gap:8px; width: 110px;">
-                                <div class="avatar" style="width:24px; height:24px; font-size:10px; background:${stat.color}">${user.charAt(0)}</div>
-                                <span style="font-size:11px; font-weight:700; color:var(--text-main);">${user}</span>
-                            </div>
-                            <div style="flex:1;">
-                                <div style="display:flex; justify-content:space-between; font-size:9px; font-weight:900; color:var(--text-muted); margin-bottom:6px;">
-                                    <span>${stat.done} de ${stat.total}</span>
-                                    <span style="color:var(--text-main);">${pct}%</span>
-                                </div>
-                                <div class="progress-bar-bg" style="height:12px;"><div class="progress-bar-fill" style="width:${pct}%; background-color:${stat.color};"></div></div>
-                            </div>
-                        </div>
-                    `;
+                    const stat = userStats[user]; const pct = stat.total === 0 ? 0 : Math.round((stat.done/stat.total)*100);
+                    const html = `<div class="user-stat-row"><div style="display:flex; align-items:center; gap:8px; width: 110px;"><div class="avatar" style="width:24px; height:24px; font-size:10px; background:${stat.color}">${user.charAt(0)}</div><span style="font-size:11px; font-weight:700; color:var(--text-main);">${user}</span></div><div style="flex:1;"><div style="display:flex; justify-content:space-between; font-size:9px; font-weight:900; color:var(--text-muted); margin-bottom:6px;"><span>${stat.done} de ${stat.total}</span><span style="color:var(--text-main);">${pct}%</span></div><div class="progress-bar-bg" style="height:12px;"><div class="progress-bar-fill" style="width:${pct}%; background-color:${getProgressColor(pct)};"></div></div></div></div>`;
                     userContainer.innerHTML += html;
                 });
             }
+        }
+
+        // ── BOARDS MODAL ──
+        function renderIconSelector() {
+            const container = document.getElementById('icon-selector'); container.innerHTML = '';
+            availableIcons.forEach(icon => {
+                const div = document.createElement('div'); div.className = `icon-option ${icon === selectedBoardIcon ? 'active' : ''}`; div.innerHTML = `<i data-lucide="${icon}"></i>`;
+                div.onclick = function() { document.querySelectorAll('.icon-option').forEach(el => el.classList.remove('active')); this.classList.add('active'); selectedBoardIcon = icon; };
+                container.appendChild(div);
+            });
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
+
+        function openBoardModal(mode) {
+            boardModalMode = mode; const modal = document.getElementById('board-modal'); const titleEl = document.getElementById('board-modal-title'); const inputEl = document.getElementById('modal-input-board-name'); const deleteBtn = document.getElementById('btn-delete-board');
+            if (mode === 'create') { titleEl.innerText = "Novo Quadro"; inputEl.value = ""; selectedBoardIcon = 'folder'; deleteBtn.style.display = 'none'; } 
+            else if (mode === 'edit') { titleEl.innerText = "Editar Quadro"; inputEl.value = currentBoard; selectedBoardIcon = currentBoardIcon; deleteBtn.style.display = 'flex'; }
+            renderIconSelector(); modal.classList.add('active');
+        }
+
+        function closeBoardModal() { document.getElementById('board-modal').classList.remove('active'); }
+
+        function saveBoard() {
+            const inputName = document.getElementById('modal-input-board-name').value.trim(); if (!inputName) return;
+            if (boardModalMode === 'create') {
+                const list = document.getElementById('boards-list'); const newLink = document.createElement('div'); newLink.className = 'nav-link'; newLink.setAttribute('data-board-name', inputName); newLink.setAttribute('data-board-icon', selectedBoardIcon);
+                newLink.onclick = function() { switchBoard(this); }; newLink.innerHTML = `<i data-lucide="${selectedBoardIcon}"></i> <span class="hide-on-collapse">${inputName}</span>`;
+                list.appendChild(newLink); if (typeof lucide !== 'undefined') lucide.createIcons(); switchBoard(newLink);
+            } else if (boardModalMode === 'edit') {
+                const oldName = currentBoard; const activeLink = document.querySelector('#boards-list .nav-link.active');
+                if (activeLink) { activeLink.setAttribute('data-board-name', inputName); activeLink.setAttribute('data-board-icon', selectedBoardIcon); activeLink.innerHTML = `<i data-lucide="${selectedBoardIcon}"></i> <span class="hide-on-collapse">${inputName}</span>`; }
+                document.querySelectorAll('.card, .list-item').forEach(el => { if (el.getAttribute('data-board') === oldName) el.setAttribute('data-board', inputName); });
+                if (typeof lucide !== 'undefined') lucide.createIcons(); switchBoard(activeLink);
+            }
+            closeBoardModal();
+        }
+
+        function deleteBoard() {
+            if(confirm(`ATENÇÃO: Tem certeza que deseja excluir o quadro "${currentBoard}" e todas as suas tarefas?\nEsta ação não pode ser desfeita.`)) {
+                const activeLink = document.querySelector('#boards-list .nav-link.active'); if(activeLink) activeLink.remove();
+                document.querySelectorAll('.card, .list-item').forEach(el => { if (el.getAttribute('data-board') === currentBoard) el.remove(); });
+                closeBoardModal();
+                const firstAvailableBoard = document.querySelector('#boards-list .nav-link');
+                if(firstAvailableBoard) { switchBoard(firstAvailableBoard); } 
+                else { currentBoard = ''; document.getElementById('board-title-text').innerText = 'Nenhum Quadro'; document.getElementById('header-board-icon').setAttribute('data-lucide', 'slash'); document.getElementById('btn-edit-board').style.display = 'none'; document.getElementById('btn-add-task').style.display = 'none'; if (typeof lucide !== 'undefined') lucide.createIcons(); applyFilters(); updateDashboard(); }
+            }
+        }
+
+        function switchBoard(element) {
+            if (!element) return;
+            const name = element.getAttribute('data-board-name'); const icon = element.getAttribute('data-board-icon'); currentBoard = name; currentBoardIcon = icon;
+            document.querySelectorAll('aside .nav-link, aside .user-profile').forEach(link => link.classList.remove('active')); element.classList.add('active');
+            document.getElementById('board-title-text').innerText = `Board de ${name}`; document.getElementById('header-board-icon').setAttribute('data-lucide', icon);
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+            document.getElementById('btn-edit-board').style.display = 'flex'; document.getElementById('btn-add-task').style.display = 'flex'; 
+            closeSystemViews(); applyFilters(); updateDashboard();
         }
 
         function toggleTheme() {
@@ -1240,135 +1043,63 @@
             if (typeof lucide !== 'undefined') lucide.createIcons();
         }
 
+        // ── TASK MODAL ──
         function openNewTaskModal() {
-            isCreatingTask = true;
-            currentEditingElementId = null;
-            document.getElementById('task-modal-title').innerText = "Nova Tarefa";
-            
-            document.getElementById('modal-input-title').value = '';
-            document.getElementById('modal-input-desc').value = '';
-            
-            const loggedUser = document.getElementById('sidebar-user-name').innerText;
-            document.getElementById('modal-input-user').value = loggedUser || 'Weverson'; 
-            
-            document.getElementById('modal-input-complexity').value = 'Baixa';
-            document.getElementById('modal-input-deadline').value = localISOString;
-            document.getElementById('modal-input-progress').value = '0';
-            document.getElementById('modal-progress-val').innerText = '0%';
-            
+            isCreatingTask = true; currentEditingElementId = null; document.getElementById('task-modal-title').innerText = "Nova Tarefa";
+            document.getElementById('modal-input-title').value = ''; document.getElementById('modal-input-desc').value = ''; 
+            const loggedUser = document.getElementById('sidebar-user-name').innerText; document.getElementById('modal-input-user').value = loggedUser || 'Weverson'; 
+            document.getElementById('modal-input-complexity').value = 'Baixa'; document.getElementById('modal-input-deadline').value = localISOString; 
+            document.getElementById('modal-input-progress').value = '0'; updateModalProgressColor(0);
             document.getElementById('task-modal').classList.add('active');
         }
 
         function openTaskModal(elementId) {
-            isCreatingTask = false;
-            currentEditingElementId = elementId; 
-            document.getElementById('task-modal-title').innerText = "Detalhes da Operação";
-            
-            const element = document.getElementById(elementId); 
-            if (!element) return;
-            
+            isCreatingTask = false; currentEditingElementId = elementId; document.getElementById('task-modal-title').innerText = "Detalhes da Operação";
+            const element = document.getElementById(elementId); if (!element) return;
             let title, user, progressRaw, deadlineRaw, descRaw, compRaw;
-            
             if (element.classList.contains('card')) {
-                title = element.querySelector('h4').innerText; 
-                user = element.getAttribute('data-user') || 'Weverson'; 
-                progressRaw = element.querySelector('.progress-header span:last-child').innerText; 
-                deadlineRaw = element.getAttribute('data-deadline') || '';
-                descRaw = element.getAttribute('data-desc') || '';
-                compRaw = element.getAttribute('data-complexity') || 'Baixa';
+                title = element.querySelector('h4').innerText; user = element.getAttribute('data-user') || 'Weverson'; progressRaw = element.querySelector('.progress-header span:last-child').innerText; deadlineRaw = element.getAttribute('data-deadline') || ''; descRaw = element.getAttribute('data-desc') || ''; compRaw = element.getAttribute('data-complexity') || 'Baixa';
             } else if (element.classList.contains('list-item')) {
-                title = element.querySelector('.list-item-title h4').innerText; 
-                user = element.getAttribute('data-user') || 'Weverson'; 
-                progressRaw = element.querySelector('.progress-val-hidden').innerText; 
-                deadlineRaw = element.getAttribute('data-deadline') || '';
-                descRaw = element.getAttribute('data-desc') || '';
-                compRaw = element.getAttribute('data-complexity') || 'Baixa';
+                title = element.querySelector('.list-item-title h4').innerText; user = element.getAttribute('data-user') || 'Weverson'; progressRaw = element.querySelector('.progress-val-hidden').innerText; deadlineRaw = element.getAttribute('data-deadline') || ''; descRaw = element.getAttribute('data-desc') || ''; compRaw = element.getAttribute('data-complexity') || 'Baixa';
             }
-            
             const progress = progressRaw.replace('%', '');
-            
-            document.getElementById('modal-input-title').value = title; 
-            document.getElementById('modal-input-desc').value = descRaw; 
-            document.getElementById('modal-input-user').value = user; 
-            document.getElementById('modal-input-complexity').value = compRaw;
-            document.getElementById('modal-input-progress').value = progress; 
-            document.getElementById('modal-progress-val').innerText = progressRaw; 
-            document.getElementById('modal-input-deadline').value = deadlineRaw;
-            
+            document.getElementById('modal-input-title').value = title; document.getElementById('modal-input-desc').value = descRaw; document.getElementById('modal-input-user').value = user; document.getElementById('modal-input-complexity').value = compRaw; document.getElementById('modal-input-progress').value = progress; updateModalProgressColor(progress); document.getElementById('modal-input-deadline').value = deadlineRaw;
             document.getElementById('task-modal').classList.add('active');
         }
 
         function closeTaskModal() { document.getElementById('task-modal').classList.remove('active'); currentEditingElementId = null; isCreatingTask = false; }
 
         async function saveTaskDetails() {
-            const newTitle = document.getElementById('modal-input-title').value.trim(); 
-            if (!newTitle && isCreatingTask) { alert("O título da tarefa é obrigatório."); return; }
-            
-            const newUser = document.getElementById('modal-input-user').value; 
-            const newComplexity = document.getElementById('modal-input-complexity').value; 
-            const newProgress = document.getElementById('modal-input-progress').value; 
-            const newDeadline = document.getElementById('modal-input-deadline').value;
-            const newDesc = document.getElementById('modal-input-desc').value;
+            const newTitle = document.getElementById('modal-input-title').value.trim(); if (!newTitle && isCreatingTask) { alert("O título da tarefa é obrigatório."); return; }
+            const newUser = document.getElementById('modal-input-user').value; const newComplexity = document.getElementById('modal-input-complexity').value; const newProgress = document.getElementById('modal-input-progress').value; const newDeadline = document.getElementById('modal-input-deadline').value; const newDesc = document.getElementById('modal-input-desc').value;
 
-            const taskData = {
-                title: newTitle,
-                user: newUser,
-                board: currentBoard,
-                deadline: newDeadline,
-                desc: newDesc,
-                complexity: newComplexity,
-                progress: newProgress,
-                status: 'todo' // default para nova
-            };
+            const taskData = { title: newTitle, user: newUser, board: currentBoard, deadline: newDeadline, desc: newDesc, complexity: newComplexity, progress: newProgress, status: 'todo' };
 
             if (isCreatingTask) {
                 try {
-                    // Salvar no Firebase
                     const docRef = await window.fs.addDoc(window.fs.collection(window.db, "tasks"), taskData);
-                    // Renderizar localmente com o ID gerado
                     renderTaskInDOM(docRef.id, taskData);
-                } catch(error) {
-                    console.error("Erro ao adicionar tarefa:", error);
-                    alert("Erro ao salvar no banco. Verifique as permissões do Firestore.");
-                }
+                } catch(error) { console.error("Erro ao adicionar tarefa:", error); alert("Erro ao salvar no banco. Verifique as permissões do Firestore."); }
             } else {
                 if (!currentEditingElementId) return; 
                 const element = document.getElementById(currentEditingElementId);
                 const dbId = element.getAttribute('data-dbid');
-                
                 try {
-                    // Pegar status atual da div (já que não salvamos status no form do modal)
                     let currentStatus = 'todo';
-                    if(element.closest('#progress')) currentStatus = 'progress';
-                    else if(element.closest('#waiting')) currentStatus = 'waiting';
-                    else if(element.closest('#done')) currentStatus = 'done';
-                    
+                    if(element.closest('#progress')) currentStatus = 'progress'; else if(element.closest('#waiting')) currentStatus = 'waiting'; else if(element.closest('#done')) currentStatus = 'done';
                     taskData.status = currentStatus;
-
-                    // Atualizar no Firebase
                     const docRef = window.fs.doc(window.db, "tasks", dbId);
                     await window.fs.updateDoc(docRef, taskData);
                     
-                    // Renderizar localmente (isso vai sobrescrever e atualizar)
+                    // Atualiza DOM
                     renderTaskInDOM(dbId, taskData);
-                } catch(error) {
-                    console.error("Erro ao atualizar tarefa:", error);
-                }
+                } catch(error) { console.error("Erro ao atualizar tarefa:", error); }
             }
 
-            closeTaskModal(); 
-            applyFilters(); 
-            updateDashboard(); 
+            closeTaskModal(); applyFilters(); updateDashboard(); 
         }
 
-        document.querySelectorAll('.modal-overlay').forEach(modal => { 
-            modal.addEventListener('click', function(e) { 
-                if (e.target === this) { 
-                    if (this.id === 'board-modal') closeBoardModal(); 
-                    if (this.id === 'task-modal') closeTaskModal(); 
-                } 
-            }); 
-        });
+        document.querySelectorAll('.modal-overlay').forEach(modal => { modal.addEventListener('click', function(e) { if (e.target === this) { if (this.id === 'board-modal') closeBoardModal(); if (this.id === 'task-modal') closeTaskModal(); } }); });
     </script>
 </body>
 </html>
