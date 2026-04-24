@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SaaS Gestão | Saturday v23</title>
+    <title>SaaS Gestão | Saturday v24</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -196,7 +196,6 @@
         .card-labels { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
         .label-group { display: flex; align-items: center; gap: 4px; justify-content: space-between; }
         
-        /* NOVO: Estilo das Badges de Complexidade */
         .badge-complex { font-size: 8px; font-weight: 900; padding: 3px 6px; border-radius: 4px; text-transform: uppercase; letter-spacing: 1px; display: inline-block; }
         .badge-complex-Baixa { background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.2); }
         .badge-complex-Média { background: rgba(234, 179, 8, 0.1); color: #eab308; border: 1px solid rgba(234, 179, 8, 0.2); }
@@ -267,13 +266,13 @@
         /* ── MODALS ── */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 1000; opacity: 0; transition: opacity 0.3s; }
         .modal-overlay.active { display: flex; opacity: 1; }
-        .modal-content { background-color: var(--bg-body); border: 1px solid var(--border-color); border-radius: 20px; width: 90%; max-width: 550px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); transform: translateY(20px); transition: transform 0.3s; }
+        .modal-content { background-color: var(--bg-body); border: 1px solid var(--border-color); border-radius: 20px; width: 90%; max-width: 500px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); transform: translateY(20px); transition: transform 0.3s; }
         .modal-overlay.active .modal-content { transform: translateY(0); }
         .modal-header { padding: 24px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
         .modal-header h3 { font-size: 14px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; color: var(--text-main); }
         .btn-close { background: transparent; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 8px; padding: 4px; transition: 0.2s; }
         .btn-close:hover { background: var(--column-bg); color: var(--text-main); }
-        .modal-body { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+        .modal-body { padding: 24px; display: flex; flex-direction: column; gap: 20px; }
         .input-group label { display: block; font-size: 10px; font-weight: 900; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 1px; }
         
         .input-group input[type="text"], .input-group input[type="date"], .input-group textarea, .input-group select { 
@@ -299,7 +298,6 @@
         <div class="login-card">
             <h2 class="logo-text">SATURDAY</h2>
             <p>Gestão Inteligente e Descomplicada</p>
-            
             <button onclick="window.loginWithGoogle()" class="btn btn-google btn-text" style="display: flex; align-items: center; justify-content: center; width: 100%;">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -335,9 +333,6 @@
                 <div class="nav-link active" onclick="switchBoard(this)" data-board-name="Marketing" data-board-icon="layout-dashboard">
                     <i data-lucide="layout-dashboard"></i> <span class="hide-on-collapse">Marketing</span>
                 </div>
-                <div class="nav-link" onclick="switchBoard(this)" data-board-name="Comercial" data-board-icon="briefcase">
-                    <i data-lucide="briefcase"></i> <span class="hide-on-collapse">Comercial</span>
-                </div>
             </div>
             
             <div class="nav-section" style="margin-top: 30px;">
@@ -357,8 +352,8 @@
             <div class="user-profile" id="nav-profile" onclick="openProfileView()" style="margin-top: 0;">
                 <div class="avatar" id="sidebar-user-avatar">W</div>
                 <div class="hide-on-collapse">
-                    <p style="font-size: 11px; font-weight: 700;" id="sidebar-user-name">Weverson</p>
-                    <p style="font-size: 9px; font-weight: 500; color: var(--text-muted);" id="sidebar-user-email">weverson@makro.com.br</p>
+                    <p style="font-size: 11px; font-weight: 700;" id="sidebar-user-name">Usuário</p>
+                    <p style="font-size: 9px; font-weight: 500; color: var(--text-muted);" id="sidebar-user-email">email@exemplo.com</p>
                 </div>
             </div>
         </aside>
@@ -391,19 +386,17 @@
                 </div>
                 <select class="filter-select" id="user-filter" onchange="applyFilters()">
                     <option value="all">Solicitante: Todos</option>
-                    </select>
+                </select>
             </div>
 
             <div class="view-container active" id="view-kanban">
                 <div class="column col-todo">
                     <div class="column-header"><h3>A fazer</h3><span class="badge-count" id="count-todo">0</span></div>
-                    <div class="task-list" id="todo" ondrop="drop(event)" ondragover="allowDrop(event)">
-                        </div>
+                    <div class="task-list" id="todo" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
                 </div>
                 <div class="column col-progress">
                     <div class="column-header"><h3>Em progresso</h3><span class="badge-count" id="count-progress">0</span></div>
-                    <div class="task-list" id="progress" ondrop="drop(event)" ondragover="allowDrop(event)">
-                        </div>
+                    <div class="task-list" id="progress" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
                 </div>
                 <div class="column col-waiting">
                     <div class="column-header"><h3>Aguardando aprovação</h3><span class="badge-count" id="count-waiting">0</span></div>
@@ -438,6 +431,7 @@
                     </div>
                     <div></div>
                 </div>
+                <div id="list-items-container" style="display: contents;"></div>
             </div>
 
             <div class="view-container" id="view-dashboard">
@@ -497,7 +491,7 @@
                         <table class="users-table">
                             <thead><tr><th>Usuário</th><th>Email</th><th>Nível de Acesso</th><th>Status</th><th style="text-align: right;">Ações</th></tr></thead>
                             <tbody id="users-table-body">
-                                <tr><td colspan="5" style="text-align: center; opacity: 0.5; padding: 20px;">Nenhum usuário cadastrado</td></tr>
+                                <tr><td colspan="5" style="text-align: center; opacity: 0.5; padding: 20px;">Nenhum usuário cadastrado além de você.</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -589,6 +583,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBY-ooceqwTp-Hp3oZ6mCZq_U0qLbRtSfA",
@@ -602,6 +597,11 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
+        
+        // Expondo o DB para a interface usar
+        const db = getFirestore(app);
+        window.db = db;
+        window.fs = { collection, addDoc, getDocs, updateDoc, deleteDoc, doc };
 
         const loginContainer = document.getElementById('login-container');
         const appContainer = document.getElementById('app-container');
@@ -628,7 +628,6 @@
 
                 document.getElementById('sidebar-user-name').innerText = displayName;
                 document.getElementById('sidebar-user-email').innerText = email;
-                
                 document.getElementById('profile-name').value = displayName;
                 document.getElementById('profile-email').value = email;
 
@@ -643,13 +642,34 @@
                     }
                 });
 
-                // Atualiza o select de Responsável no Modal
+                // Tabela de usuários: Mostrar o usuário logado
+                const usersTableBody = document.getElementById('users-table-body');
+                usersTableBody.innerHTML = `
+                    <tr>
+                        <td style="display: flex; align-items: center; gap: 12px; border-bottom: none;">
+                            <div class="avatar" style="width: 28px; height: 28px; font-size: 10px;">${firstLetter}</div> 
+                            <strong>${displayName}</strong>
+                        </td>
+                        <td>${email}</td>
+                        <td><span class="badge-role role-adm">Administrador</span></td>
+                        <td><span style="color: var(--status-done); font-weight: 700;">Ativo</span></td>
+                        <td style="text-align: right;"><button class="list-action-btn"><i data-lucide="more-horizontal"></i></button></td>
+                    </tr>
+                `;
+
+                // Filtros e Selects baseados no usuário logado
                 const selectUser = document.getElementById('modal-input-user');
                 selectUser.innerHTML = `<option value="${displayName}">${displayName}</option>`;
                 
-                // Atualiza o filtro de Usuários na barra do topo
                 const filterUser = document.getElementById('user-filter');
                 filterUser.innerHTML = `<option value="all">Solicitante: Todos</option><option value="${displayName}">${displayName}</option>`;
+
+                // CARREGAR TAREFAS DO BANCO APÓS LOGIN
+                if(window.loadTasksFromDB) {
+                    window.loadTasksFromDB();
+                }
+
+                if(typeof lucide !== 'undefined') lucide.createIcons();
 
             } else {
                 loginContainer.style.display = 'flex';
@@ -678,8 +698,13 @@
                 document.getElementById('sidebar').classList.add('collapsed');
             }
             renderIconSelector();
-            applyFilters();
-            updateDashboard();
+            
+            // Expondo a lógica do arrastar para o window pro HTML achar
+            window.drag = function(ev) { 
+                ev.dataTransfer.setData("text", ev.target.id); 
+                setTimeout(() => { document.getElementById(ev.target.id).classList.add('dragging'); }, 0); 
+            };
+            window.allowDrop = function(ev) { ev.preventDefault(); };
         });
 
         function toggleSidebar() {
@@ -698,14 +723,201 @@
         }
 
         function getAvatarColor(user) {
-            return 'var(--makro-red)'; // Pode ser dinâmico depois
+            return 'var(--makro-red)'; 
         }
 
-        // Helper para gerar o HTML da Badge de Complexidade
         function getComplexityBadge(complexity) {
             const safeComp = complexity || 'Baixa';
             return `<span class="badge-complex badge-complex-${safeComp}">${safeComp}</span>`;
         }
+
+        // ── LIGAÇÃO COM BANCO DE DADOS (FIRESTORE) ──
+
+        window.loadTasksFromDB = async function() {
+            // Limpa as colunas do DOM
+            ['todo', 'progress', 'waiting', 'done'].forEach(id => {
+                document.getElementById(id).innerHTML = '';
+            });
+            document.getElementById('list-items-container').innerHTML = '';
+
+            try {
+                // Busca todas as tarefas
+                const querySnapshot = await window.fs.getDocs(window.fs.collection(window.db, "tasks"));
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    renderTaskInDOM(doc.id, data);
+                });
+                applyFilters();
+                updateDashboard();
+            } catch (error) {
+                console.error("Erro ao carregar tarefas: ", error);
+            }
+        };
+
+        // Função central para renderizar a tarefa no HTML baseada nos dados do Firebase
+        function renderTaskInDOM(id, data) {
+            const cardId = "t_" + id;
+            const listId = "l_" + id;
+            const formattedDeadline = formatDisplayDate(data.deadline);
+            
+            // Garantir que a tarefa tenha os atributos necessários para os filtros
+            const board = data.board || 'Marketing';
+            const status = data.status || 'todo';
+
+            // 1. Criar/Atualizar Card (Kanban)
+            let card = document.getElementById(cardId);
+            if(!card) {
+                card = document.createElement('div');
+                card.className = 'card'; 
+                card.draggable = true; 
+                card.id = cardId;
+                card.onclick = function() { openTaskModal(this.id); }; 
+                card.ondragstart = window.drag;
+            }
+            
+            card.setAttribute('data-dbid', id);
+            card.setAttribute('data-user', data.user); 
+            card.setAttribute('data-board', board); 
+            card.setAttribute('data-deadline', data.deadline); 
+            card.setAttribute('data-desc', data.desc); 
+            card.setAttribute('data-complexity', data.complexity); 
+            
+            card.innerHTML = `
+                <div class="card-labels">
+                    <div class="label" style="background: var(--text-muted);"></div>
+                </div>
+                ${getComplexityBadge(data.complexity)}
+                <h4>${data.title}</h4>
+                <div class="progress-container">
+                    <div class="progress-header"><span>Progresso</span><span>${data.progress}%</span></div>
+                    <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: ${data.progress}%;"></div></div>
+                </div>
+                <div class="card-footer">
+                    <div class="deadline"><i data-lucide="calendar"></i> ${formattedDeadline}</div>
+                    <div class="avatar" style="width: 20px; height: 20px; font-size: 9px; background: ${getAvatarColor(data.user)};" title="${data.user}">${data.user.charAt(0).toUpperCase()}</div>
+                </div>
+            `;
+            
+            // Insere na coluna correta
+            const columnEl = document.getElementById(status);
+            if(columnEl && !document.getElementById(cardId)) {
+                columnEl.prepend(card);
+            }
+
+            // 2. Criar/Atualizar List Item
+            let listItem = document.getElementById(listId);
+            if(!listItem) {
+                listItem = document.createElement('div');
+                listItem.className = 'list-item'; 
+                listItem.id = listId;
+                listItem.onclick = function() { openTaskModal(this.id); };
+            }
+
+            listItem.setAttribute('data-dbid', id);
+            listItem.setAttribute('data-user', data.user); 
+            listItem.setAttribute('data-board', board); 
+            listItem.setAttribute('data-deadline', data.deadline); 
+            listItem.setAttribute('data-desc', data.desc); 
+            listItem.setAttribute('data-complexity', data.complexity); 
+
+            // Textos amigáveis de status para a lista
+            let statusText = 'A fazer'; let badgeClass = 'todo';
+            if(status === 'progress') { statusText = 'Em Progresso'; badgeClass = 'progress'; }
+            if(status === 'waiting') { statusText = 'Aguardando'; badgeClass = 'waiting'; }
+            if(status === 'done') { statusText = 'Concluído'; badgeClass = 'done'; }
+
+            listItem.innerHTML = `
+                <div class="list-item-title">
+                    <div class="label" style="background: var(--text-muted); width: 6px; height: 24px;"></div>
+                    <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 4px;">
+                        ${getComplexityBadge(data.complexity)}
+                        <h4 style="margin:0;">${data.title}</h4>
+                    </div>
+                </div>
+                <div><span class="status-badge ${badgeClass}">${statusText}</span></div>
+                <div>
+                    <div class="progress-container" style="margin: 0;">
+                        <span style="display:none" class="progress-val-hidden">${data.progress}%</span>
+                        <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: ${data.progress}%;"></div></div>
+                    </div>
+                </div>
+                <div class="deadline" style="text-transform: none;"><i data-lucide="calendar"></i> ${formattedDeadline}</div>
+                <button class="list-action-btn" onclick="event.stopPropagation();"><i data-lucide="more-horizontal"></i></button>
+            `;
+            
+            if(!document.getElementById(listId)) {
+                document.getElementById('list-items-container').prepend(listItem);
+            }
+
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
+
+        // Função de Drag & Drop atualizada para banco de dados
+        window.drop = async function(ev) {
+            ev.preventDefault(); 
+            var data = ev.dataTransfer.getData("text"); 
+            var dropzone = ev.target; 
+            var element = document.getElementById(data);
+            
+            if (!element) return; 
+            element.classList.remove('dragging');
+            
+            let targetColumn = dropzone.closest('.task-list');
+            if (dropzone.classList.contains('task-list')) {
+                targetColumn = dropzone;
+            }
+            
+            if (targetColumn) {
+                targetColumn.appendChild(element);
+                
+                // Pega o ID do documento do Firebase
+                const dbId = element.getAttribute('data-dbid');
+                const newStatus = targetColumn.id; // 'todo', 'progress', 'waiting', 'done'
+
+                // Ajustes visuais automáticos para concluído
+                let updatedProgress = element.querySelector('.progress-header span:last-child').innerText.replace('%','');
+                if (newStatus === 'done') { 
+                    updatedProgress = '100';
+                    element.querySelector('.progress-header span:last-child').innerText = '100%'; 
+                    element.querySelector('.progress-bar-fill').style.width = '100%'; 
+                    element.querySelector('.progress-bar-fill').style.backgroundColor = 'var(--status-done)'; 
+                }
+
+                // Salvar alteração de coluna no Firebase
+                try {
+                    const docRef = window.fs.doc(window.db, "tasks", dbId);
+                    await window.fs.updateDoc(docRef, {
+                        status: newStatus,
+                        progress: updatedProgress
+                    });
+                    
+                    // Sincroniza a lista com o novo status
+                    const listElement = document.getElementById(element.id.replace('t_','l_'));
+                    if(listElement) {
+                        const badge = listElement.querySelector('.status-badge');
+                        if(newStatus === 'todo') { badge.className = 'status-badge todo'; badge.innerText = 'A fazer'; }
+                        else if(newStatus === 'progress') { badge.className = 'status-badge progress'; badge.innerText = 'Em Progresso'; }
+                        else if(newStatus === 'waiting') { badge.className = 'status-badge waiting'; badge.innerText = 'Aguardando'; }
+                        else if(newStatus === 'done') { 
+                            badge.className = 'status-badge done'; badge.innerText = 'Concluído';
+                            listElement.querySelector('.progress-val-hidden').innerText = '100%'; 
+                            listElement.querySelector('.progress-bar-fill').style.width = '100%'; 
+                        }
+                    }
+
+                    applyFilters(); 
+                } catch (error) {
+                    console.error("Erro ao atualizar status:", error);
+                    alert("Erro ao salvar mudança. Atualize a página.");
+                }
+            }
+        };
+
+        document.addEventListener('dragend', function(ev) { 
+            if(ev.target && ev.target.classList) ev.target.classList.remove('dragging'); 
+        });
+
+        // ── RESTANTE DA LÓGICA DE UI ──
 
         function openSystemView(viewId, title, icon, navIdToActivate) {
             ['view-kanban', 'view-list', 'view-dashboard', 'view-settings', 'view-users', 'view-profile'].forEach(id => { document.getElementById(id).classList.remove('active'); });
@@ -787,6 +999,7 @@
                 list.appendChild(newLink);
                 if (typeof lucide !== 'undefined') lucide.createIcons();
                 switchBoard(newLink);
+
             } else if (boardModalMode === 'edit') {
                 const oldName = currentBoard;
                 const activeLink = document.querySelector('#boards-list .nav-link.active');
@@ -794,10 +1007,15 @@
                     activeLink.setAttribute('data-board-name', inputName); activeLink.setAttribute('data-board-icon', selectedBoardIcon);
                     activeLink.innerHTML = `<i data-lucide="${selectedBoardIcon}"></i> <span class="hide-on-collapse">${inputName}</span>`;
                 }
-                document.querySelectorAll('.card, .list-item').forEach(el => { if (el.getAttribute('data-board') === oldName) el.setAttribute('data-board', inputName); });
+
+                document.querySelectorAll('.card, .list-item').forEach(el => {
+                    if (el.getAttribute('data-board') === oldName) el.setAttribute('data-board', inputName);
+                });
+
                 if (typeof lucide !== 'undefined') lucide.createIcons();
                 switchBoard(activeLink);
             }
+
             closeBoardModal();
         }
 
@@ -805,17 +1023,25 @@
             if(confirm(`ATENÇÃO: Tem certeza que deseja excluir o quadro "${currentBoard}" e todas as suas tarefas?\nEsta ação não pode ser desfeita.`)) {
                 const activeLink = document.querySelector('#boards-list .nav-link.active');
                 if(activeLink) activeLink.remove();
+
                 document.querySelectorAll('.card, .list-item').forEach(el => {
                     if (el.getAttribute('data-board') === currentBoard) el.remove();
                 });
+
                 closeBoardModal();
+
                 const firstAvailableBoard = document.querySelector('#boards-list .nav-link');
                 if(firstAvailableBoard) {
                     switchBoard(firstAvailableBoard);
                 } else {
-                    currentBoard = ''; document.getElementById('board-title-text').innerText = 'Nenhum Quadro'; document.getElementById('header-board-icon').setAttribute('data-lucide', 'slash');
-                    document.getElementById('btn-edit-board').style.display = 'none'; document.getElementById('btn-add-task').style.display = 'none';
-                    if (typeof lucide !== 'undefined') lucide.createIcons(); applyFilters(); updateDashboard();
+                    currentBoard = '';
+                    document.getElementById('board-title-text').innerText = 'Nenhum Quadro';
+                    document.getElementById('header-board-icon').setAttribute('data-lucide', 'slash');
+                    document.getElementById('btn-edit-board').style.display = 'none';
+                    document.getElementById('btn-add-task').style.display = 'none';
+                    if (typeof lucide !== 'undefined') lucide.createIcons();
+                    applyFilters();
+                    updateDashboard();
                 }
             }
         }
@@ -825,7 +1051,8 @@
             const name = element.getAttribute('data-board-name');
             const icon = element.getAttribute('data-board-icon');
             currentBoard = name; currentBoardIcon = icon;
-            document.querySelectorAll('aside .nav-link, aside .user-profile').forEach(link => link.classList.remove('active')); element.classList.add('active');
+            document.querySelectorAll('aside .nav-link, aside .user-profile').forEach(link => link.classList.remove('active'));
+            element.classList.add('active');
             document.getElementById('board-title-text').innerText = `Board de ${name}`;
             const headerIcon = document.getElementById('header-board-icon');
             headerIcon.setAttribute('data-lucide', icon);
@@ -836,20 +1063,37 @@
         }
 
         function loadLogo(event) {
-            const output = document.getElementById('logo-preview'); const textLogo = document.getElementById('logo-text');
+            const output = document.getElementById('logo-preview');
+            const textLogo = document.getElementById('logo-text');
             if (event.target.files && event.target.files[0]) {
-                output.src = URL.createObjectURL(event.target.files[0]); output.style.display = 'block'; textLogo.style.display = 'none';
+                output.src = URL.createObjectURL(event.target.files[0]);
+                output.style.display = 'block';
+                textLogo.style.display = 'none';
                 output.onload = function() { URL.revokeObjectURL(output.src); }
             }
         }
 
         function changeView(viewType) {
-            ['view-settings', 'view-users', 'view-profile', 'view-kanban', 'view-list', 'view-dashboard'].forEach(id => { document.getElementById(id).classList.remove('active'); });
-            ['btn-kanban', 'btn-list', 'btn-dashboard'].forEach(id => { document.getElementById(id).classList.remove('active'); });
-            document.getElementById('view-' + viewType).classList.add('active'); document.getElementById('btn-' + viewType).classList.add('active');
-            document.getElementById('filter-bar').style.display = 'flex'; document.getElementById('view-toggle').style.display = 'flex'; document.getElementById('header-divider').style.display = 'block';
-            if(currentBoard) { document.getElementById('btn-add-task').style.display = 'flex'; }
-            if (viewType === 'dashboard') updateDashboard();
+            ['view-settings', 'view-users', 'view-profile', 'view-kanban', 'view-list', 'view-dashboard'].forEach(id => {
+                document.getElementById(id).classList.remove('active');
+            });
+            ['btn-kanban', 'btn-list', 'btn-dashboard'].forEach(id => {
+                document.getElementById(id).classList.remove('active');
+            });
+
+            document.getElementById('view-' + viewType).classList.add('active');
+            document.getElementById('btn-' + viewType).classList.add('active');
+            
+            document.getElementById('filter-bar').style.display = 'flex';
+            document.getElementById('view-toggle').style.display = 'flex';
+            document.getElementById('header-divider').style.display = 'block';
+            
+            if(currentBoard) {
+                document.getElementById('btn-add-task').style.display = 'flex';
+            }
+            if (viewType === 'dashboard') {
+                updateDashboard();
+            }
         }
 
         function applyFilters() {
@@ -919,61 +1163,75 @@
 
         function updateDashboard() {
             const cards = Array.from(document.querySelectorAll('#view-kanban .card')).filter(card => card.getAttribute('data-board') === currentBoard);
-            const total = cards.length; let aFazer = 0, emProgresso = 0, aguardando = 0, concluidas = 0, sumProgress = 0; let userStats = {};
+            
+            const total = cards.length;
+            let aFazer = 0, emProgresso = 0, aguardando = 0, concluidas = 0, sumProgress = 0;
+            let userStats = {};
 
             cards.forEach(card => {
                 const user = card.getAttribute('data-user') || 'Desconhecido';
                 if(!userStats[user]) userStats[user] = { total: 0, done: 0, color: getAvatarColor(user) };
                 userStats[user].total++;
 
-                if(card.closest('#todo')) { aFazer++; } else if(card.closest('#progress')) { emProgresso++; } else if(card.closest('#waiting')) { aguardando++; } else if(card.closest('#done')) { concluidas++; userStats[user].done++; }
-                const progressText = card.querySelector('.progress-header span:last-child').innerText; sumProgress += parseInt(progressText.replace('%', '')) || 0;
+                if(card.closest('#todo')) { aFazer++; }
+                else if(card.closest('#progress')) { emProgresso++; }
+                else if(card.closest('#waiting')) { aguardando++; }
+                else if(card.closest('#done')) { concluidas++; userStats[user].done++; }
+
+                const progressText = card.querySelector('.progress-header span:last-child').innerText;
+                sumProgress += parseInt(progressText.replace('%', '')) || 0;
             });
 
-            document.getElementById('dash-total').innerText = total; document.getElementById('dash-todo').innerText = aFazer; document.getElementById('dash-progress').innerText = emProgresso; document.getElementById('dash-done').innerText = concluidas;
+            document.getElementById('dash-total').innerText = total;
+            document.getElementById('dash-todo').innerText = aFazer;
+            document.getElementById('dash-progress').innerText = emProgresso;
+            document.getElementById('dash-done').innerText = concluidas;
 
             const progressPct = total === 0 ? 0 : Math.round(sumProgress / total);
-            document.getElementById('dash-progress-pct').innerText = progressPct + '%'; document.getElementById('dash-progress-bar').style.width = progressPct + '%';
+            document.getElementById('dash-progress-pct').innerText = progressPct + '%';
+            document.getElementById('dash-progress-bar').style.width = progressPct + '%';
 
-            const pctTodo = total === 0 ? 0 : Math.round((aFazer/total)*100); const pctProg = total === 0 ? 0 : Math.round((emProgresso/total)*100); const pctWait = total === 0 ? 0 : Math.round((aguardando/total)*100); const pctDone = total === 0 ? 0 : Math.round((concluidas/total)*100);
+            const pctTodo = total === 0 ? 0 : Math.round((aFazer/total)*100);
+            const pctProg = total === 0 ? 0 : Math.round((emProgresso/total)*100);
+            const pctWait = total === 0 ? 0 : Math.round((aguardando/total)*100);
+            const pctDone = total === 0 ? 0 : Math.round((concluidas/total)*100);
 
-            document.getElementById('dash-bar-todo').style.width = pctTodo + '%'; document.getElementById('dash-pct-todo').innerText = pctTodo + '%'; document.getElementById('dash-bar-prog').style.width = pctProg + '%'; document.getElementById('dash-pct-prog').innerText = pctProg + '%'; document.getElementById('dash-bar-wait').style.width = pctWait + '%'; document.getElementById('dash-pct-wait').innerText = pctWait + '%'; document.getElementById('dash-bar-done').style.width = pctDone + '%'; document.getElementById('dash-pct-done').innerText = pctDone + '%';
+            document.getElementById('dash-bar-todo').style.width = pctTodo + '%';
+            document.getElementById('dash-pct-todo').innerText = pctTodo + '%';
+            document.getElementById('dash-bar-prog').style.width = pctProg + '%';
+            document.getElementById('dash-pct-prog').innerText = pctProg + '%';
+            document.getElementById('dash-bar-wait').style.width = pctWait + '%';
+            document.getElementById('dash-pct-wait').innerText = pctWait + '%';
+            document.getElementById('dash-bar-done').style.width = pctDone + '%';
+            document.getElementById('dash-pct-done').innerText = pctDone + '%';
 
-            const userContainer = document.getElementById('dash-user-stats'); userContainer.innerHTML = '';
+            const userContainer = document.getElementById('dash-user-stats');
+            userContainer.innerHTML = '';
             if (Object.keys(userStats).length === 0) {
                 userContainer.innerHTML = '<p style="font-size:11px; color:var(--text-muted);">Nenhuma tarefa neste quadro.</p>';
             } else {
                 Object.keys(userStats).sort((a,b) => userStats[b].total - userStats[a].total).forEach(user => {
-                    const stat = userStats[user]; const pct = stat.total === 0 ? 0 : Math.round((stat.done/stat.total)*100);
-                    const html = `<div class="user-stat-row"><div style="display:flex; align-items:center; gap:8px; width: 110px;"><div class="avatar" style="width:24px; height:24px; font-size:10px; background:${stat.color}">${user.charAt(0)}</div><span style="font-size:11px; font-weight:700; color:var(--text-main);">${user}</span></div><div style="flex:1;"><div style="display:flex; justify-content:space-between; font-size:9px; font-weight:900; color:var(--text-muted); margin-bottom:6px;"><span>${stat.done} de ${stat.total}</span><span style="color:var(--text-main);">${pct}%</span></div><div class="progress-bar-bg" style="height:12px;"><div class="progress-bar-fill" style="width:${pct}%; background-color:${stat.color};"></div></div></div></div>`;
+                    const stat = userStats[user];
+                    const pct = stat.total === 0 ? 0 : Math.round((stat.done/stat.total)*100);
+                    const html = `
+                        <div class="user-stat-row">
+                            <div style="display:flex; align-items:center; gap:8px; width: 110px;">
+                                <div class="avatar" style="width:24px; height:24px; font-size:10px; background:${stat.color}">${user.charAt(0)}</div>
+                                <span style="font-size:11px; font-weight:700; color:var(--text-main);">${user}</span>
+                            </div>
+                            <div style="flex:1;">
+                                <div style="display:flex; justify-content:space-between; font-size:9px; font-weight:900; color:var(--text-muted); margin-bottom:6px;">
+                                    <span>${stat.done} de ${stat.total}</span>
+                                    <span style="color:var(--text-main);">${pct}%</span>
+                                </div>
+                                <div class="progress-bar-bg" style="height:12px;"><div class="progress-bar-fill" style="width:${pct}%; background-color:${stat.color};"></div></div>
+                            </div>
+                        </div>
+                    `;
                     userContainer.innerHTML += html;
                 });
             }
         }
-
-        function allowDrop(ev) { ev.preventDefault(); }
-        function drag(ev) { ev.dataTransfer.setData("text", ev.target.id); setTimeout(() => { document.getElementById(ev.target.id).classList.add('dragging'); }, 0); }
-        function drop(ev) {
-            ev.preventDefault(); var data = ev.dataTransfer.getData("text"); var dropzone = ev.target; var element = document.getElementById(data);
-            if (!element) return; element.classList.remove('dragging');
-            if (dropzone.classList.contains('task-list')) { dropzone.appendChild(element); } else if (dropzone.closest('.task-list')) { dropzone.closest('.task-list').appendChild(element); }
-            if (element.parentNode.id === 'done') { element.querySelector('.progress-header span:last-child').innerText = '100%'; element.querySelector('.progress-bar-fill').style.width = '100%'; element.querySelector('.progress-bar-fill').style.backgroundColor = 'var(--status-done)'; }
-            
-            const listElement = document.getElementById(element.id.replace('t','l'));
-            if(listElement) {
-                const badge = listElement.querySelector('.status-badge');
-                if(element.parentNode.id === 'todo') { badge.className = 'status-badge todo'; badge.innerText = 'A fazer'; }
-                else if(element.parentNode.id === 'progress') { badge.className = 'status-badge progress'; badge.innerText = 'Em Progresso'; }
-                else if(element.parentNode.id === 'waiting') { badge.className = 'status-badge waiting'; badge.innerText = 'Aguardando'; }
-                else if(element.parentNode.id === 'done') { 
-                    badge.className = 'status-badge done'; badge.innerText = 'Concluído';
-                    listElement.querySelector('.progress-val-hidden').innerText = '100%'; 
-                    listElement.querySelector('.progress-bar-fill').style.width = '100%'; 
-                }
-            }
-            applyFilters(); 
-        }
-        document.addEventListener('dragend', function(ev) { if(ev.target && ev.target.classList) ev.target.classList.remove('dragging'); });
 
         function toggleTheme() {
             const body = document.body; const themeBtn = document.getElementById('theme-btn');
@@ -982,7 +1240,6 @@
             if (typeof lucide !== 'undefined') lucide.createIcons();
         }
 
-        // ── Lógica de Abertura de Modal de Tarefas ──
         function openNewTaskModal() {
             isCreatingTask = true;
             currentEditingElementId = null;
@@ -1043,7 +1300,7 @@
 
         function closeTaskModal() { document.getElementById('task-modal').classList.remove('active'); currentEditingElementId = null; isCreatingTask = false; }
 
-        function saveTaskDetails() {
+        async function saveTaskDetails() {
             const newTitle = document.getElementById('modal-input-title').value.trim(); 
             if (!newTitle && isCreatingTask) { alert("O título da tarefa é obrigatório."); return; }
             
@@ -1053,126 +1310,55 @@
             const newDeadline = document.getElementById('modal-input-deadline').value;
             const newDesc = document.getElementById('modal-input-desc').value;
 
+            const taskData = {
+                title: newTitle,
+                user: newUser,
+                board: currentBoard,
+                deadline: newDeadline,
+                desc: newDesc,
+                complexity: newComplexity,
+                progress: newProgress,
+                status: 'todo' // default para nova
+            };
+
             if (isCreatingTask) {
-                const idNum = Date.now(); 
-                const cardId = "t" + idNum; 
-                const listId = "l" + idNum; 
-                const formattedDeadline = formatDisplayDate(newDeadline);
-                
-                // Cria Card
-                const card = document.createElement('div'); 
-                card.className = 'card'; card.draggable = true; card.id = cardId; 
-                card.setAttribute('data-user', newUser); 
-                card.setAttribute('data-board', currentBoard); 
-                card.setAttribute('data-deadline', newDeadline); 
-                card.setAttribute('data-desc', newDesc); 
-                card.setAttribute('data-complexity', newComplexity); 
-                card.onclick = function() { openTaskModal(this.id); }; 
-                card.ondragstart = drag;
-                
-                card.innerHTML = `
-                    <div class="card-labels">
-                        <div class="label" style="background: var(--text-muted);"></div>
-                    </div>
-                    ${getComplexityBadge(newComplexity)}
-                    <h4>${newTitle || 'Nova Tarefa'}</h4>
-                    <div class="progress-container">
-                        <div class="progress-header"><span>Progresso</span><span>${newProgress}%</span></div>
-                        <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: ${newProgress}%;"></div></div>
-                    </div>
-                    <div class="card-footer">
-                        <div class="deadline"><i data-lucide="calendar"></i> ${formattedDeadline}</div>
-                        <div class="avatar" style="width: 20px; height: 20px; font-size: 9px; background: ${getAvatarColor(newUser)};" title="${newUser}">${newUser.charAt(0).toUpperCase()}</div>
-                    </div>
-                `;
-                document.getElementById('todo').prepend(card);
-
-                // Cria Lista
-                const listItem = document.createElement('div'); 
-                listItem.className = 'list-item'; listItem.id = listId; 
-                listItem.setAttribute('data-user', newUser); 
-                listItem.setAttribute('data-board', currentBoard); 
-                listItem.setAttribute('data-deadline', newDeadline); 
-                listItem.setAttribute('data-desc', newDesc); 
-                listItem.setAttribute('data-complexity', newComplexity); 
-                listItem.onclick = function() { openTaskModal(this.id); };
-                
-                listItem.innerHTML = `
-                    <div class="list-item-title">
-                        <div class="label" style="background: var(--text-muted); width: 6px; height: 24px;"></div>
-                        <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 4px;">
-                            ${getComplexityBadge(newComplexity)}
-                            <h4 style="margin:0;">${newTitle || 'Nova Tarefa'}</h4>
-                        </div>
-                    </div>
-                    <div><span class="status-badge todo">A fazer</span></div>
-                    <div>
-                        <div class="progress-container" style="margin: 0;">
-                            <span style="display:none" class="progress-val-hidden">${newProgress}%</span>
-                            <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: ${newProgress}%;"></div></div>
-                        </div>
-                    </div>
-                    <div class="deadline" style="text-transform: none;"><i data-lucide="calendar"></i> ${formattedDeadline}</div>
-                    <button class="list-action-btn" onclick="event.stopPropagation();"><i data-lucide="more-horizontal"></i></button>
-                `;
-                
-                const viewList = document.getElementById('view-list'); 
-                viewList.insertBefore(listItem, viewList.children[1]);
-
+                try {
+                    // Salvar no Firebase
+                    const docRef = await window.fs.addDoc(window.fs.collection(window.db, "tasks"), taskData);
+                    // Renderizar localmente com o ID gerado
+                    renderTaskInDOM(docRef.id, taskData);
+                } catch(error) {
+                    console.error("Erro ao adicionar tarefa:", error);
+                    alert("Erro ao salvar no banco. Verifique as permissões do Firestore.");
+                }
             } else {
                 if (!currentEditingElementId) return; 
                 const element = document.getElementById(currentEditingElementId);
-                let cardElement, listElement;
-                if(element.classList.contains('card')) { cardElement = element; listElement = document.getElementById(element.id.replace('t','l')); } 
-                else { listElement = element; cardElement = document.getElementById(element.id.replace('l','t')); }
-
-                if (cardElement) {
-                    cardElement.querySelector('h4').innerText = newTitle; 
-                    cardElement.setAttribute('data-user', newUser); 
-                    cardElement.setAttribute('data-deadline', newDeadline);
-                    cardElement.setAttribute('data-desc', newDesc); 
-                    cardElement.setAttribute('data-complexity', newComplexity); 
+                const dbId = element.getAttribute('data-dbid');
+                
+                try {
+                    // Pegar status atual da div (já que não salvamos status no form do modal)
+                    let currentStatus = 'todo';
+                    if(element.closest('#progress')) currentStatus = 'progress';
+                    else if(element.closest('#waiting')) currentStatus = 'waiting';
+                    else if(element.closest('#done')) currentStatus = 'done';
                     
-                    let badge = cardElement.querySelector('.badge-complex');
-                    if(badge) {
-                        badge.className = `badge-complex badge-complex-${newComplexity}`;
-                        badge.innerText = newComplexity;
-                    } else {
-                        // Insere caso não tenha (ex: compatibilidade com old state)
-                        cardElement.querySelector('h4').insertAdjacentHTML('beforebegin', getComplexityBadge(newComplexity));
-                    }
+                    taskData.status = currentStatus;
 
-                    cardElement.querySelector('.progress-header span:last-child').innerText = newProgress + '%'; 
-                    cardElement.querySelector('.progress-bar-fill').style.width = newProgress + '%'; 
-                    cardElement.querySelector('.deadline').innerHTML = `<i data-lucide="calendar"></i> ${formatDisplayDate(newDeadline)}`; 
+                    // Atualizar no Firebase
+                    const docRef = window.fs.doc(window.db, "tasks", dbId);
+                    await window.fs.updateDoc(docRef, taskData);
                     
-                    const avatar = cardElement.querySelector('.avatar'); 
-                    avatar.innerText = newUser.charAt(0).toUpperCase(); 
-                    avatar.title = newUser;
-                    avatar.style.background = getAvatarColor(newUser);
-                }
-                if (listElement) {
-                    listElement.querySelector('h4').innerText = newTitle; 
-                    listElement.setAttribute('data-user', newUser); 
-                    listElement.setAttribute('data-deadline', newDeadline);
-                    listElement.setAttribute('data-desc', newDesc); 
-                    listElement.setAttribute('data-complexity', newComplexity); 
-
-                    let badge = listElement.querySelector('.badge-complex');
-                    if(badge) {
-                        badge.className = `badge-complex badge-complex-${newComplexity}`;
-                        badge.innerText = newComplexity;
-                    }
-
-                    listElement.querySelector('.progress-val-hidden').innerText = newProgress + '%'; 
-                    listElement.querySelector('.progress-bar-fill').style.width = newProgress + '%'; 
-                    listElement.querySelector('.deadline').innerHTML = `<i data-lucide="calendar"></i> ${formatDisplayDate(newDeadline)}`;
+                    // Renderizar localmente (isso vai sobrescrever e atualizar)
+                    renderTaskInDOM(dbId, taskData);
+                } catch(error) {
+                    console.error("Erro ao atualizar tarefa:", error);
                 }
             }
 
             closeTaskModal(); 
             applyFilters(); 
-            if (typeof lucide !== 'undefined') lucide.createIcons();
+            updateDashboard(); 
         }
 
         document.querySelectorAll('.modal-overlay').forEach(modal => { 
